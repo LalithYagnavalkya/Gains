@@ -3,7 +3,7 @@ import os from 'os'; // Node's built-in os module
 import app from './app';
 import { config } from 'dotenv';
 config({
-  path: './config/config.env'
+  path: './src/config/config.env'
 })
 const numCPUs = os.cpus().length;
 console.log(process.env.PORT)
