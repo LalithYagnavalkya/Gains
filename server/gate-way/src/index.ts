@@ -5,11 +5,9 @@ import { config } from 'dotenv';
 config({
   path: './config/config.env'
 })
-
 const numCPUs = os.cpus().length;
-
-if (cluster.isPrimary && process.env.ENVIRONMENT_NAME !== 'Dev' ) {
-  console.log(process.env.ENVIRONMENT_NAME)
+console.log(process.env.PORT)
+if (cluster.isPrimary) {
   // Fork workers for each CPU core
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
@@ -22,8 +20,8 @@ if (cluster.isPrimary && process.env.ENVIRONMENT_NAME !== 'Dev' ) {
   });
 } else {
   // Code to run in each worker process
-  const port = process.env.PORT || 5001;
-
+  const port = process.env.PORT || 5000;
+  
   app.listen(port, () => {
     console.log(`Worker ${cluster.worker?.id} is listening on port ${port}`);
   });

@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 
 import * as middlewares from './middlewares';
-import api from './api';
+import api from './controllers';
 import MessageResponse from './interfaces/MessageResponse';
 
 require('dotenv').config();
