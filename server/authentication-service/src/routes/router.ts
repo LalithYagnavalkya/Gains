@@ -3,6 +3,6 @@ import authRoutes from './auth'
 const router = Router();
 
 // Google auth routes 
-router.use("/google", authRoutes);
+router.use("/", authRoutes);
 
 export default router;

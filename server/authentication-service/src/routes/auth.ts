@@ -1,20 +1,35 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import passport from "passport";
 const router = Router();
 
-router.get("/", passport.authenticate("google", ["profile", "email"] as any));
+router.get(
+  "/auth/google",
+  (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate("google", { scope: ["profile", "email"] })(
+      req,
+      res,
+      next
+    );
+  }
+);
+
+// router.get(
+//   "/google/callback",
+//   (req: Request, res: Response, next: NextFunction) => {
+//     console.log("this is inside callback");
+//     passport.authenticate("google", {
+//       successRedirect: process.env.GOOGLE_CALLBACK_URL,
+//       failureRedirect: "/login/failed",
+//     })(req, res, next);
+//   }
+// );
 
 router.get(
-  "/callback",
+  "/google/callback",
   passport.authenticate("google", {
-    failureMessage: "Cannot login to Google, please try again later!",
-    failureRedirect: "http://localhost:3000/login/error",
-    successRedirect: "http://localhost:3000/login/success",
+    successRedirect: process.env.GOOGLE_CALLBACK_URL,
+    failureRedirect: "/login/failed",
   })
-  //   ,
-  //   (req, res) => {
-  //     res.send("Thank you for signing in!");
-  //   }
 );
 
 router.get("/logout", (req: Request, res: Response) => {
