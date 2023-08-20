@@ -2,6 +2,7 @@ import express from 'express';
 
 import MessageResponse from '../interfaces/MessageResponse';
 import emojis from './emojis';
+import User from '../models/userModel';
 
 const router = express.Router();
 
