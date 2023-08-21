@@ -13,17 +13,6 @@ router.get(
   }
 );
 
-// router.get(
-//   "/google/callback",
-//   (req: Request, res: Response, next: NextFunction) => {
-//     console.log("this is inside callback");
-//     passport.authenticate("google", {
-//       successRedirect: process.env.GOOGLE_CALLBACK_URL,
-//       failureRedirect: "/login/failed",
-//     })(req, res, next);
-//   }
-// );
-
 router.get(
   "/google/callback",
   passport.authenticate("google", {

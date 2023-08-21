@@ -7,16 +7,19 @@ dotenv.config({ path: "./src/config/config.env" });
 
 
 console.log("this inside passportgoogle");
+const strategyOptions: any = {
+  clientID: process.env.GOOGLE_CLIENT_ID!,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+  callbackURL: process.env.GOOGLE_CALLBACK_URL,
+  scope: 'https:/www.googleapis.com/aut/drive',
+  accessType: 'offline', // Use type assertion for 'accessType'
+  passReqToCallback: true,
+};
 
 const passportSetup = () => {
   passport.use(
     new GoogleStrategy(
-      {
-        clientID: process.env.GOOGLE_CLIENT_ID!,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-        callbackURL: process.env.GOOGLE_CALLBACK_URL,
-        passReqToCallback: true,
-      },
+      strategyOptions,
       async (
         req: Request,
         accessToken: string,
@@ -24,6 +27,7 @@ const passportSetup = () => {
         profile: any,
         cb: any
       ) => {
+        console.log(accessToken + "----------------" + refreshToken)
         console.log(profile);
         const image = profile._json.picture.replace("s96", "s400");
         const defaultUser = {
@@ -35,17 +39,17 @@ const passportSetup = () => {
         };
 
         try {
-          let user = await User.findOne({ googleId: profile.id });
+          // let user = await User.findOne({ googleId: profile.id });
 
-          if (!user) {
-            const newUser = new User(defaultUser);
-            await newUser.save();
-            user = newUser;
-          }
+          // if (!user) {
+          //   const newUser = new User(defaultUser);
+          //   await newUser.save();
+          //   user = newUser;
+          // }
 
-          if (user) {
-            return cb(null, user);
-          }
+          // if (user) {
+          //   return cb(null, user);
+          // }
         } catch (err) {
           console.log("Error signing up", err);
           cb(err, null);
@@ -63,11 +67,11 @@ const passportSetup = () => {
   passport.deserializeUser(async (id: string, cb) => {
     console.log("deserializing");
     try {
-      const user = await User.findById(id);
+      // const user = await User.findById(id);
 
-      if (user) {
-        cb(null, user);
-      }
+      // if (user) {
+      //   cb(null, user);
+      // }
     } catch (err) {
       console.log("Error deserializing", err);
       cb(err, null);
