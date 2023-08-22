@@ -5,11 +5,11 @@ const router = Router();
 router.get(
   "/auth/google",
   (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate("google", { scope: ["profile", "email"] })(
-      req,
-      res,
-      next
-    );
+    passport.authenticate("google", {
+      accessType: "offline",
+      prompt: "consent",
+      scope: ["profile", "email"],
+    })(req, res, next);
   }
 );
 
