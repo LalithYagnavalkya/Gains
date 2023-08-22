@@ -27,8 +27,6 @@ const passportSetup = () => {
         profile: any,
         cb: any
       ) => {
-        console.log(accessToken + "----------------" + refreshToken)
-        console.log(profile);
         const image = profile._json.picture.replace("s96", "s400");
         const defaultUser = {
           fullName: `${profile.name?.givenName} ${profile.name?.familyName}`,
