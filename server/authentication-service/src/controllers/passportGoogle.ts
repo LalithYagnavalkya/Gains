@@ -6,7 +6,6 @@ import User from "../models/userModel";
 dotenv.config({ path: "./src/config/config.env" });
 
 
-console.log("this inside passportgoogle");
 const strategyOptions: any = {
   clientID: process.env.GOOGLE_CLIENT_ID!,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -27,29 +26,37 @@ const passportSetup = () => {
         profile: any,
         cb: any
       ) => {
-        console.log(accessToken + "----------------" + refreshToken)
-        console.log(profile);
-        const image = profile._json.picture.replace("s96", "s400");
-        const defaultUser = {
-          fullName: `${profile.name?.givenName} ${profile.name?.familyName}`,
-          email: profile.emails?.[0].value,
-          givenName: profile.name?.givenName,
-          avatar: image,
-          googleId: profile.id,
-        };
+        console.log(refreshToken, accessToken, profile)
 
         try {
-          // let user = await User.findOne({ googleId: profile.id });
+          let user = await User.findOne({ email: profile._json.email });
+          if(user){
+            //update refresh token and profile pic link
+            if(refreshToken){
+              user.refreshToken = refreshToken
+            }
+            //update profile pic 
+            const profilePic = profile._json.picture.replace("s96", "s400");
+            user.profilePic = profilePic;
+            await user.save();
+          }else{
+            //create a new user
+            if (profile && profile._json){
+              const profilePic = profile._json.picture.replace("s96", "s400");
+              let userObj = {
+                username: profile._json.name,
+                email: profile._json.email,
+                refreshToken: refreshToken,
+                profilePic: profilePic
+              }
+              await User.create(userObj);
+            }
+            
+          }
 
-          // if (!user) {
-          //   const newUser = new User(defaultUser);
-          //   await newUser.save();
-          //   user = newUser;
-          // }
-
-          // if (user) {
-          //   return cb(null, user);
-          // }
+          if (user) {
+            return cb(null, {testing: true});
+          }
         } catch (err) {
           console.log("Error signing up", err);
           cb(err, null);

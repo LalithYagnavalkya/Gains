@@ -5,6 +5,9 @@ interface IUser extends Document {
   email: string;
   isActive: boolean;
   refreshToken: string;
+  profilePic: string;
+  mobile: string;
+  googleId: string,
   createdAt: Date;
   updatedAt: Date;
 }
@@ -14,7 +17,10 @@ const userSchema = new mongoose.Schema(
     username: { type: String, required: true },
     email: { type: String, required: true },
     refreshToken: { type: String },
-    isActive: { type: Boolean, default: false },
+    profilePic: { type: String },
+    isActive: { type: Boolean, default: true },
+    mobile: { type: String },
+    googleId: {type : String}
   },
   { timestamps: true }
 );
