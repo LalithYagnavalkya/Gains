@@ -3,7 +3,7 @@ import passport from "passport";
 const router = Router();
 
 router.get(
-  "/auth/google",
+  "/google",
   (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate("google", {
       accessType: "offline",
