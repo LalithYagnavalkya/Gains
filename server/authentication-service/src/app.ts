@@ -6,8 +6,9 @@ import cookieSession from "cookie-session";
 import passportSetup from "./controllers/passportGoogle";
 import passport from "passport";
 import router from "./routes/router";
+import env from "dotenv";
 
-require("dotenv").config();
+env.config();
 
 const app = express();
 passportSetup();
@@ -25,11 +26,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(
-  cookieSession({
-    name: "session",
-    keys: ["cyberwolve"],
-    maxAge: 24 * 60 * 60 * 100,
-  })
+	cookieSession({
+		name: "session",
+		keys: ["cyberwolve"],
+		maxAge: 24 * 60 * 60 * 100,
+	}),
 );
 app.use(passport.initialize());
 app.use(passport.session());
