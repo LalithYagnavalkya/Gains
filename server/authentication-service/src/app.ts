@@ -3,7 +3,6 @@ import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
 import cookieSession from "cookie-session";
-import passportSetup from "./controllers/passportGoogle";
 import passport from "passport";
 import router from "./routes/router";
 import env from "dotenv";
@@ -11,7 +10,6 @@ import env from "dotenv";
 env.config();
 
 const app = express();
-passportSetup();
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(cors());
@@ -32,8 +30,6 @@ app.use(
 		maxAge: 24 * 60 * 60 * 100,
 	}),
 );
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(router);
 

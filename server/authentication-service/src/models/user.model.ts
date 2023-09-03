@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
 		isActive: { type: Boolean, default: true },
 		mobile: { type: String },
 		googleId: { type: String },
-		password: { type: String },
+		password: { type: String, select: false },
 		role: {
 			type: String,
 			enum: ['ADMIN', 'SUPER_ADMIN', 'USER'],
