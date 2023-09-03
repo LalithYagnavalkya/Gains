@@ -16,13 +16,13 @@ app.use(morgan("dev"));
 app.use(helmet());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
-// app.use(
-//   cors({
-//     origin: "https://localhost:3000",
-//     methods: "GET,POST,PUT,DELTE",
-// Credential: true;
-//   })
-// );
+app.use(
+	cors({
+		origin: "https://localhost:3000",
+		methods: "GET,POST,PUT,DELTE",
+		credentials: true
+	})
+);
 app.use(express.json());
 
 app.use(

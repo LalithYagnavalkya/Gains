@@ -7,7 +7,7 @@ import {
 import { Request } from "express";
 import passport from "passport";
 import dotenv from "dotenv";
-import User, { IUser } from "../models/userModel";
+import User, { IUser } from "../models/user.model";
 import logger from "../utils/logger";
 dotenv.config({ path: "./src/config/config.env" });
 
@@ -67,25 +67,6 @@ const passportSetup = () => {
 			},
 		),
 	);
-
-	// passport.serializeUser((user:Record<string,string>, cb) => {
-	// 	cb(null, user.id);
-	// 	logger.info("userid: " + user.id);
-	// 	logger.info("serializing");
-	// });
-
-	// passport.deserializeUser(async (id: string, cb) => {
-	// 	logger.info("deserializing");
-	// 	try {
-	// 		// const user = await User.findById(id);
-	// 		// if (user) {
-	// 		//   cb(null, user);
-	// 		// }
-	// 	} catch (err) {
-	// 		logger.info("Error deserializing", err);
-	// 		cb(err, null);
-	// 	}
-	// });
 };
 
 export default passportSetup;
