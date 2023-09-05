@@ -1,6 +1,6 @@
 import mongoose, { Document, Model } from "mongoose";
 
-export interface IUser {
+export interface IUser extends Document {
 	username: string;
 	email: string;
 	isActive?: boolean;
@@ -10,8 +10,9 @@ export interface IUser {
 	googleId?: string;
 	createdAt?: Date;
 	updatedAt?: Date;
+	password: string;
+	role: string[];
 }
-interface IUserModel extends IUser, Document {}
 
 const userSchema = new mongoose.Schema(
 	{
@@ -22,10 +23,16 @@ const userSchema = new mongoose.Schema(
 		isActive: { type: Boolean, default: true },
 		mobile: { type: String },
 		googleId: { type: String },
+		password: { type: String, select: false },
+		role: {
+			type: String,
+			enum: ['ADMIN', 'SUPER_ADMIN', 'USER'],
+			default: 'USER'
+		}
 	},
 	{ timestamps: true },
 );
 
-const User: Model<IUserModel> = mongoose.model<IUserModel>("user", userSchema);
+const User: Model<IUser> = mongoose.model<IUser>("user", userSchema);
 
 export default User;
