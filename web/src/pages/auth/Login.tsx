@@ -1,57 +1,46 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Link } from 'react-router-dom'
 import React from 'react'
+import { UserAuthForm } from './userLoginForm'
 
 const Login: React.FC = () => {
     return (
-        <div className='md:mx-auto w-full h-screen flex justify-center items-center '>
-            <Card>
-                <CardHeader className="space-y-1">
-                    {/* scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl */}
-                    <CardTitle className="text-4xl scroll-m-20 font-extrabold tracking-tight lg:text-5xl">Create an account</CardTitle>
-                    <CardDescription>
-                        Enter your email below to create your account
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="grid gap-4">
-                    <div className="grid grid-cols-2 gap-6">
-                        <Button variant="outline">
-                            {/* <Icons.gitHub className="mr-2 h-4 w-4" /> */}
-                            Github
-                        </Button>
-                        <Button variant="outline">
-                            {/* <Icons.google className="mr-2 h-4 w-4" /> */}
-                            Google
-                        </Button>
-                    </div>
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t" />
+        <div className='overflow-hidden h-screen'>
+            <div className="overflow-hidden h-full relative flex-col items-center justify-center">
+                <div className="lg:p-8 flex h-full">
+                    <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+                        <div className="flex flex-col space-y-2 text-center">
+                            <h1 className="text-2xl font-semibold tracking-tight lg:text-4xl">
+                                GAINS
+                            </h1>
+                            <p className="text-sm text-muted-foreground">
+                                Enter your email and password below
+                            </p>
                         </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background px-2 text-muted-foreground">
-                                Or continue with
-                            </span>
-                        </div>
+                        <UserAuthForm />
+                        <p className="px-8 text-center text-sm text-muted-foreground">
+                            By clicking continue, you agree to our{" "}
+                            <Link
+                                to="/terms"
+                                className="underline underline-offset-4 hover:text-primary"
+                            >
+                                Terms of Service
+                            </Link>{" "}
+                            and{" "}
+                            <Link
+                                to="/privacy"
+                                className="underline underline-offset-4 hover:text-primary"
+                            >
+                                Privacy Policy
+                            </Link>
+                            .
+                        </p>
                     </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input id="email" type="email" placeholder="m@example.com" />
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input id="password" type="password" />
-                    </div>
-                </CardContent>
-                <CardFooter>
-                    <Button className="w-full">Create account</Button>
-                </CardFooter>
-            </Card>
+                </div>
+            </div>
         </div>
+
     )
 }
 
 export default Login
+
