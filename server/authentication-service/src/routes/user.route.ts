@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 import passport from "passport";
 import bcrypt from 'bcrypt'
-import { login } from "../controllers/auth.controller";
+import { login } from "../controllers/user.controller";
 
 //schemas
 import { loginInput } from '../schemas/auth.schema'
