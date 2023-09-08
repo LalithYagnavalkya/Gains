@@ -28,7 +28,8 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			enum: ['ADMIN', 'SUPER_ADMIN', 'USER'],
 			default: 'USER'
-		}
+		},
+		
 	},
 	{ timestamps: true },
 );

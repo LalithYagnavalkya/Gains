@@ -11,20 +11,20 @@ dotenv.config({ path: "./src/config/config.env" });
 
 export const registerAdmin = async (req: Request<{}, {}, createAdminInput['body']>, res: Response) => {
     try {
-        let userExists = await User.findOne({ email: req.body.email })
-        if (userExists) {
-            return res.status(400).json({ error: true, message: "Email id already taken" })
+
+        const {
+            password
+        } = req.body;
+
+        const hashedPassword = await bcrypt.hash(password, Number(process.env.BCRYPT_SALT_ROUNDS as String));
+        await User.create({ ...req.body, password: hashedPassword, role: 'ADMIN' });
+
+        return res.send("User successfully created");
+    } catch (e: any) {
+        if (e.code === 11000) {
+            return res.status(409).send("Account already exists");
         }
-        console.log(process.env.BCRYPT_SALT_ROUNDS)
-        const hashedPassword = await bcrypt.hash(req.body.password, Number(process.env.BCRYPT_SALT_ROUNDS as String))
-        req.body.password = hashedPassword;
-        const user = await User.create({...req.body, role: 'ADMIN'})
-        if (user) {
-            return res.status(201).json({ error: false, message: 'User has been created Successfully', user })
-        } else {
-            return res.status(500).json({ error: true, message: "Ops!, Something went wrong" })
-        }
-    } catch (error: any) {
-        return res.status(500).json({ error: true, message: error.message })
+
+        return res.status(500).send(e);
     }
 }
