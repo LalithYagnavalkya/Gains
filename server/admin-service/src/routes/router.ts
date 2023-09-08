@@ -23,4 +23,8 @@ const router = Router();
 // api which shows paid customers in past days
 // api which shows new joinees this month
 
+//make body measurements collection
+// make paymentdue collection
+// make meambership collection (not sure about this)
+
 export default router;
