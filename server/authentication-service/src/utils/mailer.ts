@@ -19,9 +19,9 @@ const transporter = nodemailer.createTransport({
 });
 
 async function sendEmail(payload: SendMailOptions) {
-    transporter.sendMail(payload, (err, info) => {
+    transporter.sendMail(payload, (err: any, info: any) => {
         if (err) {
-           //log error in future
+            //log error in future
             return;
         }
 
