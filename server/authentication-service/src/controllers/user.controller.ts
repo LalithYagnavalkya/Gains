@@ -9,6 +9,7 @@ dotenv.config({ path: "./src/config/config.env" });
 
 //schemas
 import { forgotPasswordInput, loginInput } from "../schemas/auth.schema";
+import sendEmail from "../utils/mailer";
 
 
 export const login = async (req: Request<{}, {}, loginInput['body']>, res: Response) => {
@@ -51,16 +52,25 @@ export const forgotPassword = async (req: Request<{}, {}, forgotPasswordInput['b
     } = req.body;
 
     let user = await User.findOne({ user_email: email });
-
-    const randomNumber = Math.floor(100000 + Math.random() * 900000);
-
-    // user.otp = randomNumber;
-
-    if (!user) {
+    
+    if (!user || user.isActive === false) {
         return res.send(message);
     }
+  
+    const token = generateToken(user._id);
 
-    if (!user || user.isActive === false) {
-        return res.status(400).json(message)
-    }
+    // const mailer = {
+    //     from: 'nodeAdmin@techvedhas.com',
+    //     to: user.email,
+    //     subject: 'Your request for reset password',
+    //     text: `To reset your password, click on the following link: http://localhost:3000/reset-password?token=${token}`,
+    // }
+    await sendEmail({
+        to: user.email,
+        from: "test@example.com",
+        subject: "Reset your password",
+        text: `To reset your password, click on the following link: http://localhost:3000/reset-password?token=${token}`,
+    });
+    
+    return res.send(message);    
 }

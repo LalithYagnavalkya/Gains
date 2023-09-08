@@ -28,8 +28,8 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			enum: ['ADMIN', 'SUPER_ADMIN', 'USER'],
 			default: 'USER'
-		}
-		// passwordResetCode = {type: Number, select: false}
+		},
+		
 	},
 	{ timestamps: true },
 );
