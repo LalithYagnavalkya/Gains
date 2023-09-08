@@ -15,5 +15,6 @@ app.use(cors());
 app.use(express.json());
 
 app.use(base_url + "/auth", proxy(`http://localhost:${process.env.AUTH_PORT}`));
+app.use(base_url + "/admin", proxy(`http://localhost:${process.env.ADMIN_PORT}`));
 
 export default app;
