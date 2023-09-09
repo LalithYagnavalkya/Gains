@@ -32,4 +32,13 @@ const router = Router();
 // make paymentdue collection
 // make meambership collection (not sure about this)
 
+// measurements calculation 
+// Feet = 5
+// Inches = 9
+
+// Decimal Feet = 5 + (9 / 12)
+
+// Decimal Feet = 5 + 0.75
+
+// Decimal Feet = 5.75
 export default router;
