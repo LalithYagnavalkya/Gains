@@ -12,6 +12,11 @@ export interface IUser extends Document {
 	updatedAt?: Date;
 	password: string;
 	role: string[];
+	joinedOn: Date;
+	validUpto: Date;
+	lastPayoffDate: Date;
+	isPrimeUser: boolean,
+	paymentStatus: string;
 }
 
 const userSchema = new mongoose.Schema(
@@ -29,7 +34,12 @@ const userSchema = new mongoose.Schema(
 			enum: ['ADMIN', 'SUPER_ADMIN', 'USER'],
 			default: 'USER'
 		},
-		
+		joinedOn: { type: Date },
+		validUpto: { type: Date },
+		lastPayOffDate: { type: Date },
+		isPrimeUser: { type: Date }, // isPrimeUser: true if validUpto date is more than a year.
+		paymentStatus: { type: String, enum: ['PENDING', 'PAID'] }
+
 	},
 	{ timestamps: true },
 );

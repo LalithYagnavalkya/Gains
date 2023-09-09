@@ -7,7 +7,7 @@ const router = Router();
 // this api should take list of users and store them in db
 
 // under /customer route
-// API under  update user details 9 such as edit name)
+// API under  update user details  such as edit name)
 // API update usesr measurements 
 // add user email or phone number
 // update payment
@@ -22,6 +22,11 @@ const router = Router();
 // api which show due customers in comming days
 // api which shows paid customers in past days
 // api which shows new joinees this month
+
+// things to do 
+// total payments made by a customer in total 
+// this usaully needs a transactions collection which creates objects during payments.
+// we can use this collection to show how much a user has totaly paid to this gym in total.
 
 //make body measurements collection
 // make paymentdue collection

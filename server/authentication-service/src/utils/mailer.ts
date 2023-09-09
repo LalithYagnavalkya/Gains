@@ -22,9 +22,9 @@ async function sendEmail(payload: SendMailOptions) {
     transporter.sendMail(payload, (err: any, info: any) => {
         if (err) {
             //log error in future
-            return;
+            return false;
         }
-
+        return true;
         // log.info(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
     });
 }
