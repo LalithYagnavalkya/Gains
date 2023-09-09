@@ -1,7 +1,9 @@
 import { Router } from "express";
-// import authRoutes from "./user.route";
-// import superAdminRoutes from './superAdmin.route'
+import customerRoute from './customer.route'
 const router = Router();
+
+
+router.use('/customer', customerRoute )
 
 // API bulk upload api 
 // this api should take list of users and store them in db

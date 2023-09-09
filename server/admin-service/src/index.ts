@@ -3,7 +3,7 @@ import os from "os"; // Node's built-in os module
 import app from "./app";
 import { config } from "dotenv";
 import connectToDb from "./utils/connectToDb";
-// import logger from "./utils/logger";
+import logger from "./utils/logger";
 
 config({
 	path: "./src/config/config.env",
@@ -19,16 +19,16 @@ if (cluster.isPrimary && process.env.ENVIRONMENT_NAME !== "Dev") {
 	}
 
 	cluster.on("exit", (worker) => {
-		// logger.info(`Worker ${worker.process.pid} died`);
+		logger.info(`Worker ${worker.process.pid} died`);
 		// Replace the dead worker
 		cluster.fork();
 	});
 } else {
 	// Code to run in each worker process
-	const port = process.env.PORT || 5001;
+	const port = process.env.PORT || 4002;
 
 	app.listen(port, async () => {
-		// logger.info(`Worker ${cluster.worker?.id ? cluster.worker?.id: ""}is listening on port ${port} authentication-service`);
+		logger.info(`Worker ${cluster.worker?.id ? cluster.worker?.id: ""}is listening on port ${port} authentication-service`);
 		await connectToDb();
 	});
 }

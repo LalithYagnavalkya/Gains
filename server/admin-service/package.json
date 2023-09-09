@@ -18,6 +18,8 @@
     "helmet": "^7.0.0",
     "mongoose": "^7.5.0",
     "morgan": "^1.10.0",
+    "pino": "^8.15.1",
+    "pino-pretty": "^10.2.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   },
