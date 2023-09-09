@@ -11,11 +11,12 @@ export interface IUser extends Document {
 	createdAt?: Date;
 	updatedAt?: Date;
 	password: string;
-	role: string[];
+	role: string;
 	joinedOn: Date;
 	validUpto: Date;
 	lastPayoffDate: Date;
 	paymentStatus: string;
+	gender: string;
 }
 
 const userSchema = new mongoose.Schema(
@@ -33,10 +34,11 @@ const userSchema = new mongoose.Schema(
 			enum: ['ADMIN', 'SUPER_ADMIN', 'USER'],
 			default: 'USER'
 		},
-		joinedOn: { type: Date },
-		validUpto: { type: Date },
+		joinedOn: { type: Date }, 
+		validUpto: { type: Date }, 
 		lastPayOffDate: { type: Date },
-		paymentStatus: { type: String, enum: ['PENDING', 'PAID'], default: 'PENDING' }
+		paymentStatus: { type: String, enum: ['PENDING', 'PAID', 'UPCOMMING_PAYMENT_DUE'], default: 'PENDING' },
+		gender: {type: String, enum: ['MALE', 'FEMALE'], required: true}
 
 	},
 	{ timestamps: true },
@@ -45,3 +47,4 @@ const userSchema = new mongoose.Schema(
 const User: Model<IUser> = mongoose.model<IUser>("user", userSchema);
 
 export default User;
+

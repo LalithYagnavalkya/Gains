@@ -11,11 +11,10 @@ const router = Router();
 // API update usesr measurements 
 // add user email or phone number
 // update payment
-// deconsinged user
-
-// under /customerSearch route
+// deconsinged user // user left the gym.
+// under /customerSearch route 
 // search with email or phone or some unique id given by admin
-// use measurements to filter customers
+// use measurements to filter customers //filter by fatest tallest shortest
 
 
 // under /dashboard
@@ -24,11 +23,11 @@ const router = Router();
 // api which shows new joinees this month
 
 // things to do 
-// total payments made by a customer in total 
+// total payments made by a customer in total //transaction collection.
 // this usaully needs a transactions collection which creates objects during payments.
 // we can use this collection to show how much a user has totaly paid to this gym in total.
 
-//make body measurements collection
+// make body measurements collection
 // make paymentdue collection
 // make meambership collection (not sure about this)
 
@@ -36,9 +35,6 @@ const router = Router();
 // Feet = 5
 // Inches = 9
 
-// Decimal Feet = 5 + (9 / 12)
-
-// Decimal Feet = 5 + 0.75
-
-// Decimal Feet = 5.75
 export default router;
+
+

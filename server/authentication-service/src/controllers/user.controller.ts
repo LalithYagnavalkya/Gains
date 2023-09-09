@@ -17,6 +17,7 @@ export const login = async (req: Request<{}, {}, loginInput['body']>, res: Respo
 
         const {
             email,
+            password
         } = req.body;
 
         let user = await User.findOne({ email: email }).select('username email password profilePic role');
@@ -25,7 +26,7 @@ export const login = async (req: Request<{}, {}, loginInput['body']>, res: Respo
             return res.status(400).json({ error: true, message: "Email not found" })
         }
 
-        const isUser = await bcrypt.compare(req.body.password, user.password)
+        const isUser = await bcrypt.compare(password, user.password)
 
         if (!isUser) {
             return res.status(400).json({ error: true, message: "Wrong password" })
@@ -40,7 +41,7 @@ export const login = async (req: Request<{}, {}, loginInput['body']>, res: Respo
             email: user.email,
             profilePic: user.profilePic,
             role: user.role,
-        };
+        };  
 
         return res.status(200).json({ error: false, message: "Login successful", user: userObj, token })
     } catch (error: any) {
@@ -57,7 +58,7 @@ export const forgotPassword = async (req: Request<{}, {}, forgotPasswordInput['b
         email,
     } = req.body;
 
-    let user = await User.findOne({ user_email: email });
+    let user = await User.findOne({email}).select('email').lean();
 
     if (!user || user.isActive === false) {
         return res.send(message);
@@ -67,7 +68,7 @@ export const forgotPassword = async (req: Request<{}, {}, forgotPasswordInput['b
 
     await sendEmail({
         to: user.email,
-        from: "test@example.com",
+        from: "nodeAdmin@techvedhas.com",
         subject: "Reset your password",
         text: `To reset your password, click on the following link: http://localhost:3000/reset-password?token=${token}`,
     });
@@ -83,8 +84,8 @@ export const resetPassword = async (req: Request<resetPassowrdInput['params'], {
 
     try {
 
-        const id = verifyToken(token)
-        const user = await User.findById(id);
+        const decoded = verifyToken(token)
+        const user = await User.findById(decoded?.userId).select('password');
 
         if (!user) {
             return res.status(400).send(message);
