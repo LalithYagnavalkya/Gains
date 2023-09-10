@@ -2,42 +2,32 @@ import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
-import proxy from "express-http-proxy";
-import { createProxyMiddleware } from 'http-proxy-middleware';
+import proxy, { ProxyOptions } from "express-http-proxy";
 // import * as middlewares from './middlewares';
 const defaultRoute: string = '/api/v1';
 require('dotenv').config({ path: "./src/config/config.env" });
 
 const app = express();
 const base_url: string = '/api/v1'
-
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-const authServiceProxy = createProxyMiddleware('/auth', {
-    target: `http://localhost:${process.env.AUTH_PORT}`,
-    changeOrigin: true,
-});
+// Define custom ProxyOptions with proxyOnProxyReq property
+const customProxyOptions: ProxyOptions & { proxyOnProxyReq?: (proxyReq: any, req: any, res: any) => any } = {
+    proxyOnProxyReq: (proxyReq, req, res): any => {
+        if (req.headers['content-type'] === 'multipart/form-data') {
+            // Handle multipart/form-data requests here if needed
+        }
 
-const adminServiceProxy = createProxyMiddleware('/admin', {
-    target: `http://localhost:4002`,
-    changeOrigin: true,
-});
+        return proxyReq;
+    },
+};
+// Auth route
+app.use(base_url + "/auth", proxy(`http://localhost:${process.env.AUTH_PORT}`));
 
-// Use the proxy middleware for the corresponding paths
-app.use('/auth', authServiceProxy);
-app.use('/admin', (req, res, next) => {
-    adminServiceProxy(req, res, next); console.log(
-        'here'
-    )
-});
-app.use('/', (req, res) => {
-    res.send('fuck')
-});
-// app.use(base_url + "/auth", proxy(`http://localhost:${process.env.AUTH_PORT}`));
-// app.use(base_url + "/admin", proxy(`http://localhost:${process.env.ADMIN_PORT}`));
+// Admin route
+app.use(base_url + "/admin", proxy(`http://localhost:${process.env.ADMIN_PORT}`, customProxyOptions));
 
 export default app;
