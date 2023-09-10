@@ -13,11 +13,15 @@ export const registerAdmin = async (req: Request<{}, {}, createAdminInput['body'
     try {
 
         const {
-            password
+            password,
+            phone,
         } = req.body;
 
         const hashedPassword = await bcrypt.hash(password, Number(process.env.BCRYPT_SALT_ROUNDS as String));
-        await User.create({ ...req.body, password: hashedPassword, role: 'ADMIN' });
+        
+        await User.create({ ...req.body, password: hashedPassword, phone: phone, role: 'ADMIN' });
+
+        // after creating user  we have to create his partner collection info
 
         return res.send("User successfully created");
     } catch (e: any) {

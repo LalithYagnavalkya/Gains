@@ -6,17 +6,17 @@ export interface IUser extends Document {
 	isActive?: boolean;
 	refreshToken?: string;
 	profilePic?: string;
-	mobile?: string;
+	phone?: string;
 	googleId?: string;
 	createdAt?: Date;
 	updatedAt?: Date;
-	password: string;
-	role: string[];
-	joinedOn: Date;
-	validUpto: Date;
-	lastPayoffDate: Date;
-	isPrimeUser: boolean,
+	password?: string;
+	role: string;
+	joinedOn?: Date;
+	validUpto?: Date;
+	lastPayoffDate?: Date;
 	paymentStatus: string;
+	gender?: string;
 }
 
 const userSchema = new mongoose.Schema(
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema(
 		refreshToken: { type: String },
 		profilePic: { type: String },
 		isActive: { type: Boolean, default: true },
-		mobile: { type: String },
+		phone: { type: String, unique: true },
 		googleId: { type: String },
 		password: { type: String, select: false },
 		role: {
@@ -37,8 +37,10 @@ const userSchema = new mongoose.Schema(
 		joinedOn: { type: Date },
 		validUpto: { type: Date },
 		lastPayOffDate: { type: Date },
-		isPrimeUser: { type: Date }, // isPrimeUser: true if validUpto date is more than a year.
-		paymentStatus: { type: String, enum: ['PENDING', 'PAID'] }
+		paymentStatus: { type: String, enum: ['PENDING', 'PAID', 'UPCOMMING_PAYMENT_DUE'], default: 'PENDING' },
+		gender: { type: String, enum: ['MALE', 'FEMALE'] },
+		isPhoneVerified: { type: Boolean, default: false, required: false },
+		isEmailVerified: { type: Boolean, default: false, required: false }
 
 	},
 	{ timestamps: true },
@@ -47,3 +49,4 @@ const userSchema = new mongoose.Schema(
 const User: Model<IUser> = mongoose.model<IUser>("user", userSchema);
 
 export default User;
+

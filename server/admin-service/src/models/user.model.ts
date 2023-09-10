@@ -6,7 +6,7 @@ export interface IUser extends Document {
 	isActive?: boolean;
 	refreshToken?: string;
 	profilePic?: string;
-	mobile?: string;
+	phone?: string;
 	googleId?: string;
 	createdAt?: Date;
 	updatedAt?: Date;
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema(
 		refreshToken: { type: String },
 		profilePic: { type: String },
 		isActive: { type: Boolean, default: true },
-		mobile: { type: String },
+		phone: { type: String, unique: true },
 		googleId: { type: String },
 		password: { type: String, select: false },
 		role: {
@@ -38,7 +38,10 @@ const userSchema = new mongoose.Schema(
 		validUpto: { type: Date },
 		lastPayOffDate: { type: Date },
 		paymentStatus: { type: String, enum: ['PENDING', 'PAID', 'UPCOMMING_PAYMENT_DUE'], default: 'PENDING' },
-		gender: { type: String, enum: ['MALE', 'FEMALE'] }
+		gender: { type: String, enum: ['MALE', 'FEMALE'] },
+		isPhoneVerified: { type: Boolean, default: false, required: false },
+		isEmailVerified: { type: Boolean, default: false, required: false },
+		partnerId: { type: Number, required: true }
 
 	},
 	{ timestamps: true },

@@ -1,4 +1,4 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import fs from 'fs'
 import csv from 'csv-parser'
 import log from "../utils/logger";
@@ -6,6 +6,7 @@ import log from "../utils/logger";
 // models
 import User, { IUser } from "../models/user.model";
 import { UserBulkUpload as UserBulkUploadSchema } from "../types/types";
+import { parseDate } from "./shared.controller";
 
 // schemas
 
@@ -19,22 +20,28 @@ const insertIntoDB = async (users: any, req: any, res: any) => {
             }
             return newObj;
         });
-       
+
         const listOfUsers: UserBulkUploadSchema[] = []
 
         convertedData.map((user: any) => {
             const userObj: UserBulkUploadSchema = {
                 username: user.name,
                 mobile: user.phone,
-                joinedOn: user.joinedon ? user.joinedon: new Date(),
+                // joinedOn: user.joinedon ?  : new Date(),
                 role: 'USER'
             }
+            if (!user.joinedon) {
+                userObj.joinedOn = new Date();
+            } else {
+                userObj.joinedOn = parseDate(user.joinedon, 'dd-mm-yy')
+            }
+
             listOfUsers.push(userObj)
         })
 
         await User.insertMany(listOfUsers);
-      
-        return res.status(200).json({ error: false, message: 'successfully inserted data'})
+
+        return res.status(200).json({ error: false, message: 'successfully inserted data' })
     } catch (error) {
         return res.status(500).json({ error: true, message: "Something went wrong in findEMailsInDb" })
     }
@@ -55,7 +62,6 @@ export const uploadCustomers = async (req: Request, res: Response) => {
 
                 })
 
-            return res.send('done')
         } else {
             return res.status(500).json({ error: true, message: "Something went wrong in findEMailsInDb" })
         }
