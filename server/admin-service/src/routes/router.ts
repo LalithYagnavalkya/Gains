@@ -37,6 +37,8 @@ router.use('/customer', customerRoute )
 // Feet = 5
 // Inches = 9
 
+
+// dash board can contanis payments made table which can filter payments today and yestruday or last one week and others.
 export default router;
 
 
