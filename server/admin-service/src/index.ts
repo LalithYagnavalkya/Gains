@@ -28,7 +28,7 @@ if (cluster.isPrimary && process.env.ENVIRONMENT_NAME !== "Dev") {
 	const port = process.env.PORT || 4002;
 
 	app.listen(port, async () => {
-		logger.info(`Worker ${cluster.worker?.id ? cluster.worker?.id: ""}is listening on port ${port} authentication-service`);
+		logger.info(`Worker ${cluster.worker?.id ? cluster.worker?.id: ""}is listening on port ${port} admin-service`);
 		await connectToDb();
 	});
 }

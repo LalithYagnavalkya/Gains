@@ -38,7 +38,7 @@ router.use('/customer', customerRoute )
 // Inches = 9
 
 
-// dash board can contanis payments made table which can filter payments today and yestruday or last one week and others.
+// dashboard  contanis payments made table which can filter payments today and yestruday or last one week and others.
 export default router;
 
 

@@ -17,6 +17,9 @@ export const createAdminSchema = object({
         phone: string({
             required_error: "username is required",
         }).length(10, "Not a valid phone number"),
+        partnerName: string({
+            required_error: "please provide organization's name"
+        })
     }).refine((data) => data.password === data.passwordConfirmation, {
         message: "passwords do not match",
         path: ["passwordConfirmation"],

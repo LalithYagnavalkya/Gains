@@ -25,11 +25,13 @@ export const login = async (req: Request<{}, {}, loginInput['body']>, res: Respo
         if (!user || user.isActive === false) {
             return res.status(400).json({ error: true, message: "Email not found" })
         }
+        if (user.password) {
+            const isUser = await bcrypt.compare(password, user.password);
 
-        const isUser = await bcrypt.compare(password, user.password)
+            if (!isUser) {
+                return res.status(400).json({ error: true, message: "Wrong password" });
+            }
 
-        if (!isUser) {
-            return res.status(400).json({ error: true, message: "Wrong password" })
         }
 
         //generate token
@@ -41,9 +43,10 @@ export const login = async (req: Request<{}, {}, loginInput['body']>, res: Respo
             email: user.email,
             profilePic: user.profilePic,
             role: user.role,
-        };  
+        };
 
         return res.status(200).json({ error: false, message: "Login successful", user: userObj, token })
+
     } catch (error: any) {
         return res.status(500).json({ error: true, message: error.message })
     }
@@ -58,7 +61,7 @@ export const forgotPassword = async (req: Request<{}, {}, forgotPasswordInput['b
         email,
     } = req.body;
 
-    let user = await User.findOne({email}).select('email').lean();
+    let user = await User.findOne({ email }).select('email').lean();
 
     if (!user || user.isActive === false) {
         return res.send(message);
