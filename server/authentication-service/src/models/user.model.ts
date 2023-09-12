@@ -17,6 +17,8 @@ export interface IUser extends Document {
 	lastPayoffDate?: Date;
 	paymentStatus: string;
 	gender?: string;
+	customerSerialNumber?: string,
+	partnerId: number;
 }
 
 const userSchema = new mongoose.Schema(
@@ -40,11 +42,20 @@ const userSchema = new mongoose.Schema(
 		paymentStatus: { type: String, enum: ['PENDING', 'PAID', 'UPCOMMING_PAYMENT_DUE'], default: 'PENDING' },
 		gender: { type: String, enum: ['MALE', 'FEMALE'] },
 		isPhoneVerified: { type: Boolean, default: false, required: false },
-		isEmailVerified: { type: Boolean, default: false, required: false }
-
+		isEmailVerified: { type: Boolean, default: false, required: false },
+		partnerId: { type: Number, required: true },
+		customerSerialNumber: { type: String }
 	},
 	{ timestamps: true },
 );
+
+userSchema.pre<IUser>("save", function (next) {
+	// Convert the username to lowercase
+	if (this.isModified("username")) {
+		this.username = this.username.toLowerCase();
+	}
+	next();
+});
 
 const User: Model<IUser> = mongoose.model<IUser>("user", userSchema);
 

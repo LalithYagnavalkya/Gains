@@ -24,9 +24,9 @@ export const registerAdmin = async (req: Request<{}, {}, createAdminInput['body'
 
         const hashedPassword = await bcrypt.hash(password, Number(process.env.BCRYPT_SALT_ROUNDS as String));
 
-        await User.create({ email, username: username.toLocaleLowerCase(), password: hashedPassword, phone: phone, role: 'ADMIN' });
 
         let partnerId = 1;
+
 
         let lastPartner = await Partner.findOne({}).sort({ createdAt: -1 }) // fetch last partner Id
 
@@ -35,12 +35,14 @@ export const registerAdmin = async (req: Request<{}, {}, createAdminInput['body'
             partnerId++
         }
 
+        const user = await User.create({ email, username: username, password: hashedPassword, phone: phone, role: 'ADMIN', partnerId: partnerId });
+
         let partnerObjInput = {
             partnerId: partnerId,
             name: partnerName.toLocaleLowerCase()
         }
 
-        await Partner.create(partnerObjInput)
+        await Partner.create(partnerObjInput);
 
         return res.send("User successfully created");
     } catch (e: any) {

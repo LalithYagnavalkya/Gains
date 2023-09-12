@@ -17,6 +17,8 @@ export interface IUser extends Document {
 	lastPayoffDate?: Date;
 	paymentStatus: string;
 	gender?: string;
+	customerSerialNumber?: string,
+	partnerId: number;
 }
 
 const userSchema = new mongoose.Schema(
@@ -41,8 +43,8 @@ const userSchema = new mongoose.Schema(
 		gender: { type: String, enum: ['MALE', 'FEMALE'] },
 		isPhoneVerified: { type: Boolean, default: false, required: false },
 		isEmailVerified: { type: Boolean, default: false, required: false },
-		partnerId: { type: Number, required: true }
-
+		partnerId: { type: Number, required: true },
+		customerSerialNumber: { type: String }
 	},
 	{ timestamps: true },
 );
