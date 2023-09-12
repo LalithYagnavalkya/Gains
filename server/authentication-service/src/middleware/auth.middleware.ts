@@ -48,9 +48,20 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-        req.body._loggedInUser = user;
+        req.body._user = user;
         next();
     } catch (error) {
         res.status(500).json({ error: 'An error occurred while authenticating the user' });
     }
 };
+
+// Middleware to authorize access based on user role
+export const authorizeRole = (allowedRoles: string[]) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const { role } = req.body._user;
+        if (!allowedRoles.includes(role)) {
+           res.status(401).json('Unauthorized');
+        }
+        next();
+    };
+}
