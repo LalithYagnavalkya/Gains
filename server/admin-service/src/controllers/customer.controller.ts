@@ -25,15 +25,15 @@ const insertIntoDB = async (users: any, req: any, res: any) => {
 
         convertedData.map((user: any) => {
             const userObj: UserBulkUploadSchema = {
-                username: user.name,
-                mobile: user.phone,
-                // joinedOn: user.joinedon ?  : new Date(),
-                role: 'USER'
-            }
-            if (!user.joinedon) {
-                userObj.joinedOn = new Date();
-            } else {
-                userObj.joinedOn = parseDate(user.joinedon, 'dd-mm-yy')
+                username: user.username,
+                phone: user.phone,
+                lastPayOffDate: parseDate(user.startdate, 'dd-mm-yy'),
+                validUpto:parseDate(user.enddate, 'dd-mm-yy'),
+                joinedOn: new Date(),
+                customerSerialNumber: user.slno,
+                role: 'USER',
+                partnerId: 1 // later take this from middleware
+                
             }
 
             listOfUsers.push(userObj)

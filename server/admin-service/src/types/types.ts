@@ -2,9 +2,13 @@ import { z } from "zod";
 
 const UserBulkUploadSchema = z.object({
     username: z.string(),
-    mobile: z.string().optional(),
+    phone: z.string().optional(),
     role: z.string(),
-    joinedOn: z.date().optional(),
+    lastPayOffDate: z.date().optional(),
+    validUpto: z.date().optional(),
+    joinedOn: z.date(),
+    customerSerialNumber: z.string(),
+    partnerId: z.number(),
 });
 
 export type UserBulkUpload = z.infer<typeof UserBulkUploadSchema>;
