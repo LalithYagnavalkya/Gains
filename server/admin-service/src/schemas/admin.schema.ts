@@ -1,4 +1,4 @@
-import { TypeOf, object, string, z } from "zod";
+import { TypeOf, array, object, string, z } from "zod";
 import { Types } from 'mongoose';
 
 const isObjectId = (value: string): boolean => {
@@ -31,7 +31,7 @@ export const editCustomerSchema = object({
 
         validUpto: z.date().optional(),
 
-        workoutType: string().optional(),
+        workoutTypes: array(string()).optional(),
 
 
     })
@@ -56,8 +56,12 @@ export const usernameSchema = object({
 });
 export const phoneSchema = object({
     userId: string(),
-    phone:string()
-    .length(10, 'Phone number must be 10 digits')
+    phone: string()
+        .length(10, 'Phone number must be 10 digits')
+});
+export const workoutSchmea = object({
+    userId: string(),
+    workoutTypes: array(string()),
 });
 
 
@@ -65,3 +69,4 @@ export type editCustomerInput = TypeOf<typeof editCustomerSchema>
 export type addEmailInput = TypeOf<typeof addOrEditEmailSchema>
 export type usernameInput = TypeOf<typeof usernameSchema>
 export type phoneInput = TypeOf<typeof phoneSchema>
+export type wroukoutTypeInput = TypeOf<typeof workoutSchmea>

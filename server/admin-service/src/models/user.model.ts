@@ -18,13 +18,14 @@ export interface IUser extends Document {
 	paymentStatus: string;
 	gender?: string;
 	customerSerialNumber?: string,
+	workoutType: string[],
 	partnerId: number;
 }
 
 const userSchema = new mongoose.Schema(
 	{
 		username: { type: String, required: true },
-		email: { type: String},
+		email: { type: String },
 		refreshToken: { type: String },
 		profilePic: { type: String },
 		isActive: { type: Boolean, default: true },
@@ -44,10 +45,19 @@ const userSchema = new mongoose.Schema(
 		isPhoneVerified: { type: Boolean, default: false, required: false },
 		isEmailVerified: { type: Boolean, default: false, required: false },
 		partnerId: { type: Number, required: true },
+		workoutType: [{ type: String }],
 		customerSerialNumber: { type: String }
 	},
 	{ timestamps: true },
 );
+
+userSchema.pre<IUser>("save", function (next) {
+	// Convert the username to lowercase
+	if (this.isModified("username")) {
+		this.username = this.username.toLowerCase();
+	}
+	next();
+});
 
 const User: Model<IUser> = mongoose.model<IUser>("user", userSchema);
 

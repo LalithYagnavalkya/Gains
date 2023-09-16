@@ -6,10 +6,10 @@ import log from "../utils/logger";
 // models
 
 // schemas
-import { addOrEditEmailSchema, editCustomerInput, phoneSchema, usernameSchema } from '../schemas/admin.schema'
+import { addOrEditEmailSchema, editCustomerInput, phoneSchema, usernameSchema, workoutSchmea } from '../schemas/admin.schema'
 
 // services
-import { editEmail, editPhone, editUsername, insertIntoDB } from "../services/admin.service";
+import { editEmail, editPhone, editUsername, editWorkoutType, insertIntoDB } from "../services/admin.service";
 
 export const uploadCustomers = async (req: Request, res: Response) => {
     try {
@@ -84,7 +84,7 @@ export const editCustomer = async (req: Request<editCustomerInput['params'], {},
         }
 
 
-        case 'phone':
+        case 'phone': {
             const parsedData = phoneSchema.safeParse({ userId, phone: req.body.phone })
 
             if (parsedData.success) {
@@ -100,9 +100,23 @@ export const editCustomer = async (req: Request<editCustomerInput['params'], {},
 
             return res.status(400).json({ error: true, message: parsedData.error.message ?? 'Invalid phone number' })
             break;
+        }
 
         case 'workoutType':
+            const parsedData = workoutSchmea.safeParse({ userId, workoutTypes: req.body.workoutTypes })
 
+            if (parsedData.success) {
+                const { workoutTypes } = parsedData.data;
+
+                const { error, message } = await editWorkoutType({ workoutTypes, userId });
+
+                if (error) {
+                    return res.status(409).json({ error, message })
+                }
+                return res.status(200).json({ error, message })
+            }
+
+            return res.status(400).json({ error: true, message: parsedData.error.message ?? 'Invalid workoutType ' })
             break;
 
         case 'joinedOn':
