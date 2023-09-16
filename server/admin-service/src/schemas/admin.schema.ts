@@ -54,8 +54,14 @@ export const usernameSchema = object({
         .max(20, { message: 'Username cannot exceed 20 characters' })
         .regex(usernameRegex, { message: 'Username can only contain letters, numbers, underscores, and hyphens' })
 });
+export const phoneSchema = object({
+    userId: string(),
+    phone:string()
+    .length(10, 'Phone number must be 10 digits')
+});
 
 
 export type editCustomerInput = TypeOf<typeof editCustomerSchema>
 export type addEmailInput = TypeOf<typeof addOrEditEmailSchema>
 export type usernameInput = TypeOf<typeof usernameSchema>
+export type phoneInput = TypeOf<typeof phoneSchema>
