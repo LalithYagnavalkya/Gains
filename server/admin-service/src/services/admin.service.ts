@@ -1,7 +1,15 @@
 import { Request, Response } from "express";
+
+// models
 import User, { IUser } from "../models/user.model";
+
+// schemas
+import { addEmailInput, phoneInput, usernameInput, wroukoutTypeInput } from "../schemas/admin.schema";
 import { UserBulkUpload as UserBulkUploadSchema } from "../types/types";
+
+// services
 import { parseDate } from "../controllers/shared.controller";
+import Classification from "../models/classification.model";
 
 export const insertIntoDB = async (users: any, req: any, res: any) => {
     try {
@@ -38,4 +46,97 @@ export const insertIntoDB = async (users: any, req: any, res: any) => {
     } catch (error) {
         return res.status(500).json({ error: true, message: "Something went wrong in findEMailsInDb" })
     }
+}
+
+export const editEmail = async (data: addEmailInput) => {
+
+    const { email, userId } = data;
+
+    const user = await User.findById(userId).select('email role');
+
+    if (user && String(user?._id) === String(userId) && user.role === 'USER') {
+        const isEmailTaken = await User.findOne({ email }).select('email')
+
+        if (isEmailTaken) { return Promise.resolve({ error: true, message: 'User with this email already exists' }) }
+
+        user.email = email;
+        await user.save();
+        return Promise.resolve({ error: false, message: 'Updated sucessfuly' })
+    }
+    else {
+        return Promise.resolve({ error: true, message: 'User not found' });
+    }
+
+}
+
+export const editUsername = async (data: usernameInput) => {
+
+    const { username, userId } = data;
+
+    const user = await User.findById(userId).select('username role');
+
+    if (user && String(user?._id) === String(userId) && user.role === 'USER') {
+        user.username = username;
+        await user.save();
+        return Promise.resolve({ error: false, message: 'Updated sucessfuly' })
+    }
+    else {
+        return Promise.resolve({ error: true, message: 'User not found' });
+    }
+
+}
+
+export const editPhone = async (data: phoneInput) => {
+
+    const { phone, userId } = data;
+
+    const user = await User.findById(userId).select('phone role');
+
+    if (user && String(user?._id) === String(userId) && user.role === 'USER') {
+
+        const isPhoneTaken = await User.findOne({ phone }).select('phone')
+
+        if (isPhoneTaken) {
+            return Promise.resolve({ error: true, message: 'User with this phone number already exists' })
+        }
+
+        user.phone = phone;
+        await user.save();
+        return Promise.resolve({ error: false, message: 'Updated sucessfuly' })
+    }
+    else {
+        return Promise.resolve({ error: true, message: 'User not found' });
+    }
+
+}
+
+export const editWorkoutType = async (data: wroukoutTypeInput) => {
+
+    const {  workoutTypes, userId } = data;
+
+    const user = await User.findById(userId).select('workout role');
+
+    if (user && String(user?._id) === String(userId) && user.role === 'USER') {
+
+        const _workoutTypes = await Classification.find({ type: 'WORKOUT_TYPE' }).select('key value').lean();
+        const _keys = _workoutTypes.map(x => x.key);
+        const updatedWorkoutTypes: string[] = [];
+
+        for (const x of workoutTypes) {
+            if (!_keys.includes(x.toLocaleLowerCase())) {
+                return { error: true, message: `Invalid workout type: ${x}` };
+            }
+            const updatedType = _workoutTypes.find(item => item.key === x.toLocaleLowerCase())?.value || '';
+            updatedWorkoutTypes.push(updatedType);
+        }
+
+        user.workoutType = updatedWorkoutTypes;
+        await user.save();
+
+        return Promise.resolve({ error: false, message: 'Updated sucessfuly' })
+    }
+    else {
+        return Promise.resolve({ error: true, message: 'User not found' });
+    }
+
 }
