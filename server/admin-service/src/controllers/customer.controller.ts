@@ -75,7 +75,7 @@ export const editCustomer = async (req: Request<editCustomerInput['params'], {},
 
                 if (error) {
                     return res.status(409).json({ error, message })
-                }g
+                }
                 return res.status(200).json({ error, message })
             }
 
