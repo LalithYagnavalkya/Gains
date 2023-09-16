@@ -1,22 +1,25 @@
-import { Router, Request, Response, NextFunction } from "express";
-import passport from "passport";
-import bcrypt from 'bcrypt'
-import { login } from "../controllers/user.controller";
+import { Router } from "express";
+import dotenv from "dotenv";
+
+//middlewares
+import validateResource from "../middleware/validateResource";
+
+//controllers
+import { forgotPassword, login, resetPassword } from "../controllers/user.controller";
 
 //schemas
-import { loginInput } from '../schemas/auth.schema'
+import { createAdminSchema } from '../schemas/createUser.schema'
+import {forgotPasswordSchema, loginSchema, resetPassowrdSchema} from '../schemas/auth.schema'
 
-//models
-import User from '../models/user.model'
+dotenv.config({ path: "./src/config/config.env" });
 
 const router = Router();
 
-//login
-router.post("/login", login);
+router.post("/login", validateResource(loginSchema), login );
 
-//forgot password
-//reset password
+router.post("/forgotpassword", validateResource(forgotPasswordSchema), forgotPassword );
 
+router.post('/resetpassword/:token', validateResource(resetPassowrdSchema), resetPassword)
 
 
 // router.get(
@@ -39,5 +42,4 @@ router.post("/login", login);
 
 
 
-router.post('/admin/login')
 export default router;

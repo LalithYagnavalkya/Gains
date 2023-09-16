@@ -48,10 +48,12 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-        req.body._user = user;
+        req.body.user = user;
+        req.body.loggedInUserId = user._id;
+        console.log(req.body)
         next();
     } catch (error) {
-        return res.status(500).json({ error: 'An error occurred while authenticating the user' });
+        res.status(500).json({ error: 'An error occurred while authenticating the user' });
     }
 };
 
@@ -60,7 +62,7 @@ export const authorizeRole = (allowedRoles: string[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
         const { role } = req.body._user;
         if (!allowedRoles.includes(role)) {
-           return res.status(401).json('Unauthorized');
+            return res.status(401).json('Unauthorized');
         }
         next();
     };
