@@ -56,3 +56,14 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
         res.status(500).json({ error: 'An error occurred while authenticating the user' });
     }
 };
+
+// Middleware to authorize access based on user role
+export const authorizeRole = (allowedRoles: string[]) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const { role } = req.body._user;
+        if (!allowedRoles.includes(role)) {
+            return res.status(401).json('Unauthorized');
+        }
+        next();
+    };
+}

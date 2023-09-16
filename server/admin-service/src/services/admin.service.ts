@@ -1,16 +1,9 @@
 import { Request, Response } from "express";
-import fs from 'fs'
-import csv from 'csv-parser'
-import log from "../utils/logger";
-
-// models
 import User, { IUser } from "../models/user.model";
 import { UserBulkUpload as UserBulkUploadSchema } from "../types/types";
-import { parseDate } from "./shared.controller";
+import { parseDate } from "../controllers/shared.controller";
 
-// schemas
-
-const insertIntoDB = async (users: any, req: any, res: any) => {
+export const insertIntoDB = async (users: any, req: any, res: any) => {
     try {
         // Convert keys to lowercase for each object in the array
         const convertedData = users.map((obj: any) => {
@@ -28,12 +21,12 @@ const insertIntoDB = async (users: any, req: any, res: any) => {
                 username: user.username,
                 phone: user.phone,
                 lastPayOffDate: parseDate(user.startdate, 'dd-mm-yy'),
-                validUpto:parseDate(user.enddate, 'dd-mm-yy'),
+                validUpto: parseDate(user.enddate, 'dd-mm-yy'),
                 joinedOn: new Date(),
                 customerSerialNumber: user.slno,
                 role: 'USER',
                 partnerId: 1 // later take this from middleware
-                
+
             }
 
             listOfUsers.push(userObj)
@@ -46,27 +39,3 @@ const insertIntoDB = async (users: any, req: any, res: any) => {
         return res.status(500).json({ error: true, message: "Something went wrong in findEMailsInDb" })
     }
 }
-
-export const uploadCustomers = async (req: Request, res: Response) => {
-    try {
-        let users: any = [];
-        if (String(req?.file?.path)) {
-
-            fs.createReadStream(String(req?.file?.path))
-                .pipe(csv({}))
-                .on('data', (data: any) => users.push(data))
-                .on('end', async () => {
-                    // log.info(users)
-                    console.log(users)
-                    await insertIntoDB(users, req, res)
-
-                })
-
-        } else {
-            return res.status(500).json({ error: true, message: "Something went wrong in findEMailsInDb" })
-        }
-
-    } catch (error: any) {
-        return res.status(500).json({ error: true, message: "Something went wrong in findEMailsInDb" })
-    }
-}   
