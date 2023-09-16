@@ -35,7 +35,13 @@ export const registerAdmin = async (req: Request<{}, {}, createAdminInput['body'
             partnerId++
         }
 
-        const user = await User.create({ email, username: username, password: hashedPassword, phone: phone, role: 'ADMIN', partnerId: partnerId });
+        const user = await User.findOne({email}).select('username');
+
+        if(user){
+            return res.status(409).send("Email already exists");
+        }
+
+        await User.create({ email, username: username, password: hashedPassword, phone: phone, role: 'ADMIN', partnerId: partnerId });
 
         let partnerObjInput = {
             partnerId: partnerId,
