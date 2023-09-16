@@ -1,0 +1,28 @@
+import { Router } from "express";
+import dotenv from "dotenv";
+
+// middlewares
+import upload from '../middleware/multer.middleware'
+import { authenticateUser, authorizeRole } from "../middleware/auth.middleware";
+import validateResource from "../middleware/validateResource";
+
+// schemas
+import { editCustomerSchema } from "../schemas/admin.schema";
+
+// controllers
+import { uploadCustomers, addCustomer, editCustomer } from "../controllers/customer.controller";
+
+dotenv.config({ path: "./src/config/config.env" });
+const router = Router();
+
+router.post('/uploadCustomers', authenticateUser, upload.single('csvdata'), uploadCustomers)
+
+router.post('/addCustomer', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), validateResource(editCustomerSchema), addCustomer)
+
+router.post('/editCustomer/:userId', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), validateResource(editCustomerSchema), editCustomer)
+
+router.post('/', (req, res) => {
+    res.send('fuck you')
+})
+
+export default router;
