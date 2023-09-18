@@ -27,17 +27,15 @@ export const editCustomerSchema = object({
 
         username: string().optional(),
 
-        joinedOn: z.date().optional(),
+        joinedOn: z.string().optional(),
 
-        validUpto: z.date().optional(),
+        validUpto: z.string().optional(),
 
         workoutTypes: array(string()).optional(),
 
 
     })
 });
-
-
 
 export const addOrEditEmailSchema = object({
     userId: string(),
@@ -64,9 +62,56 @@ export const workoutSchmea = object({
     workoutTypes: array(string()),
 });
 
+export const joinedOnSchema = object({
+    userId: string(),
+    joinedOn: string(),
+});
 
-export type editCustomerInput = TypeOf<typeof editCustomerSchema>
-export type addEmailInput = TypeOf<typeof addOrEditEmailSchema>
-export type usernameInput = TypeOf<typeof usernameSchema>
-export type phoneInput = TypeOf<typeof phoneSchema>
-export type wroukoutTypeInput = TypeOf<typeof workoutSchmea>
+export const validUptoSchema = object({
+    userId: string(),
+    validUpto: string(),
+});
+
+export const addCustomerSchema = object({
+
+    body: object({
+        email: string()
+            .email("Not a valid email"),
+
+        phone: string()
+            .length(10, 'Phone number must be 10 digits'),
+
+        username: string({
+            required_error: "username is required",
+        }).min(3, { message: 'Username must be at least 3 characters long' })
+            .max(20, { message: 'Username cannot exceed 20 characters' })
+            .regex(usernameRegex, { message: 'Username can only contain letters, numbers, underscores, and hyphens' }),
+
+        joinedOn: z.string(),
+
+        validUpto: z.string(),
+
+        workoutTypes: array(string()).optional(),
+
+        gender: z.string().optional(),
+
+        membershipFee: z.number(),
+
+        _user: object({
+            _id: z.string(),
+            role: string(),
+            partnerId: z.number(),
+        })
+
+    })
+});
+
+
+export type editCustomerInput = TypeOf<typeof editCustomerSchema>;
+export type addEmailInput = TypeOf<typeof addOrEditEmailSchema>;
+export type usernameInput = TypeOf<typeof usernameSchema>;
+export type phoneInput = TypeOf<typeof phoneSchema>;
+export type wroukoutTypeInput = TypeOf<typeof workoutSchmea>;
+export type joinedOnInput = TypeOf<typeof joinedOnSchema>;
+export type validUptoInput = TypeOf<typeof validUptoSchema>;
+export type addCustomerInput = TypeOf<typeof addCustomerSchema>;

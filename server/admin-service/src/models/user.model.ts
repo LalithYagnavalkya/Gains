@@ -3,7 +3,7 @@ import mongoose, { Document, Model } from "mongoose";
 export interface IUser extends Document {
 	username: string;
 	email?: string;
-	isActive?: boolean;
+	active?: boolean;
 	refreshToken?: string;
 	profilePic?: string;
 	phone?: string;
@@ -20,6 +20,7 @@ export interface IUser extends Document {
 	customerSerialNumber?: string,
 	workoutType: string[],
 	partnerId: number;
+	membershipFee?: number;
 }
 
 const userSchema = new mongoose.Schema(
@@ -28,7 +29,7 @@ const userSchema = new mongoose.Schema(
 		email: { type: String },
 		refreshToken: { type: String },
 		profilePic: { type: String },
-		isActive: { type: Boolean, default: true },
+		active: { type: Boolean, default: true },
 		phone: { type: String, unique: true },
 		googleId: { type: String },
 		password: { type: String, select: false },
@@ -46,7 +47,8 @@ const userSchema = new mongoose.Schema(
 		isEmailVerified: { type: Boolean, default: false, required: false },
 		partnerId: { type: Number, required: true },
 		workoutType: [{ type: String }],
-		customerSerialNumber: { type: String }
+		customerSerialNumber: { type: String },
+		membershipFee: { type: Number }
 	},
 	{ timestamps: true },
 );
