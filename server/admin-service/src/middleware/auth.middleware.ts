@@ -43,12 +43,13 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
     }
 
     try {
-        const user = await User.findById(decoded?.userId);
+        const user = await User.findById(decoded?.userId).lean();
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
         req.body._user = user;
+        req.body._user._id = String(user._id);
         req.body.loggedInUserId = user._id;
         next();
     } catch (error) {

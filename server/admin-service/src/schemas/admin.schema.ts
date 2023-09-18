@@ -89,13 +89,19 @@ export const addCustomerSchema = object({
 
         joinedOn: z.string(),
 
-        validUpto: z.string().optional(),
+        validUpto: z.string(),
 
         workoutTypes: array(string()).optional(),
 
         gender: z.string().optional(),
 
         membershipFee: z.number(),
+
+        _user: object({
+            _id: z.string(),
+            role: string(),
+            partnerId: z.number(),
+        })
 
     })
 });
