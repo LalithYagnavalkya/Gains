@@ -5,7 +5,7 @@ import { UserAuthForm } from './userLoginForm'
 const Login: React.FC = () => {
     return (
         <div className='overflow-hidden h-screen'>
-            <h1 className="mt-10 scroll-m-20 pt-6 pl-5 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
+            <h1 className="scroll-m-20 pt-6 pl-5 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
                 Gains
             </h1>
             <div className="overflow-hidden h-full relative flex-col items-center justify-center">
