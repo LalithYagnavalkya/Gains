@@ -25,9 +25,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     return (
         <div className={cn("grid gap-6", className)} {...props}>
             <form onSubmit={onSubmit}>
-                <div className="grid gap-2">
-                    <div className="grid gap-1">
-                        <Label className="sr-only" htmlFor="email">
+                <div className="grid gap-5">
+                    <div className="grid gap-3">
+                        <Label className="pl-2" htmlFor="email">
                             Email
                         </Label>
                         <Input
@@ -40,9 +40,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                             disabled={isLoading}
                         />
                     </div>
-                    <div className="grid gap-1">
-                        <Label className="sr-only" htmlFor="email">
-                            Email
+                    <div className="grid gap-3">
+                        <Label className="pl-2" htmlFor="email">
+                            Password
                         </Label>
                         <Input
                             id="password"
@@ -54,11 +54,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                             disabled={isLoading}
                         />
                     </div>
-                    <Button className="mt-3" disabled={isLoading}>
+                    <Button className="mt-3 w-fit flex justify-self-center" disabled={isLoading}>
                         {isLoading && (
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                         )}
-                        Sign In
+                        Log In
                     </Button>
                 </div>
             </form>
