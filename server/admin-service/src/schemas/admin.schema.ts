@@ -27,9 +27,9 @@ export const editCustomerSchema = object({
 
         username: string().optional(),
 
-        joinedOn: z.date().optional(),
+        joinedOn: z.string().optional(),
 
-        validUpto: z.date().optional(),
+        validUpto: z.string().optional(),
 
         workoutTypes: array(string()).optional(),
 
@@ -64,9 +64,21 @@ export const workoutSchmea = object({
     workoutTypes: array(string()),
 });
 
+export const joinedOnSchema = object({
+    userId: string(),
+    joinedOn: string(),
+});
 
-export type editCustomerInput = TypeOf<typeof editCustomerSchema>
-export type addEmailInput = TypeOf<typeof addOrEditEmailSchema>
-export type usernameInput = TypeOf<typeof usernameSchema>
-export type phoneInput = TypeOf<typeof phoneSchema>
-export type wroukoutTypeInput = TypeOf<typeof workoutSchmea>
+export const validUptoSchema = object({
+    userId: string(),
+    validUpto: string(),
+});
+
+
+export type editCustomerInput = TypeOf<typeof editCustomerSchema>;
+export type addEmailInput = TypeOf<typeof addOrEditEmailSchema>;
+export type usernameInput = TypeOf<typeof usernameSchema>;
+export type phoneInput = TypeOf<typeof phoneSchema>;
+export type wroukoutTypeInput = TypeOf<typeof workoutSchmea>;
+export type joinedOnInput = TypeOf<typeof joinedOnSchema>;
+export type validUptoInput = TypeOf<typeof validUptoSchema>;

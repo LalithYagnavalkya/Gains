@@ -6,10 +6,10 @@ import log from "../utils/logger";
 // models
 
 // schemas
-import { addOrEditEmailSchema, editCustomerInput, phoneSchema, usernameSchema, workoutSchmea } from '../schemas/admin.schema'
+import { addOrEditEmailSchema, editCustomerInput, joinedOnSchema, phoneSchema, usernameSchema, validUptoSchema, workoutSchmea } from '../schemas/admin.schema'
 
 // services
-import { editEmail, editPhone, editUsername, editWorkoutType, insertIntoDB } from "../services/admin.service";
+import { editEmail, editJoinedOn, editPhone, editUsername, editValidUpto, editWorkoutType, insertIntoDB } from "../services/admin.service";
 
 export const uploadCustomers = async (req: Request, res: Response) => {
     try {
@@ -83,7 +83,6 @@ export const editCustomer = async (req: Request<editCustomerInput['params'], {},
             break;
         }
 
-
         case 'phone': {
             const parsedData = phoneSchema.safeParse({ userId, phone: req.body.phone })
 
@@ -102,7 +101,7 @@ export const editCustomer = async (req: Request<editCustomerInput['params'], {},
             break;
         }
 
-        case 'workoutType':
+        case 'workoutType': {
             const parsedData = workoutSchmea.safeParse({ userId, workoutTypes: req.body.workoutTypes })
 
             if (parsedData.success) {
@@ -118,13 +117,41 @@ export const editCustomer = async (req: Request<editCustomerInput['params'], {},
 
             return res.status(400).json({ error: true, message: parsedData.error.message ?? 'Invalid workoutType ' })
             break;
+        }
 
-        case 'joinedOn':
+        case 'joinedOn': {
+            const parsedData = joinedOnSchema.safeParse({ userId, joinedOn: req.body.joinedOn })
 
+            if (parsedData.success) {
+                const { joinedOn } = parsedData.data;
+                
+                const { error, message } = await editJoinedOn({ joinedOn, userId });
+
+                if (error) {
+                    return res.status(409).json({ error, message })
+                }
+                return res.status(200).json({ error, message })
+            }
+
+            return res.status(400).json({ error: true, message: parsedData.error.message ?? 'Invalid joinedOn Date ' })
             break;
+        }
 
         case 'validUpto':
+            const parsedData = validUptoSchema.safeParse({ userId, validUpto: req.body.validUpto })
 
+            if (parsedData.success) {
+                const { validUpto } = parsedData.data;
+                
+                const { error, message } = await editValidUpto({ validUpto, userId });
+
+                if (error) {
+                    return res.status(409).json({ error, message })
+                }
+                return res.status(200).json({ error, message })
+            }
+
+            return res.status(400).json({ error: true, message: parsedData.error.message ?? 'Invalid validupto Date ' })
             break;
 
         default:

@@ -3,7 +3,7 @@ import mongoose, { Document, Model } from "mongoose";
 export interface IUser extends Document {
 	username: string;
 	email?: string;
-	isActive?: boolean;
+	active?: boolean;
 	refreshToken?: string;
 	profilePic?: string;
 	phone?: string;
@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
 		email: { type: String },
 		refreshToken: { type: String },
 		profilePic: { type: String },
-		isActive: { type: Boolean, default: true },
+		active: { type: Boolean, default: true },
 		phone: { type: String, unique: true },
 		googleId: { type: String },
 		password: { type: String, select: false },

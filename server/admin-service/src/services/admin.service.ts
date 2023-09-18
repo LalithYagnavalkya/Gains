@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import User, { IUser } from "../models/user.model";
 
 // schemas
-import { addEmailInput, phoneInput, usernameInput, wroukoutTypeInput } from "../schemas/admin.schema";
+import { addEmailInput, joinedOnInput, phoneInput, usernameInput, validUptoInput, wroukoutTypeInput } from "../schemas/admin.schema";
 import { UserBulkUpload as UserBulkUploadSchema } from "../types/types";
 
 // services
@@ -112,7 +112,7 @@ export const editPhone = async (data: phoneInput) => {
 
 export const editWorkoutType = async (data: wroukoutTypeInput) => {
 
-    const {  workoutTypes, userId } = data;
+    const { workoutTypes, userId } = data;
 
     const user = await User.findById(userId).select('workout role');
 
@@ -131,6 +131,56 @@ export const editWorkoutType = async (data: wroukoutTypeInput) => {
         }
 
         user.workoutType = updatedWorkoutTypes;
+        await user.save();
+
+        return Promise.resolve({ error: false, message: 'Updated sucessfuly' })
+    }
+    else {
+        return Promise.resolve({ error: true, message: 'User not found' });
+    }
+
+}
+
+export const editJoinedOn = async (data: joinedOnInput) => {
+
+    const { joinedOn, userId } = data;
+
+    const parsedDate = new Date(joinedOn);
+
+    if (isNaN(parsedDate.getTime())) {
+        // invalid date
+        return Promise.resolve({ error: true, message: 'Invalid Date' });
+    }
+
+    const user = await User.findById(userId).select('joinedOn role');
+
+    if (user && String(user?._id) === String(userId) && user.role === 'USER') {
+        user.joinedOn = parsedDate;
+        await user.save();
+
+        return Promise.resolve({ error: false, message: 'Updated sucessfuly' })
+    }
+    else {
+        return Promise.resolve({ error: true, message: 'User not found' });
+    }
+
+}
+
+export const editValidUpto = async (data: validUptoInput) => {
+
+    const { validUpto, userId } = data;
+
+    const parsedDate = new Date(validUpto);
+
+    if (isNaN(parsedDate.getTime())) {
+        // invalid date
+        return Promise.resolve({ error: true, message: 'Invalid Date' });
+    }
+
+    const user = await User.findById(userId).select('validUpto role');
+
+    if (user && String(user?._id) === String(userId) && user.role === 'USER') {
+        user.validUpto = parsedDate;
         await user.save();
 
         return Promise.resolve({ error: false, message: 'Updated sucessfuly' })
