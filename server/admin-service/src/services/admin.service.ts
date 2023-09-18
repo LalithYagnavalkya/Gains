@@ -8,7 +8,7 @@ import { addEmailInput, joinedOnInput, phoneInput, usernameInput, validUptoInput
 import { UserBulkUpload as UserBulkUploadSchema } from "../types/types";
 
 // services
-import { parseDate } from "../controllers/shared.controller";
+import { parseDate, parseWorkoutTypes } from "../controllers/shared.controller";
 import Classification from "../models/classification.model";
 
 export const insertIntoDB = async (users: any, req: any, res: any) => {
@@ -118,18 +118,13 @@ export const editWorkoutType = async (data: wroukoutTypeInput) => {
 
     if (user && String(user?._id) === String(userId) && user.role === 'USER') {
 
-        const _workoutTypes = await Classification.find({ type: 'WORKOUT_TYPE' }).select('key value').lean();
-        const _keys = _workoutTypes.map(x => x.key);
-        const updatedWorkoutTypes: string[] = [];
 
-        for (const x of workoutTypes) {
-            if (!_keys.includes(x.toLocaleLowerCase())) {
-                return { error: true, message: `Invalid workout type: ${x}` };
-            }
-            const updatedType = _workoutTypes.find(item => item.key === x.toLocaleLowerCase())?.value || '';
-            updatedWorkoutTypes.push(updatedType);
+        const { error, message, updatedWorkoutTypes } = await parseWorkoutTypes(workoutTypes);
+
+        if (error) {
+            return Promise.resolve({ error, message });
         }
-
+        
         user.workoutType = updatedWorkoutTypes;
         await user.save();
 

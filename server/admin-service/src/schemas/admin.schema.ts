@@ -37,8 +37,6 @@ export const editCustomerSchema = object({
     })
 });
 
-
-
 export const addOrEditEmailSchema = object({
     userId: string(),
     email: string({
@@ -74,6 +72,34 @@ export const validUptoSchema = object({
     validUpto: string(),
 });
 
+export const addCustomerSchema = object({
+
+    body: object({
+        email: string()
+            .email("Not a valid email"),
+
+        phone: string()
+            .length(10, 'Phone number must be 10 digits'),
+
+        username: string({
+            required_error: "username is required",
+        }).min(3, { message: 'Username must be at least 3 characters long' })
+            .max(20, { message: 'Username cannot exceed 20 characters' })
+            .regex(usernameRegex, { message: 'Username can only contain letters, numbers, underscores, and hyphens' }),
+
+        joinedOn: z.string(),
+
+        validUpto: z.string().optional(),
+
+        workoutTypes: array(string()).optional(),
+
+        gender: z.string().optional(),
+
+        membershipFee: z.number(),
+
+    })
+});
+
 
 export type editCustomerInput = TypeOf<typeof editCustomerSchema>;
 export type addEmailInput = TypeOf<typeof addOrEditEmailSchema>;
@@ -82,3 +108,4 @@ export type phoneInput = TypeOf<typeof phoneSchema>;
 export type wroukoutTypeInput = TypeOf<typeof workoutSchmea>;
 export type joinedOnInput = TypeOf<typeof joinedOnSchema>;
 export type validUptoInput = TypeOf<typeof validUptoSchema>;
+export type addCustomerInput = TypeOf<typeof addCustomerSchema>;

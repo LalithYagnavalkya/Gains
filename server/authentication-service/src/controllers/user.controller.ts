@@ -22,7 +22,7 @@ export const login = async (req: Request<{}, {}, loginInput['body']>, res: Respo
 
         let user = await User.findOne({ email: email }).select('username email password profilePic role');
 
-        if (!user || user.isActive === false) {
+        if (!user || user.active === false) {
             return res.status(400).json({ error: true, message: "Email not found" })
         }
         if (user.password) {
@@ -63,7 +63,7 @@ export const forgotPassword = async (req: Request<{}, {}, forgotPasswordInput['b
 
     let user = await User.findOne({ email }).select('email').lean();
 
-    if (!user || user.isActive === false) {
+    if (!user || user.active === false) {
         return res.send(message);
     }
 

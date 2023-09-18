@@ -4,12 +4,19 @@ import csv from 'csv-parser'
 import log from "../utils/logger";
 
 // models
+import User from "../models/user.model";
 
 // schemas
-import { addOrEditEmailSchema, editCustomerInput, joinedOnSchema, phoneSchema, usernameSchema, validUptoSchema, workoutSchmea } from '../schemas/admin.schema'
+import {
+    addCustomerInput, addOrEditEmailSchema, editCustomerInput, joinedOnSchema,
+    phoneSchema, usernameSchema, validUptoSchema, workoutSchmea
+} from '../schemas/admin.schema'
 
 // services
-import { editEmail, editJoinedOn, editPhone, editUsername, editValidUpto, editWorkoutType, insertIntoDB } from "../services/admin.service";
+import {
+    editEmail, editJoinedOn, editPhone, editUsername,
+    editValidUpto, editWorkoutType, insertIntoDB
+} from "../services/admin.service";
 
 export const uploadCustomers = async (req: Request, res: Response) => {
     try {
@@ -36,8 +43,18 @@ export const uploadCustomers = async (req: Request, res: Response) => {
     }
 }
 
-export const addCustomer = async (req: Request, res: Response) => {
-    res.send('hello')
+export const addCustomer = async (req: Request<{}, {}, addCustomerInput['body']>, res: Response) => {
+    const { username, email, phone, validUpto,
+        joinedOn, gender, workoutTypes, membershipFee } = req.body;
+
+    const userExists = await User.findOne({
+        $or: [{ email }, { phone }]
+    });
+
+    if(userExists){
+        return res.status(409).json({ error: true, message: "A user with this email or phone already exists" }) 
+    }
+    
 }
 
 export const editCustomer = async (req: Request<editCustomerInput['params'], {}, editCustomerInput['body']>, res: Response) => {
@@ -124,7 +141,7 @@ export const editCustomer = async (req: Request<editCustomerInput['params'], {},
 
             if (parsedData.success) {
                 const { joinedOn } = parsedData.data;
-                
+
                 const { error, message } = await editJoinedOn({ joinedOn, userId });
 
                 if (error) {
@@ -142,7 +159,7 @@ export const editCustomer = async (req: Request<editCustomerInput['params'], {},
 
             if (parsedData.success) {
                 const { validUpto } = parsedData.data;
-                
+
                 const { error, message } = await editValidUpto({ validUpto, userId });
 
                 if (error) {

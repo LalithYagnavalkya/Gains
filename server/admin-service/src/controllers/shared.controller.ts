@@ -1,3 +1,4 @@
+import Classification from "../models/classification.model";
 
 export const parseDate = (dateString: string, format: string): Date => {
     const parts = dateString.split('-');
@@ -21,3 +22,17 @@ export const parseDate = (dateString: string, format: string): Date => {
     return new Date();
 }
 
+export const parseWorkoutTypes = async (workoutTypes: string[]): Promise<{ error: boolean, message?: string, updatedWorkoutTypes: string[] }> => {
+    const _workoutTypes = await Classification.find({ type: 'WORKOUT_TYPE' }).select('key value').lean();
+    const _keys = _workoutTypes.map(x => x.key);
+    const updatedWorkoutTypes: string[] = [];
+
+    for (const x of workoutTypes) {
+        if (!_keys.includes(x.toLocaleLowerCase())) {
+            return { error: true, message: `Invalid workout type: ${x}`, updatedWorkoutTypes: [] };
+        }
+        const updatedType = _workoutTypes.find(item => item.key === x.toLocaleLowerCase())?.value || '';
+        updatedWorkoutTypes.push(updatedType);
+    }
+    return { error: false, updatedWorkoutTypes }
+}

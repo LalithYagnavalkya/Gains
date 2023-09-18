@@ -20,6 +20,7 @@ export interface IUser extends Document {
 	customerSerialNumber?: string,
 	workoutType: string[],
 	partnerId: number;
+	membershipFee?: number;
 }
 
 const userSchema = new mongoose.Schema(
@@ -46,7 +47,8 @@ const userSchema = new mongoose.Schema(
 		isEmailVerified: { type: Boolean, default: false, required: false },
 		partnerId: { type: Number, required: true },
 		workoutType: [{ type: String }],
-		customerSerialNumber: { type: String }
+		customerSerialNumber: { type: String },
+		membershipFee: { type: Number }
 	},
 	{ timestamps: true },
 );
