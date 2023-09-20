@@ -1,4 +1,4 @@
-import { TypeOf, array, object, string, z } from "zod";
+import { TypeOf, array, number, object, string, z } from "zod";
 import { Types } from 'mongoose';
 
 const isObjectId = (value: string): boolean => {
@@ -97,6 +97,7 @@ export const addCustomerSchema = object({
 
         membershipFee: z.number(),
 
+        // middleware
         _user: object({
             _id: z.string(),
             role: string(),
@@ -106,6 +107,39 @@ export const addCustomerSchema = object({
     })
 });
 
+export const getCustomersSchema = object({
+
+    body: object({
+        // middleware
+        _user: object({
+            _id: z.string(),
+            role: string(),
+            partnerId: z.number(),
+        })
+    }),
+    query: object({
+        _user: object({
+            _id: z.string(),
+            role: string(),
+            partnerId: z.number(),
+        }),
+        page: number(),
+
+        type: z.enum(["recentCustomers", "username", "phone", "workoutType", "joinedOn", "validUpto"]).
+            transform((val) => val.toLowerCase()),
+
+        limit: number(),
+
+    }),
+});
+
+export const getRecentCustomersSchema = object({
+    query: object({
+
+        page: number(),
+
+    })
+})
 
 export type editCustomerInput = TypeOf<typeof editCustomerSchema>;
 export type addEmailInput = TypeOf<typeof addOrEditEmailSchema>;
@@ -115,3 +149,5 @@ export type wroukoutTypeInput = TypeOf<typeof workoutSchmea>;
 export type joinedOnInput = TypeOf<typeof joinedOnSchema>;
 export type validUptoInput = TypeOf<typeof validUptoSchema>;
 export type addCustomerInput = TypeOf<typeof addCustomerSchema>;
+export type getCustomersInput = TypeOf<typeof getCustomersSchema>;
+export type getRecentCustomersInput = TypeOf<typeof getRecentCustomersSchema>;

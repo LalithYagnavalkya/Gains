@@ -8,7 +8,7 @@ import User from "../models/user.model";
 
 // schemas
 import {
-    addCustomerInput, addOrEditEmailSchema, editCustomerInput, joinedOnSchema,
+    addCustomerInput, addOrEditEmailSchema, editCustomerInput, getCustomersInput, joinedOnSchema,
     phoneSchema, usernameSchema, validUptoSchema, workoutSchmea
 } from '../schemas/admin.schema'
 
@@ -187,7 +187,28 @@ export const editCustomer = async (req: Request<editCustomerInput['params'], {},
             default:
                 break;
         }
-    } catch (error) {
-        return res.status(500).json('something went wrong')
+    } catch (error: any) {
+        return res.status(500).json({ error: true, message: error.message })
     }
 }
+
+export const getCustomers = async (req: Request<{}, getCustomersInput['body'], getCustomersInput['query']>, res: Response) => {
+    const { page, type, limit } = req.query;
+    const { _user } = req.body;
+    try {
+        const resObj = {};
+        // switch (type) {
+        //     case 'recentcustomers':
+        //         const users = User.find({ partnerId: req.body._user.partnerId, active: true }).skip((page - 1) * limit).limit(+limit);
+        //         break;
+
+        //     default:
+        //         break;
+        // }
+
+        return res.status(200).json({ error: false, users: resObj })
+    } catch (error: any) {
+        return res.status(500).json({ error: true, message: error.message })
+    }
+}
+
