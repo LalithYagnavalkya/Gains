@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import React from 'react'
-import { UserAuthForm } from './userLoginForm'
+import { UserAuthForm } from './login.form'
 import { Card } from '@/components/ui/card'
 
 const Login: React.FC = () => {
