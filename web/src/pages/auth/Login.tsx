@@ -13,8 +13,8 @@ const Login: React.FC = () => {
                 <div className="lg:p-8 flex h-full">
                     <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                         <Card className="w-[350px] p-4 pb-6 " >
-                        <div className="flex flex-col space-y-2 pb-6 pt-2 pl-2 text-start">
-                            <span><img src="/full-logo.svg" alt=""  className='w-32 h-32' /></span>
+                        <div className="flex pl-2 text-start">
+                           <img src="/full-logo.svg" alt=""  className='w-32 h-32' />
                         </div>
                         <UserAuthForm />
                         </Card>
