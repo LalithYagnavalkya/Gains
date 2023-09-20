@@ -18,6 +18,7 @@ const Login: React.FC = () => {
                         </div>
                         <UserAuthForm />
                         </Card>
+                       
                         <p className="px-8 text-center text-sm text-muted-foreground">
                             By clicking continue, you agree to our{" "}
                             <Link

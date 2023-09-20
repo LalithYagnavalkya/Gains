@@ -7,10 +7,12 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/ui/icon"
+import { useNavigate } from "react-router-dom"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
     async function onSubmit(event: React.SyntheticEvent) {
@@ -53,6 +55,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                             autoCorrect="off"
                             disabled={isLoading}
                         />
+                        <p className="px-1 text-start text-sm text-muted-foreground cursor-pointer"
+                        onClick={() => navigate('/forgotpassword')}>Forgot password?</p>
                     </div>
                     <Button className="mt-3 w-fit flex justify-self-center" disabled={isLoading}>
                         {isLoading && (
@@ -62,7 +66,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                     </Button>
                 </div>
             </form>
-            
         </div>
     )
 }
