@@ -43,8 +43,8 @@ export const insertIntoDB = async (users: any, req: any, res: any) => {
         await User.insertMany(listOfUsers);
 
         return res.status(200).json({ error: false, message: 'successfully inserted data' })
-    } catch (error) {
-        return res.status(500).json({ error: true, message: "Something went wrong in findEMailsInDb" })
+    } catch (error:any) {
+        return res.status(500).json({ error: true, message: error.message })
     }
 }
 

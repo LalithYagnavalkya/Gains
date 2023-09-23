@@ -25,7 +25,7 @@ export const registerAdmin = async (req: Request<{}, {}, createAdminInput['body'
         const hashedPassword = await bcrypt.hash(password, Number(process.env.BCRYPT_SALT_ROUNDS as String));
 
 
-        let partnerId = 1;
+        let partnerId = 0;
 
 
         let lastPartner = await Partner.findOne({}).sort({ createdAt: -1 }) // fetch last partner Id
