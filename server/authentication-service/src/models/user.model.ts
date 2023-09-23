@@ -58,6 +58,9 @@ userSchema.pre<IUser>("save", function (next) {
 	if (this.isModified("username")) {
 		this.username = this.username.toLowerCase();
 	}
+	if(this.email){
+		this.email = this.email.toLowerCase();
+	}
 	next();
 });
 

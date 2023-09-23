@@ -10,5 +10,9 @@ const UserBulkUploadSchema = z.object({
     customerSerialNumber: z.string(),
     partnerId: z.number(),
 });
+export interface PaginatedResults<T> {
+    totalCount: number;
+    data: T[];
+}
 
 export type UserBulkUpload = z.infer<typeof UserBulkUploadSchema>;

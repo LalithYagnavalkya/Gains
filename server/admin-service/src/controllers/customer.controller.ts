@@ -4,11 +4,11 @@ import csv from 'csv-parser'
 import log from "../utils/logger";
 
 // models
-import User from "../models/user.model";
+import User, { IUser } from "../models/user.model";
 
 // schemas
 import {
-    addCustomerInput, addOrEditEmailSchema, editCustomerInput, joinedOnSchema,
+    addCustomerInput, addOrEditEmailSchema, editCustomerInput, getCustomersInput, getCustomersSchema, joinedOnSchema,
     phoneSchema, usernameSchema, validUptoSchema, workoutSchmea
 } from '../schemas/admin.schema'
 
@@ -18,6 +18,7 @@ import {
     editEmail, editJoinedOn, editPhone, editUsername,
     editValidUpto, editWorkoutType, insertIntoDB
 } from "../services/admin.service";
+import { paginateResults } from "./shared.controller";
 
 export const uploadCustomers = async (req: Request, res: Response) => {
     try {
@@ -187,7 +188,56 @@ export const editCustomer = async (req: Request<editCustomerInput['params'], {},
             default:
                 break;
         }
-    } catch (error) {
-        return res.status(500).json('something went wrong')
+    } catch (error: any) {
+        return res.status(500).json({ error: true, message: error.message })
     }
 }
+
+export const getCustomers = async (req: Request, res: Response) => {
+
+    try {
+        // couldn't figure how to use query without getting overloaded error in routes file
+        // so using this instead for get apis 
+
+        // validating input
+        const reqInput = getCustomersSchema.parse({ body: req.body, query: req.query })
+        const { page, type, limit, partnerId } = reqInput.query;
+        const { _user } = reqInput.body;
+        let _partnerId = _user.partnerId;
+
+        if (_user.role === 'SUPER_ADMIN' && partnerId) {
+            _partnerId = partnerId
+        }
+        const resObj = {
+            users: [] as IUser[],
+            totalCount: 0,
+        };
+
+        switch (type) {
+            case 'recentcustomers': {
+                const query = {
+                    partnerId: _partnerId,
+                    role: 'USER',
+                    active: true,
+                }
+                const { totalCount, data } = await paginateResults(User, query, page, limit, 'createdAt', -1, 'username');
+                resObj['users'] = data ?? [];
+                resObj['totalCount'] = totalCount ?? [];
+            }
+
+                break;
+
+            default:
+                break;
+        }
+
+        return res.status(200).json({ error: false, resObj })
+
+    } catch (error: any) {
+        if (error.name === 'ZodError') {
+            return res.status(400).send(error.errors);
+        }
+        return res.status(500).json({ error: true, message: error.message })
+    }
+}
+
