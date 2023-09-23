@@ -4,7 +4,7 @@ import csv from 'csv-parser'
 import log from "../utils/logger";
 
 // models
-import User from "../models/user.model";
+import User, { IUser } from "../models/user.model";
 
 // schemas
 import {
@@ -196,7 +196,6 @@ export const editCustomer = async (req: Request<editCustomerInput['params'], {},
 export const getCustomers = async (req: Request, res: Response) => {
 
     try {
-
         // couldn't figure how to use query without getting overloaded error in routes file
         // so using this instead for get apis 
 
@@ -206,17 +205,24 @@ export const getCustomers = async (req: Request, res: Response) => {
         const { _user } = reqInput.body;
         let _partnerId = _user.partnerId;
 
-        if(_user.role === 'SUPER_ADMIN' && partnerId){
+        if (_user.role === 'SUPER_ADMIN' && partnerId) {
             _partnerId = partnerId
         }
+        const resObj = {
+            users: [] as IUser[],
+            totalCount: 0,
+        };
 
         switch (type) {
             case 'recentcustomers': {
                 const query = {
                     partnerId: _partnerId,
-                    role: 'USER'
+                    role: 'USER',
+                    active: true,
                 }
                 const { totalCount, data } = await paginateResults(User, query, page, limit, 'createdAt', -1, 'username');
+                resObj['users'] = data ?? [];
+                resObj['totalCount'] = totalCount ?? [];
             }
 
                 break;
@@ -225,8 +231,7 @@ export const getCustomers = async (req: Request, res: Response) => {
                 break;
         }
 
-        const resObj = {};
-        return res.status(200).json({ error: false, users: resObj })
+        return res.status(200).json({ error: false, resObj })
 
     } catch (error: any) {
         if (error.name === 'ZodError') {
