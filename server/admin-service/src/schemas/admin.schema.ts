@@ -118,17 +118,19 @@ export const getCustomersSchema = object({
         })
     }),
     query: object({
-        _user: object({
-            _id: z.string(),
-            role: string(),
-            partnerId: z.number(),
-        }),
-        page: number(),
+        // _user: object({
+        //     _id: z.string(),
+        //     role: string(),
+        //     partnerId: z.number(),
+        // }),
+        page: string().transform((val) => Number(val)),
 
         type: z.enum(["recentCustomers", "username", "phone", "workoutType", "joinedOn", "validUpto"]).
             transform((val) => val.toLowerCase()),
 
-        limit: number(),
+        limit: string().transform((val) => Number(val)),
+
+        partnerId: string().transform((val) => Number(val)).optional(),
 
     }),
 });

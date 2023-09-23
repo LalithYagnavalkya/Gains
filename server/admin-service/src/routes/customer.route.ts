@@ -21,6 +21,7 @@ router.post('/addCustomer', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADM
 
 router.post('/editCustomer/:userId', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), validateResource(editCustomerSchema), editCustomer)
 
-router.get('/getCustomers', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), validateResource(getCustomersSchema), getCustomers)
+// validation input in the api for query params
+router.get('/getCustomers', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), getCustomers)
 
 export default router;

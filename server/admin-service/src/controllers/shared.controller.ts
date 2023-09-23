@@ -1,4 +1,10 @@
+import { Model, Document } from "mongoose";
+
+// models
 import Classification from "../models/classification.model";
+
+// types
+import { PaginatedResults } from "../types/types";
 
 export const parseDate = (dateString: string, format: string): Date => {
     const parts = dateString.split('-');
@@ -36,3 +42,43 @@ export const parseWorkoutTypes = async (workoutTypes: string[]): Promise<{ error
     }
     return { error: false, updatedWorkoutTypes }
 }
+
+export const paginateResults = async <T extends Document>(
+    model: Model<T>,
+    query: Record<string, any>,
+    pageNumber: number = 1,
+    limit: number = 5,
+    sortField?: string,
+    sortDirection?: -1 | 1,
+    select?: string
+): Promise<PaginatedResults<T>> => {
+
+    if (pageNumber < 1) {
+        // throw new AppError(400, 'Page must be a positive integer');
+    }
+
+    const skip = (pageNumber - 1) * limit;
+
+    let queryBuilder = model.find(query).skip(skip).limit(limit);
+
+    if (sortField && sortDirection) {
+        const sortOptions: Record<string, -1 | 1> = {
+            [sortField]: sortDirection,
+        };
+        queryBuilder = queryBuilder.sort(sortOptions);
+    }
+
+    if (select) {
+        queryBuilder = queryBuilder.select(select);
+    }
+
+    const results = await queryBuilder.lean() as T[];
+
+    const totalCount = await model.countDocuments(query);
+
+    return {
+        totalCount,
+        data: results,
+    };
+};
+
