@@ -9,63 +9,79 @@ import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/ui/icon"
 import { useNavigate } from "react-router-dom"
 
+// reducers
+import { useLoginMutation } from "../../features/auth/auth.slice";
+import { z } from "zod"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
+const formSchema = z.object({
+    email: z.string()
+        .email("Not a valid email"),
+    password: z.string().min(6)
+})
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+    const [login, { isLoading, isError, isSuccess }] = useLoginMutation();
+    const [credentials, setCredentials] = React.useState({ email: "", password: "" })
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
-    async function onSubmit(event: React.SyntheticEvent) {
-        event.preventDefault()
-        setIsLoading(true)
+    async function onSubmit() {
+        try {
+            console.log(credentials)
+            const data = await login(credentials)
+            console.log(data)
+        } catch (error) {
 
-        setTimeout(() => {
-            setIsLoading(false)
-        }, 3000)
+        }
     }
-
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            email: "",
+            password: ""
+        },
+    })
     return (
-        <div className={cn("grid gap-6", className)} {...props}>
-            <form onSubmit={onSubmit}>
-                <div className="grid gap-5">
-                    <div className="grid gap-3">
-                        <Label className="pl-2" htmlFor="email">
-                            Email
-                        </Label>
-                        <Input
-                            id="email"
-                            placeholder="name@example.com"
-                            type="email"
-                            autoCapitalize="none"
-                            autoComplete="email"
-                            autoCorrect="off"
-                            disabled={isLoading}
-                        />
-                    </div>
-                    <div className="grid gap-3">
-                        <Label className="pl-2" htmlFor="email">
-                            Password
-                        </Label>
-                        <Input
-                            id="password"
-                            placeholder="password"
-                            type="password"
-                            autoCapitalize="none"
-                            autoComplete="email"
-                            autoCorrect="off"
-                            disabled={isLoading}
-                        />
-                        <p className="px-1 text-start text-sm text-muted-foreground cursor-pointer"
-                        onClick={() => navigate('/forgotpassword')}>Forgot password?</p>
-                    </div>
-                    <Button className="mt-3 w-fit flex justify-self-center" disabled={isLoading}>
+        <div >
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
+                    <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="gains@email.com" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Password</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Enter you password" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button type="submit" className="mt-3 w-fit flex justify-self-center" disabled={isLoading}>
                         {isLoading && (
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                         )}
-                        Log In
-                    </Button>
-                </div>
-            </form>
+                        Login</Button>
+                </form>
+            </Form>
+
         </div>
     )
 }
