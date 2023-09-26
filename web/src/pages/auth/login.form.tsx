@@ -68,7 +68,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                             <FormItem>
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Enter you password" {...field} />
+                                    <Input type="password" placeholder="Enter you password" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
