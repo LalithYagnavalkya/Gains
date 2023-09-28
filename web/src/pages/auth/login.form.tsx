@@ -25,13 +25,12 @@ const formSchema = z.object({
 })
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     const [login, { isLoading, isError, isSuccess }] = useLoginMutation();
-    const [credentials, setCredentials] = React.useState({ email: "", password: "" })
     const navigate = useNavigate();
 
-    async function onSubmit() {
+     async function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log(values)
         try {
-            console.log(credentials)
-            const data = await login(credentials)
+            const data = await login(values)
             console.log(data)
         } catch (error) {
 

@@ -8,11 +8,13 @@ const initialState = usersAdapter.getInitialState({
   user: null,
 });
 
+const authBackendRoute: string = '/auth'
+
 export const authSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
     login: builder.mutation({
       query: (credentials) => ({
-        url: '/login',
+        url: authBackendRoute + '/login',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
