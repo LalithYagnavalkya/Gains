@@ -24,16 +24,16 @@ const formSchema = z.object({
     password: z.string().min(6)
 })
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-    const [login, { isLoading, isError, isSuccess }] = useLoginMutation();
+    const [login, { isSuccess, isError, isLoading }] = useLoginMutation();
     const navigate = useNavigate();
 
-     async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values)
         try {
             const data = await login(values)
-            console.log(data)
+            console.log(data, isError, isSuccess, isLoading)
         } catch (error) {
-
+            console.log('comming from catchF')
         }
     }
     const form = useForm<z.infer<typeof formSchema>>({
@@ -54,7 +54,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="gains@email.com" {...field} />
+                                    <Input placeholder="gains@email.com" autoComplete="email"{...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
