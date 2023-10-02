@@ -7,10 +7,12 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/ui/icon"
+import { useNavigate } from "react-router-dom"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
     async function onSubmit(event: React.SyntheticEvent) {
@@ -25,9 +27,15 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     return (
         <div className={cn("grid gap-6", className)} {...props}>
             <form onSubmit={onSubmit}>
-                <div className="grid gap-2">
-                    <div className="grid gap-1">
-                        <Label className="sr-only" htmlFor="email">
+                <div className="grid gap-5">
+                    <div className="grid gap-3">
+                        <h2 className="px-1 mt-10 scroll-m-20 pb-1 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
+                            Forgot Password?
+                        </h2>
+                        <p className="px-1 leading-5 text-muted-foreground pb-6">
+                           We will send you an email to reset your password.
+                        </p>
+                        <Label className="pl-2" htmlFor="email">
                             Email
                         </Label>
                         <Input
@@ -40,29 +48,15 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                             disabled={isLoading}
                         />
                     </div>
-                    <div className="grid gap-1">
-                        <Label className="sr-only" htmlFor="email">
-                            Email
-                        </Label>
-                        <Input
-                            id="password"
-                            placeholder="password"
-                            type="email"
-                            autoCapitalize="none"
-                            autoComplete="email"
-                            autoCorrect="off"
-                            disabled={isLoading}
-                        />
-                    </div>
-                    <Button className="mt-3" disabled={isLoading}>
+                   
+                    <Button className="mt-3 w-fit flex justify-self-center" disabled={isLoading}>
                         {isLoading && (
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                         )}
-                        Sign In
+                        Send
                     </Button>
                 </div>
             </form>
-            
         </div>
     )
 }

@@ -1,13 +1,13 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState, PrivateRoutesProps } from "./types";
+import { PrivateRoutesProps } from "./types";
+import { useSelector } from 'react-redux';
 
 export const PrivateRoutes: React.FC<PrivateRoutesProps> = () => {
-    const { isLoggedIn } = useSelector((state: RootState) => state.auth);
-    if (isLoggedIn) {
+   const {isAuthenticated} = useSelector((state:any) => state.user);
+    if (isAuthenticated) {
         return <Outlet />
     } else {
-        return <Navigate to='/login'></Navigate>
+        return <Navigate to='/login' replace></Navigate>
     }
 };
