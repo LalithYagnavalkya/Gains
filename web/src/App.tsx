@@ -3,7 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 //pages
 import { Forgot, Login, Reset } from "./pages/auth";
 import { PrivateRoutes } from "./utils/privateRoutes";
-import { Home } from "./pages/home/Home";
+import { Home } from "./pages/dashboard/Home";
 import { useSelector } from "react-redux";
 const App: React.FC = () => {
   const { isAuthenticated } = useSelector((state: any) => state.user);
