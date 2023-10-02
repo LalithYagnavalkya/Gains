@@ -1,20 +1,19 @@
 "use client"
 
+// modules
 import * as React from "react"
+import { z } from "zod"
+import { useNavigate } from "react-router-dom"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 
-import { cn } from "@/lib/utils"
-import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/ui/icon"
-import { useNavigate } from "react-router-dom"
 
 // reducers
 import { useLoginMutation } from "../../features/auth/auth.slice";
-import { z } from "zod"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
@@ -24,16 +23,21 @@ const formSchema = z.object({
     password: z.string().min(6)
 })
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-    const [login, { isSuccess, isError, isLoading }] = useLoginMutation();
     const navigate = useNavigate();
+    const [login, {data, isLoading, isError }] = useLoginMutation();
+    const [isPasswordWrong, setIsPasswordWrong] = React.useState(false)
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values)
         try {
-            const data = await login(values)
-            console.log(data, isError, isSuccess, isLoading)
-        } catch (error) {
-            console.log('comming from catchF')
+            const resData = await login(values).unwrap()
+            if (!resData.error && !isError) {
+                navigate('/app/home');
+            } else {
+            }
+        } catch (error :any) {
+            if(error.status === 401)
+            setIsPasswordWrong(true);
         }
     }
     const form = useForm<z.infer<typeof formSchema>>({
@@ -73,6 +77,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                             </FormItem>
                         )}
                     />
+                    {isPasswordWrong && <p className="leading-5 text-muted-foreground pb-6 text-center">
+                        Sorry, your credentials were incorrect. Please double-check your credentials.
+                    </p>}
                     <Button type="submit" className="mt-3 w-fit flex justify-self-center" disabled={isLoading}>
                         {isLoading && (
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

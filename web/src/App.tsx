@@ -4,8 +4,9 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Forgot, Login, Reset } from "./pages/auth";
 import { PrivateRoutes } from "./utils/privateRoutes";
 import { Home } from "./pages/home/Home";
+import { useSelector } from "react-redux";
 const App: React.FC = () => {
-  let user = null;
+  const { isAuthenticated } = useSelector((state: any) => state.user);
 
   return (
     <div className="min-h-screen">
@@ -14,11 +15,11 @@ const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/forgotPassword" element={<Forgot />} />
           <Route path="/reset" element={<Reset />} />
-          <Route path="/auth" element={<PrivateRoutes />}>
+          <Route path="/app" element={<PrivateRoutes />}>
             <Route path="home" element={<Home />} />
           </Route>
-          <Route path="/" element={<Navigate to={user === null?  "login" : "/auth/home"} />} />
-          <Route path="*" element={<Navigate to={user === null ? "login" : "/auth/home"} />} />
+          <Route path="/" element={<Navigate to={isAuthenticated ? "login" : "/app/home"} />} />
+          <Route path="*" element={<Navigate to={isAuthenticated ? "login" : "/app/home"} />} />
         </Routes>
       </BrowserRouter>
     </div>
