@@ -37,6 +37,7 @@ export const authSlice = apiSlice.injectEndpoints({
       ) {
         const authData = await cacheDataLoaded;
         if (authData && authData.data && !authData.data.error) {
+          localStorage.setItem("currentUser", JSON.stringify({user: authData.data.user, token: authData.data.token }));
           dispatch(setAuth({ isAuthenticated: true, user: authData.data.user, token: authData.data.token }));
         }
       },
@@ -46,6 +47,16 @@ export const authSlice = apiSlice.injectEndpoints({
         url: '/logout',
         method: 'POST',
       }),
+      async onCacheEntryAdded(
+        arg,
+        { dispatch, cacheDataLoaded, }
+      ) {
+        const authData = await cacheDataLoaded;
+        if (authData && authData.data && !authData.data.error) {
+          localStorage.removeItem("currentUser");
+          dispatch(setAuth({ isAuthenticated: false, user:null, token: null }));
+        }
+      },
       invalidatesTags: ['Auth'],
     }),
   }),
