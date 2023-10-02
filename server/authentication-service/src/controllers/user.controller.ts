@@ -29,7 +29,7 @@ export const login = async (req: Request<{}, {}, loginInput['body']>, res: Respo
             const isUser = await bcrypt.compare(password, user.password);
 
             if (!isUser) {
-                return res.status(401).json({ error: true, message: "Wrong password" });
+                return res.status(401).json({ error: true, message: "Wrong credentials" });
             }
 
         }
