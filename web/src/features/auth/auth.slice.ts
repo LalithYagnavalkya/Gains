@@ -1,7 +1,8 @@
-import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
+import { createEntityAdapter } from '@reduxjs/toolkit';
 import { apiSlice } from '../api/api.slice';
 
 import { loginResType } from './types'
+import { setAuth } from './user.slice';
 
 
 const usersAdapter = createEntityAdapter();
@@ -24,28 +25,28 @@ export const authSlice = apiSlice.injectEndpoints({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(credentials),
+        providesTags: ['Auth'],
+
+        transformResponse: (res: loginResType, state: any) => {
+          usersAdapter.setAll(initialState, { isAuthenticated: true, user: res.user, token: res.token })
+        }
       }),
-      transformResponse: (res: loginResType) => {
-        // return usersAdapter.setAll(initialState, { isAuthenticated: true, user: res.user, token: res.token })
-        const { user, token } = res; // Extract necessary data
-        return {
-          ...initialState,
-          isAuthenticated: true,
-          user,
-          token,
-        };
-        console.log("inside RTK ")
-        console.log("inside RTK ",res)
-        // return usersAdapter.setAll(initialState, res)
+      async onCacheEntryAdded(
+        arg,
+        { dispatch, cacheDataLoaded, }
+      ) {
+        const authData = await cacheDataLoaded;
+        if (authData && authData.data && !authData.data.error) {
+          dispatch(setAuth({ isAuthenticated: true, user: authData.data.user, token: authData.data.token }));
+        }
       },
-      invalidatesTags: ['User'],
     }),
     logout: builder.mutation({
       query: () => ({
         url: '/logout',
         method: 'POST',
       }),
-      invalidatesTags: ['User'],
+      invalidatesTags: ['Auth'],
     }),
   }),
 });
