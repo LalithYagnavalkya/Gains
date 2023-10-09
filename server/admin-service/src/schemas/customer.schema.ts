@@ -118,15 +118,22 @@ export const getCustomersSchema = object({
         })
     }),
     query: object({
-        // _user: object({
-        //     _id: z.string(),
-        //     role: string(),
-        //     partnerId: z.number(),
-        // }),
+
         page: string().transform((val) => Number(val)),
 
         type: z.enum(["recentCustomers", "username", "phone", "workoutType", "joinedOn", "validUpto"]).
             transform((val) => val.toLowerCase()),
+
+        paymentStatus: z.union([
+            z.enum(['PENDING', 'PAID', 'UPCOMING_PAYMENT_DUE']),
+            z.array(z.enum(['PENDING', 'PAID', 'UPCOMING_PAYMENT_DUE'])),
+        ]).transform((val) => {
+            if (Array.isArray(val)) {
+                return val.map((item) => item.toLowerCase());
+            } else {
+                return [val.toLowerCase()];
+            }
+        }).optional(),
 
         limit: string().transform((val) => Number(val)),
 

@@ -10,7 +10,7 @@ import User, { IUser } from "../models/user.model";
 import {
     addCustomerInput, addOrEditEmailSchema, editCustomerInput, getCustomersInput, getCustomersSchema, joinedOnSchema,
     phoneSchema, usernameSchema, validUptoSchema, workoutSchmea
-} from '../schemas/admin.schema'
+} from '../schemas/customer.schema'
 
 // services
 import {
@@ -212,6 +212,11 @@ export const getCustomers = async (req: Request, res: Response) => {
             users: [] as IUser[],
             totalCount: 0,
         };
+
+        // if(queryObj)
+        const queryObj = {
+            status: req.query.paymentStatus
+        }
 
         switch (type) {
             case 'recentcustomers': {

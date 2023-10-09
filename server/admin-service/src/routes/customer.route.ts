@@ -7,7 +7,7 @@ import { authenticateUser, authorizeRole } from "../middleware/auth.middleware";
 import validateResource from "../middleware/validateResource";
 
 // schemas
-import { addCustomerSchema, editCustomerSchema, getCustomersSchema } from "../schemas/admin.schema";
+import { addCustomerSchema, editCustomerSchema, getCustomersSchema } from "../schemas/customer.schema";
 
 // controllers
 import { uploadCustomers, addCustomer, editCustomer, getCustomers } from "../controllers/customer.controller";
