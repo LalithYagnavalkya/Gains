@@ -42,7 +42,11 @@ const userSchema = new mongoose.Schema(
 		joinedOn: { type: Date },
 		validUpto: { type: Date },
 		lastPayOffDate: { type: Date },
-		paymentStatus: { type: String, enum: ['PENDING', 'PAID', 'UPCOMMING_PAYMENT_DUE'], default: 'PENDING' },
+		paymentStatus: { type: String, enum: ['PENDING', 'PAID', 'UPCOMMING_DUE'], default: 'PENDING' },
+		// Assume user is in middle of the month October 15th, and user next payment is on november 1st.
+		// user payment status will be paid for october month. 
+		// On October 23rd, seven days before the validUpto. user paymentStatus will become UPCOMMING_DUE
+		// if user did not pay on 1st, paymentStatus will be PENDING.
 		gender: { type: String, enum: ['MALE', 'FEMALE'] },
 		isPhoneVerified: { type: Boolean, default: false, required: false },
 		isEmailVerified: { type: Boolean, default: false, required: false },

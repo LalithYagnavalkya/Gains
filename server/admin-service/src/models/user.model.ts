@@ -21,7 +21,7 @@ export interface IUser extends Document {
 	workoutType: string[],
 	partnerId: number;
 	membershipFee?: number;
-	membershipDuriation? : number; //number of months
+	membershipDuriation?: number; //number of months
 }
 
 const userSchema = new mongoose.Schema(
@@ -42,7 +42,11 @@ const userSchema = new mongoose.Schema(
 		joinedOn: { type: Date },
 		validUpto: { type: Date },
 		lastPayOffDate: { type: Date },
-		paymentStatus: { type: String, enum: ['PENDING', 'PAID', 'UPCOMMING_PAYMENT_DUE'], default: 'PENDING' },
+		paymentStatus: { type: String, enum: ['PENDING', 'PAID', 'UPCOMMING_DUE'], default: 'PENDING' },
+		// Assume user is in middle of the month October 15th, and user next payment is on november 1st.
+		// user payment status will be paid for october month. 
+		// On October 23rd, seven days before the validUpto. user paymentStatus will become UPCOMMING_DUE
+		// if user did not pay on 1st, paymentStatus will be PENDING.
 		gender: { type: String, enum: ['MALE', 'FEMALE'] },
 		isPhoneVerified: { type: Boolean, default: false, required: false },
 		isEmailVerified: { type: Boolean, default: false, required: false },
@@ -50,7 +54,7 @@ const userSchema = new mongoose.Schema(
 		workoutType: [{ type: String }],
 		customerSerialNumber: { type: String },
 		membershipFee: { type: Number },
-		membershipDuriation: {type : Number} // number of months
+		membershipDuriation: { type: Number } // number of months
 	},
 	{ timestamps: true },
 );
@@ -60,7 +64,7 @@ userSchema.pre<IUser>("save", function (next) {
 	if (this.isModified("username")) {
 		this.username = this.username.toLowerCase();
 	}
-	if(this.email){
+	if (this.email) {
 		this.email = this.email.toLowerCase();
 	}
 	next();
