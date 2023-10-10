@@ -21,6 +21,7 @@ export interface IUser extends Document {
 	workoutType: string[],
 	partnerId: number;
 	membershipFee?: number;
+	membershipDuriation?: number; //number of months
 }
 
 const userSchema = new mongoose.Schema(
@@ -48,7 +49,8 @@ const userSchema = new mongoose.Schema(
 		partnerId: { type: Number, required: true },
 		workoutType: [{ type: String }],
 		customerSerialNumber: { type: String },
-		membershipFee: { type: Number }
+		membershipFee: { type: Number },
+		membershipDuriation: { type: Number } // number of months
 	},
 	{ timestamps: true },
 );
@@ -58,7 +60,7 @@ userSchema.pre<IUser>("save", function (next) {
 	if (this.isModified("username")) {
 		this.username = this.username.toLowerCase();
 	}
-	if(this.email){
+	if (this.email) {
 		this.email = this.email.toLowerCase();
 	}
 	next();
