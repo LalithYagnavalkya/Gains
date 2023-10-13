@@ -50,7 +50,9 @@ export const paginateResults = async <T extends Document>(
     limit: number = 5,
     sortField?: string,
     sortDirection?: -1 | 1,
-    select?: string
+    select?: string,
+    populateFields?: string[], 
+    populateSelect?: string[]
 ): Promise<PaginatedResults<T>> => {
 
     if (pageNumber < 1) {
@@ -59,7 +61,7 @@ export const paginateResults = async <T extends Document>(
 
     const skip = (pageNumber - 1) * limit;
 
-    let queryBuilder = model.find(query).skip(skip).limit(limit);
+    let queryBuilder: any = model.find(query).skip(skip).limit(limit);
 
     if (sortField && sortDirection) {
         const sortOptions: Record<string, -1 | 1> = {
@@ -70,6 +72,12 @@ export const paginateResults = async <T extends Document>(
 
     if (select) {
         queryBuilder = queryBuilder.select(select);
+    }
+
+    if (populateFields && populateFields.length > 0) {
+        for (const field of populateFields) {
+            queryBuilder = queryBuilder.populate(field, populateSelect?.join(' '));
+        }
     }
 
     const results = await queryBuilder.lean() as T[];
