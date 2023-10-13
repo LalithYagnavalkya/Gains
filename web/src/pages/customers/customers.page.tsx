@@ -12,14 +12,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { DataTableDemo } from "./table/table"
+import { useGetCustomersQuery } from "@/features/customer/customer.slice"
 // import DemoPage from "./customerTable/customer.page"
 
 type Checked = DropdownMenuCheckboxItemProps["checked"]
 
 export const Customer = () => {
+  const { data: users } = useGetCustomersQuery({type: 'recentlyJoined', page: 1, limit: 5});
   const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
   const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
   const [showPanel, setShowPanel] = React.useState<Checked>(false)
+
 
   return <div className="p-4 ">
     <div className="mx-auto container flex justify-between items-center">
@@ -60,8 +63,7 @@ export const Customer = () => {
       </DropdownMenu></div>
     </div>
     <div className="mx-auto container">
-      <DataTableDemo />
-      {/* <DemoPage /> */}
+      <DataTableDemo users={users} />
     </div>
   </div >
 }
