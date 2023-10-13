@@ -121,7 +121,7 @@ export const getCustomersSchema = object({
 
         page: string().transform((val) => Number(val)),
 
-        type: z.enum(["recentCustomers", "username", "phone", "workoutType", "joinedOn", "validUpto"]).
+        type: z.enum(["recentlyJoined", "username", "phone", "workoutType", "joinedOn", "validUpto"]).
             transform((val) => val.toLowerCase()),
 
         paymentStatus: z.union([
