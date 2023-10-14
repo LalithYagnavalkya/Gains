@@ -9,6 +9,8 @@ import {
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '@/features/auth/user.slice';
 
 interface navItemType {
     name: string,
@@ -31,15 +33,21 @@ const NavComponent: React.FC<{ item: navItemType }> = ({ item }) => {
 }
 
 const Navbar: React.FC = () => {
+    const dispatch = useDispatch();
     return (
         <nav className="p-4 border-b">
             <div className="container mx-auto">
                 <div className="flex justify-between items-center">
-                   <Logo />
+                    <Logo />
                     <NavigationMenu className="flex space-x-4">
                         <NavigationMenuList>
                             {navLinks.map((x: navItemType
-                            ) => <NavComponent item={x} />)}
+                            ) => <NavComponent key={x.name} item={x} />)}
+                            <Link to='/login'>
+                                <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={() => dispatch(logout)}>
+                                    Logout
+                                </NavigationMenuLink>
+                            </Link>
                         </NavigationMenuList>
                     </NavigationMenu>
                 </div>
