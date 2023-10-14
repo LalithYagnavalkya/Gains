@@ -13,20 +13,47 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { DataTableDemo } from "./table/table"
 import { useGetCustomersQuery } from "@/features/customer/customer.slice"
+import { DataTableFacetedFilter } from "./components/status.filter"
 // import DemoPage from "./customerTable/customer.page"
 
 type Checked = DropdownMenuCheckboxItemProps["checked"]
 
 export const Customer = () => {
-  const { data: users } = useGetCustomersQuery({type: 'recentlyJoined', page: 1, limit: 5});
+  const { data: users, isLoading,
+    isSuccess,
+    isError,
+    error } = useGetCustomersQuery({ type: 'recentlyJoined', page: 1, limit: 5 });
+
   const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
   const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
   const [showPanel, setShowPanel] = React.useState<Checked>(false)
-
+  const [query, setQuery] = React.useState({
+    query: "",
+    status: [],
+    type: "",
+  })
 
   return <div className="p-4 ">
-    <div className="mx-auto container flex justify-between items-center">
+    <div className="mx-auto container flex justify-around items-center">
       <div className="items-center w-1/3"><Input type="email" placeholder="Search with names" /></div>
+      <div className="items-start w-1/2">
+        <DataTableFacetedFilter
+        title="status"
+          options={[
+            {
+              label: 'Pending',
+              value: 'PENDING'
+            },
+            {
+              label: 'Paid',
+              value: 'PAID'
+            },
+            {
+              label: 'Upcoming',
+              value: 'UPCOMING'
+            },
+          ]}
+        /></div>
       <div> <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -64,6 +91,7 @@ export const Customer = () => {
     </div>
     <div className="mx-auto container">
       <DataTableDemo users={users} />
+
     </div>
   </div >
 }

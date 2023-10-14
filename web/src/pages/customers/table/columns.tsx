@@ -17,41 +17,31 @@ export type Payment = {
 }
 export const columns: ColumnDef<Payment>[] = [
     {
-        accessorKey: "status",
-        header: "Status",
+        accessorKey: "username",
+        header: "Name",
         cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("status")}</div>
+            <div className="capitalize">{row.getValue("username")}</div>
         ),
     },
     {
-        accessorKey: "email",
+        accessorKey: "phone",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Email
-                    <CaretSortIcon className="ml-2 h-4 w-4" />
+                    Phone
+                    {/* <CaretSortIcon className="ml-2 h-4 w-4" /> */}
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+        cell: ({ row }) => <div className="lowercase text-left">{row.getValue("phone")}</div>,
     },
     {
-        accessorKey: "amount",
-        header: () => <div className="text-right">Amount</div>,
-        cell: ({ row }) => {
-            const amount = parseFloat(row.getValue("amount"))
-
-            // Format the amount as a dollar amount
-            const formatted = new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-            }).format(amount)
-
-            return <div className="text-right font-medium">{formatted}</div>
-        },
+        accessorKey: "paymentStatus",
+        header:"payment status",
+        cell: ({ row }) => <div className="lowercase text-center w-1/2">{row.getValue("paymentStatus")}</div>,
     },
     {
         id: "actions",

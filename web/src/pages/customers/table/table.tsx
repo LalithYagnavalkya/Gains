@@ -77,18 +77,18 @@ import {
 //         status: "processing",
 //         email: "Monserrat44@gmail.com",
 //     },
-//     {
-//         id: "5kma53ae",
-//         amount: 874,
-//         status: "success",
-//         email: "Silas22@gmail.com",
-//     },
-//     {
-//         id: "bhqecj4p",
-//         amount: 721,
-//         status: "failed",
-//         email: "carmella@hotmail.com",
-//     },
+// {
+//     id: "5kma53ae",
+//     amount: 874,
+//     status: "success",
+//     email: "Silas22@gmail.com",
+// },
+// {
+//     id: "bhqecj4p",
+//     amount: 721,
+//     status: "failed",
+//     email: "carmella@hotmail.com",
+// },
 // ]
 export type Payment = {
     id: string
@@ -108,10 +108,22 @@ export function DataTableDemo(data: any) {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
-  
+
     console.log(data)
     const table = useReactTable({
-        data,
+        data: data?.users && data.users?.users ? data.users.users : [{
+            _id: "5kma53ae",
+            amount: 874,
+            status: "success",
+            email: "Silas22@gmail.com",
+        },
+        {
+            _id: "bhqecj4p",
+            amount: 721,
+            status: "failed",
+            email: "carmella@hotmail.com",
+        },
+    ],
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -134,7 +146,6 @@ export function DataTableDemo(data: any) {
                 {table.getHeaderGroups().map((headerGroup) => (
                     <TableRow key={headerGroup.id}>
                         {headerGroup.headers.map((header) => {
-                            console.log(header)
                             if (header.id === 'actions') {
                                 return (
                                     <></>
