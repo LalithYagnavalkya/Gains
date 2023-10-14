@@ -4,13 +4,13 @@ import { apiSlice } from '../api/api.slice';
 
 const usersAdapter = createEntityAdapter();
 
-const customerBackend: string = '/admin'
+const customerBackend: string = '/admin/customer'
 
 export const customerSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         getCustomers: builder.query({
             query: (data) => ({
-                url: customerBackend + '/customer/getCustomers',
+                url: customerBackend + '/getCustomers',
                 method: 'GET',
                 params: data,
                 providesTags: ['Customers'],
