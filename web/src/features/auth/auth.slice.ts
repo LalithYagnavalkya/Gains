@@ -53,7 +53,6 @@ export const authSlice = apiSlice.injectEndpoints({
       ) {
         const authData = await cacheDataLoaded;
         if (authData && authData.data && !authData.data.error) {
-          localStorage.clear();
           dispatch(setAuth({ isAuthenticated: false, user: null, token: null }));
         }
       },
