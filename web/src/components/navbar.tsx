@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/navigation-menu"
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { logout } from '@/features/auth/user.slice';
+import { logout } from '../features/auth/user.slice';
 
 interface navItemType {
     name: string,
@@ -43,8 +43,8 @@ const Navbar: React.FC = () => {
                         <NavigationMenuList>
                             {navLinks.map((x: navItemType
                             ) => <NavComponent key={x.name} item={x} />)}
-                            <Link to='/login'>
-                                <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={() => dispatch(logout)}>
+                            <Link to='/'>
+                                <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={() => { dispatch(logout()) }}>
                                     Logout
                                 </NavigationMenuLink>
                             </Link>

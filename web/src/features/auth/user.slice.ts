@@ -7,9 +7,9 @@ const user = userJSON ? JSON.parse(userJSON) : null;
 const userSlice = createSlice({
     name: 'user',
     initialState: {
-        isAuthenticated: user? true: false,
+        isAuthenticated: user ? true : false,
         user: user ? user.user : null,
-        token: user? user.token: null,
+        token: user ? user.token : null,
     },
     reducers: {
         setAuth(state, action) {
@@ -19,6 +19,7 @@ const userSlice = createSlice({
             };
         },
         logout(state) {
+            localStorage.removeItem('currentUser')
             return {
                 ...state,
                 isAuthenticated: false,
