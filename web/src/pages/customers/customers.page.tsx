@@ -14,6 +14,7 @@ import {
 import { DataTableDemo } from "./table/table"
 import { useGetCustomersQuery } from "@/features/customer/customer.slice"
 import { DataTableFacetedFilter } from "./components/status.filter"
+import CreateCustomer from "./createCustomer/create.customer"
 // import DemoPage from "./customerTable/customer.page"
 
 type Checked = DropdownMenuCheckboxItemProps["checked"]
@@ -32,11 +33,12 @@ export const Customer = () => {
     status: [],
     type: "",
   })
+  console.log(users)
 
   return <div className="p-4 ">
-    <div className="mx-auto container flex justify-around items-center">
+    <div className="mx-auto container flex justify-between items-center">
       <div className="items-center w-1/3"><Input type="email" placeholder="Search with names" /></div>
-      <div className="items-start w-1/2">
+      {/* <div className="items-start w-1/2">
         <DataTableFacetedFilter
         title="status"
           options={[
@@ -53,8 +55,8 @@ export const Customer = () => {
               value: 'UPCOMING'
             },
           ]}
-        /></div>
-      <div> <DropdownMenu>
+        /></div> */}
+      {/* <div> <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"
@@ -87,10 +89,13 @@ export const Customer = () => {
             Panel
           </DropdownMenuCheckboxItem>
         </DropdownMenuContent>
-      </DropdownMenu></div>
+      </DropdownMenu></div> */}
+      <CreateCustomer />
     </div>
     <div className="mx-auto container">
-      <DataTableDemo users={users} />
+      {isLoading ? "loading" :
+        <DataTableDemo users={users} />
+      }
 
     </div>
   </div >
