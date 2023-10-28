@@ -21,8 +21,12 @@ const formSchema = z.object({
     email: z.string()
         .email("Not a valid email"),
     phone: z.string().min(10),
-    joinedOn: z.string(),
-    validUpto: z.string(),
+    joinedOn: z.date({
+        required_error: "Joined Date is required.",
+    }),
+    validUpto: z.date({
+        required_error: "Valid upto date is required.",
+    }),
     membershipFee: z.number(),
     workoutType: z.string(),
 })
@@ -143,7 +147,7 @@ const CreateCustomer: React.FC = () => {
                                                         )}
                                                     >
                                                         {field.value ? (
-                                                            format(parseInt(field.value), "PPP")
+                                                            format(field.value, "PPP")
                                                         ) : (
                                                             <span>Pick a date</span>
                                                         )}
@@ -187,7 +191,7 @@ const CreateCustomer: React.FC = () => {
                                                         )}
                                                     >
                                                         {field.value ? (
-                                                            format(parseInt(field.value), "PPP")
+                                                            format(field.value, "PPP")
                                                         ) : (
                                                             <span>Pick a date</span>
                                                         )}
