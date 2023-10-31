@@ -4,7 +4,6 @@ import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
 
 import { DataTableDemo } from "./table/table"
 import { useGetCustomersQuery } from "@/features/customer/customer.slice"
-import CreateCustomer from "./createCustomer/create.customer"
 import AddCustomer from "./createCustomer/add.customer"
 // import DemoPage from "./customerTable/customer.page"
 
@@ -20,7 +19,6 @@ export const Customer: React.FC = () => {
   return <div className="p-4 ">
     <div className="mx-auto container flex justify-between items-center">
       <div className="items-center w-1/3"><Input type="email" placeholder="Search with names" /></div>
-      <CreateCustomer />
       <AddCustomer />
     </div>
     <div className="mx-auto container">
