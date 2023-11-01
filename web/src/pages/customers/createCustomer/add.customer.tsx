@@ -27,6 +27,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { RupeeInput } from "@/components/ui/rupeeInput";
 // schema
 const formSchema = z.object({
     username: z.string(),
@@ -61,14 +62,14 @@ const AddCustomer: React.FC = () => {
     return <>
 
         <Button size={'sm'} onClick={openModal}>
-            Open Modal
+            Add Customer
         </Button>
         {isModalOpen && (
             <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
                 <Card className="w-[545px]">
                     <CardHeader>
                         <CardTitle>Add Customer</CardTitle>
-                        <CardDescription>Make changes to your profile here. Click save when you're done.</CardDescription>
+                        <CardDescription>Fill up your customer details. Click confirm when you're done.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <Form {...form}>
@@ -127,7 +128,8 @@ const AddCustomer: React.FC = () => {
                                                 <FormItem>
                                                     <FormLabel>Fee</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="" {...field} />
+                                                        {/* <Input placeholder="" {...field} /> */}
+                                                        <RupeeInput placeholder="" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>

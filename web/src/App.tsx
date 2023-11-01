@@ -5,7 +5,6 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Forgot, Login, Reset } from "./pages/auth";
 import { Home } from "./pages/dashboard/dashboard";
 import {Customer} from "./pages/customers/customers.page";
-import CreateCustomer from "./pages/customers/createCustomer/create.customer";
 
 // others
 import { PrivateRoutes } from "./utils/privateRoutes";
@@ -24,7 +23,6 @@ const App: React.FC = () => {
           <Route path="/app" element={<PrivateRoutes />}>
             <Route path="home" element={<Home />} />
             <Route path="customers" element={<Customer />} />
-            <Route path="createCustomer" element={<CreateCustomer />} />
           </Route>
           <Route path="/" element={<Navigate to={isAuthenticated ? "login" : "/app/home"} />} />
           <Route path="*" element={<Navigate to={isAuthenticated ? "login" : "/app/home"} />} />
