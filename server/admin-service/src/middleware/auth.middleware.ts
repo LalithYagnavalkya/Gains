@@ -10,7 +10,7 @@ config({
 
 export const generateToken = (userId: string) => {
     const secretKey: string = <string>process.env.SECRET_KEY
-    const token = jwt.sign({ userId }, secretKey, { expiresIn: '30d' });
+    const token = jwt.sign({ userId }, secretKey, { expiresIn: '1h' });
     return token;
 };
 interface tokenObj {

@@ -129,7 +129,7 @@ const AddCustomer: React.FC = () => {
                                                     <FormLabel>Fee</FormLabel>
                                                     <FormControl>
                                                         {/* <Input placeholder="" {...field} /> */}
-                                                        <RupeeInput placeholder="" {...field} />
+                                                        <RupeeInput type='number' placeholder="" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
