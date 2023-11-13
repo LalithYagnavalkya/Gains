@@ -2,28 +2,48 @@ import { createEntityAdapter } from '@reduxjs/toolkit';
 import { apiSlice } from '../api/api.slice';
 
 
-const usersAdapter = createEntityAdapter();
-
+const customerAdapter = createEntityAdapter();
+const initialState = customerAdapter.getInitialState()
 const customerBackend: string = '/admin/customer'
 
 export const customerSlice = apiSlice.injectEndpoints({
-    endpoints: builder => ({
+    endpoints: (builder: any) => ({
         getCustomers: builder.query({
-            query: (data) => ({
+            query: (data: any) => ({
                 url: customerBackend + '/getCustomers',
                 method: 'GET',
                 params: data,
-                providesTags: ['Customers'],
+                // providesTags: ['Customer'],
 
-                // transformResponse: (res, state: any) => {
-                //     usersAdapter.setAll(initialState, { isAuthenticated: true, user: res.user, token: res.token })
-                // }
+                transformResponse: (responseData: any, state: any) => {
+                    console.log(responseData)
+                    customerAdapter.setAll(initialState, responseData)
+                },
+                providesTags: (result: any, error: any, arg: any) => [
+                    { type: 'Customer', id: "LIST" },
+                    ...result.ids.map((id: any) => ({ type: 'Customer', id }))
+                ]
             }),
-          
+
+        }),
+
+        addCustomer: builder.mutation({
+            query: (data: any) => ({
+                url: customerBackend + '/addCustomer',
+                method: 'POST',
+                body: {
+                    ...data,
+                    // memberShipFee: Number(memberShiptFee)
+                }
+            }),
+            invalidatesTags: [
+                { type: 'Customer', id: "LIST" }
+            ]
         }),
     }),
 });
 
 export const {
     useGetCustomersQuery,
+    useAddCustomerMutation
 } = customerSlice;

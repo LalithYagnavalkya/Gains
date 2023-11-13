@@ -10,7 +10,7 @@ const getAuthToken = () => {
     return '';
 };
 
-export const apiSlice = createApi({
+export const apiSlice: any = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:4000/api/v1',
@@ -23,6 +23,6 @@ export const apiSlice = createApi({
             return headers;
         },
     }),
-    tagTypes: ['Post', 'User', 'Auth'],
+    tagTypes: ['Post', 'User', 'Auth', 'Customer'],
     endpoints: builder => ({})
 })

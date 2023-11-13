@@ -10,14 +10,7 @@ import {
 import { format } from "date-fns"
 
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react"
 import { useForm } from "react-hook-form";
@@ -28,28 +21,38 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { RupeeInput } from "@/components/ui/rupeeInput";
+import { useAddCustomerMutation } from "@/features/customer/customer.slice";
+
 // schema
 const formSchema = z.object({
-    username: z.string(),
+    username: z.string().nonempty("Username is required."), 
     email: z.string()
         .email("Not a valid email"),
-    phone: z.string().min(10),
+    phone: z.string().nullable().refine(data => data === null || data.length === 10, {
+        message: "Phone number must be at least 10 characters long when provided",
+    }),
     joinedOn: z.date({
         required_error: "Joined Date is required.",
     }),
     validUpto: z.date({
         required_error: "Valid upto date is required.",
     }),
-    membershipFee: z.number(),
-    workoutType: z.string(),
+    membershipFee: z.string(),
+    workoutType: z.string().optional(),
 })
 
 const AddCustomer: React.FC = () => {
+    const [addNewCustomer, { isLoading }] = useAddCustomerMutation()
+
     const [isModalOpen, setModalOpen] = useState<Boolean>(false);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             email: "",
+            username: "",
+            phone: '',
+            // joinedOn: new Date(),
+
         },
     })
     const openModal = () => {
@@ -59,6 +62,16 @@ const AddCustomer: React.FC = () => {
     const closeModal = () => {
         setModalOpen(false);
     };
+
+    const onSubmit = (values: z.infer<typeof formSchema>) => {
+        console.log(values)
+        let memberShipFeeInNumber: number = parseFloat(values.membershipFee.replace(/,/g, ''));
+        addNewCustomer({
+            ...values, memberShipFee: memberShipFeeInNumber
+        })
+        // closeModal()
+    }
+
     return <>
 
         <Button size={'sm'} onClick={openModal}>
@@ -73,7 +86,7 @@ const AddCustomer: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                         <Form {...form}>
-                            <form onSubmit={form.handleSubmit(() => { })} className="grid gap-6">
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
                                 <FormField
                                     control={form.control}
                                     name="username"
@@ -81,7 +94,7 @@ const AddCustomer: React.FC = () => {
                                         <FormItem>
                                             <FormLabel>Name</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="whats his name?" {...field} />
+                                                <Input autoComplete="off"  placeholder="whats his name?" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -97,7 +110,7 @@ const AddCustomer: React.FC = () => {
                                                 <FormItem>
                                                     <FormLabel>Email</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="" {...field} />
+                                                        <Input autoComplete="off" placeholder="" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -111,7 +124,8 @@ const AddCustomer: React.FC = () => {
                                             <FormItem>
                                                 <FormLabel>Phone</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="" {...field} />
+                                                    {/* <Input  placeholder="" {...field} /> */}
+                                                    <Input autoComplete="off" placeholder="" value={field.value ?? ""} onChange={field.onChange} onBlur={field.onBlur} name={field.name} ref={field.ref} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -129,7 +143,7 @@ const AddCustomer: React.FC = () => {
                                                     <FormLabel>Fee</FormLabel>
                                                     <FormControl>
                                                         {/* <Input placeholder="" {...field} /> */}
-                                                        <RupeeInput type='number' placeholder="" {...field} />
+                                                        <RupeeInput autoComplete="off"  placeholder="" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -143,7 +157,7 @@ const AddCustomer: React.FC = () => {
                                             <FormItem>
                                                 <FormLabel>Workout Type</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="" {...field} />
+                                                    <Input autoComplete="off"  placeholder="" {...field} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -226,9 +240,6 @@ const AddCustomer: React.FC = () => {
                                                             mode="single"
                                                             selected={field.value}
                                                             onSelect={field.onChange}
-                                                            disabled={(date: any) =>
-                                                                date > new Date() || date < new Date("1900-01-01")
-                                                            }
                                                             initialFocus
                                                         />
                                                     </PopoverContent>
@@ -241,14 +252,13 @@ const AddCustomer: React.FC = () => {
                                         )}
                                     />
                                 </div>
-
+                                <div className="flex justify-between">
+                                    <Button variant="outline" onClick={() => closeModal()} >Cancel</Button>
+                                    <Button type="button" onClick={form.handleSubmit(onSubmit)}>Confirm</Button>
+                                </div>
                             </form>
                         </Form>
                     </CardContent>
-                    <CardFooter className="flex justify-between">
-                        <Button variant="outline"  onClick={() => closeModal()} >Cancel</Button>
-                        <Button onClick={() => closeModal()}>Confirm</Button>
-                    </CardFooter>
                 </Card>
             </div>
         )}

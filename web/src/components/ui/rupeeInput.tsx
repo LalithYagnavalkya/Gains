@@ -3,13 +3,14 @@ import { IndianRupee } from 'lucide-react';
 import { cn } from "@/lib/utils"
 export type SearchProps = React.InputHTMLAttributes<HTMLInputElement>;
 export interface InputProps
-    extends React.InputHTMLAttributes<HTMLInputElement> { }
+    extends React.InputHTMLAttributes<HTMLInputElement> { 
+    }
 
 const RupeeInput = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ className, type, ...props }, ref) => {
+    ({ className, type, value, onChange,...props }, ref) => {
         
         const [inputValue, setInputValue] = React.useState<string>(
-            (props.value as string) || ''
+            (value as string) || ''
         );
 
         const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -18,11 +19,12 @@ const RupeeInput = React.forwardRef<HTMLInputElement, InputProps>(
             const sanitizedValue = value.replace(/[^0-9]/g, '');
             // Format the number with commas
             const formattedValue = sanitizedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            console.log(formattedValue)
             setInputValue(formattedValue);
+            // Pass the updated value to the external onChange handler
+            onChange && onChange(event);
         };
 
-
+       
         return (
             <div className="flex relative">
                 <IndianRupee className="h-[16px] w-[16px] absolute mt-2.5 ml-1.5" />

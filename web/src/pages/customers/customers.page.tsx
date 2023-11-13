@@ -5,15 +5,24 @@ import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
 import { DataTableDemo } from "./table/table"
 import { useGetCustomersQuery } from "@/features/customer/customer.slice"
 import AddCustomer from "./createCustomer/add.customer"
+import { useDispatch } from "react-redux"
+import { logout } from "@/features/auth/user.slice"
 // import DemoPage from "./customerTable/customer.page"
 
 type Checked = DropdownMenuCheckboxItemProps["checked"]
 
 export const Customer: React.FC = () => {
+  const dispatch = useDispatch();
   const { data: users, isLoading,
     isSuccess,
     isError,
     error } = useGetCustomersQuery({ type: 'recentlyJoined', page: 1, limit: 5 });
+
+    if(error){
+     if(error.status === 401){
+      dispatch(logout())
+     }
+    }
 
 
   return <div className="p-4 ">
