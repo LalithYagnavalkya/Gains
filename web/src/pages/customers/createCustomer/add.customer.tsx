@@ -63,13 +63,17 @@ const AddCustomer: React.FC = () => {
         setModalOpen(false);
     };
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log(values)
-        let memberShipFeeInNumber: number = parseFloat(values.membershipFee.replace(/,/g, ''));
-        addNewCustomer({
-            ...values, memberShipFee: memberShipFeeInNumber
-        })
-        // closeModal()
+
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        if (!isLoading) {
+            // convert membership fee from string (1,200) to number 1200
+            let memberShipFeeInNumber: number = parseFloat(values.membershipFee.replace(/,/g, ''));
+            const result = await addNewCustomer({
+                ...values, membershipFee: memberShipFeeInNumber
+            })
+            console.log(result)
+            closeModal()
+        }
     }
 
     return <>
@@ -94,7 +98,7 @@ const AddCustomer: React.FC = () => {
                                         <FormItem>
                                             <FormLabel>Name</FormLabel>
                                             <FormControl>
-                                                <Input autoComplete="off"  placeholder="whats his name?" {...field} />
+                                                <Input autoComplete="off" placeholder="whats his name?" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -143,7 +147,7 @@ const AddCustomer: React.FC = () => {
                                                     <FormLabel>Fee</FormLabel>
                                                     <FormControl>
                                                         {/* <Input placeholder="" {...field} /> */}
-                                                        <RupeeInput autoComplete="off"  placeholder="" {...field} />
+                                                        <RupeeInput autoComplete="off" placeholder="" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -157,7 +161,7 @@ const AddCustomer: React.FC = () => {
                                             <FormItem>
                                                 <FormLabel>Workout Type</FormLabel>
                                                 <FormControl>
-                                                    <Input autoComplete="off"  placeholder="" {...field} />
+                                                    <Input autoComplete="off" placeholder="" {...field} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
