@@ -244,6 +244,9 @@ const AddCustomer: React.FC = () => {
                                                             mode="single"
                                                             selected={field.value}
                                                             onSelect={field.onChange}
+                                                            disabled={(date) =>
+                                                                date < new Date(new Date().setMonth(new Date().getMonth() + 1))
+                                                            }
                                                             initialFocus
                                                         />
                                                     </PopoverContent>
