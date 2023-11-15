@@ -55,7 +55,7 @@ export function DataTableDemo(data: any) {
             status: "failed",
             email: "carmella@hotmail.com",
         },
-    ],
+        ],
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -75,9 +75,9 @@ export function DataTableDemo(data: any) {
     const renderTableCells = () => {
         return (
             (<TableBody>
-                {table.getHeaderGroups().map((headerGroup) => (
+                {table.getHeaderGroups().map((headerGroup: any) => (
                     <TableRow key={headerGroup.id}>
-                        {headerGroup.headers.map((header) => {
+                        {headerGroup.headers.map((header: any) => {
                             if (header.id === 'actions') {
                                 return (
                                     <></>
@@ -107,9 +107,9 @@ export function DataTableDemo(data: any) {
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
+                        {table.getHeaderGroups().map((headerGroup: any) => (
                             <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
+                                {headerGroup.headers.map((header: any) => {
                                     return (
                                         <TableHead key={header.id}>
                                             {header.isPlaceholder
@@ -129,12 +129,12 @@ export function DataTableDemo(data: any) {
                         :
                         (<TableBody>
                             {table.getRowModel().rows?.length ? (
-                                table.getRowModel().rows.map((row) => (
+                                table.getRowModel().rows.map((row :any) => (
                                     <TableRow
                                         key={row.id}
                                         data-state={row.getIsSelected() && "selected"}
                                     >
-                                        {row.getVisibleCells().map((cell) => (
+                                        {row.getVisibleCells().map((cell : any) => (
                                             <TableCell key={cell.id}>
                                                 {flexRender(
                                                     cell.column.columnDef.cell,

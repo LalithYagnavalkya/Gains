@@ -22,6 +22,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { RupeeInput } from "@/components/ui/rupeeInput";
 import { useAddCustomerMutation } from "@/features/customer/customer.slice";
+import { useToast } from "@/components/ui/use-toast";
 
 // schema
 const formSchema = z.object({
@@ -42,7 +43,8 @@ const formSchema = z.object({
 })
 
 const AddCustomer: React.FC = () => {
-    const [addNewCustomer, { isLoading }] = useAddCustomerMutation()
+    const [addNewCustomer, { isLoading ,isError }] = useAddCustomerMutation()
+    const { toast } = useToast()
 
     const [isModalOpen, setModalOpen] = useState<Boolean>(false);
     const form = useForm<z.infer<typeof formSchema>>({
@@ -71,8 +73,17 @@ const AddCustomer: React.FC = () => {
             const result = await addNewCustomer({
                 ...values, membershipFee: memberShipFeeInNumber
             })
-            console.log(result)
-            closeModal()
+            console.log(values)
+            if (result.error?.data?.error){
+                console.log(result.error.data.message)
+                toast({
+                    title: "Please Provide new Phone number",
+                    description: result.error.data.message,
+                })
+                return;
+            }else{
+                closeModal()
+            }
         }
     }
 
