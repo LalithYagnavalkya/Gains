@@ -9,7 +9,7 @@ import { forgotPassword, login, resetPassword } from "../controllers/user.contro
 
 //schemas
 import { createAdminSchema } from '../schemas/createUser.schema'
-import { emailOrPhoneSchema, forgotPasswordSchema, loginSchema, resetPassowrdSchema } from '../schemas/auth.schema'
+import { forgotPasswordSchema, loginSchema, resetPassowrdSchema } from '../schemas/auth.schema'
 
 dotenv.config({ path: "./src/config/config.env" });
 
