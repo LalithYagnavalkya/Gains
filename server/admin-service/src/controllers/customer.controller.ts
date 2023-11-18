@@ -8,7 +8,7 @@ import User, { IUser } from "../models/user.model";
 
 // schemas
 import {
-    addCustomerInput, addOrEditEmailSchema, editCustomerInput, getCustomersInput, getCustomersSchema, joinedOnSchema,
+    addCustomerInput, addOrEditEmailSchema, editCustomerInput, emailOrPhoneInput, getCustomersInput, getCustomersSchema, joinedOnSchema,
     phoneSchema, usernameSchema, validUptoSchema, workoutSchmea
 } from '../schemas/customer.schema'
 
@@ -262,3 +262,17 @@ export const getCustomers = async (req: Request, res: Response) => {
     }
 }
 
+export const checkIfEmailOrPhoneExists = async (req: Request<emailOrPhoneInput['params']>, res: Response) => {
+    const { email, phone } = req.params;
+
+    try {
+        const isFound = await User.find({ $or: [{ email }, { phone }] })
+
+        if (isFound) {
+            return true
+        }
+        return false;
+    } catch (e: any) {
+        return res.status(500).json({ error: true, message: e.message })
+    }
+}

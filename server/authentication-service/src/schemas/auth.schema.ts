@@ -36,6 +36,7 @@ export const resetPassowrdSchema = object({
     })
 });
 
+
 export type loginInput = TypeOf<typeof loginSchema>
 export type forgotPasswordInput = TypeOf<typeof forgotPasswordSchema>
 export type resetPassowrdInput = TypeOf<typeof resetPassowrdSchema>

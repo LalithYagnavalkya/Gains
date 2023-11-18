@@ -7,10 +7,10 @@ import { authenticateUser, authorizeRole } from "../middleware/auth.middleware";
 import validateResource from "../middleware/validateResource";
 
 // schemas
-import { addCustomerSchema, editCustomerSchema, getCustomersSchema } from "../schemas/customer.schema";
+import { addCustomerSchema, editCustomerSchema, getCustomersSchema, emailOrPhoneSchema } from "../schemas/customer.schema";
 
 // controllers
-import { uploadCustomers, addCustomer, editCustomer, getCustomers } from "../controllers/customer.controller";
+import { uploadCustomers, addCustomer, editCustomer, getCustomers, checkIfEmailOrPhoneExists } from "../controllers/customer.controller";
 
 dotenv.config({ path: "./src/config/config.env" });
 const router = Router();
@@ -23,5 +23,8 @@ router.post('/editCustomer/:userId', authenticateUser, authorizeRole(['SUPER_ADM
 
 // validation input in the api for query params
 router.get('/getCustomers', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), getCustomers)
+
+router.get('/checkIfEmailOrPhoneExists', validateResource(emailOrPhoneSchema), checkIfEmailOrPhoneExists)
+
 
 export default router;

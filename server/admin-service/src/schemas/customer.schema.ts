@@ -150,6 +150,18 @@ export const getRecentCustomersSchema = object({
     })
 })
 
+export const emailOrPhoneSchema = object({
+    params: object({
+        email: string({
+            required_error: "email is required",
+        }).email("Not a valid email").optional(),
+        phone: string()
+            .length(10, 'Phone number must be 10 digits')
+            .optional(),
+    })
+});
+
+
 export type editCustomerInput = TypeOf<typeof editCustomerSchema>;
 export type addEmailInput = TypeOf<typeof addOrEditEmailSchema>;
 export type usernameInput = TypeOf<typeof usernameSchema>;
@@ -160,3 +172,4 @@ export type validUptoInput = TypeOf<typeof validUptoSchema>;
 export type addCustomerInput = TypeOf<typeof addCustomerSchema>;
 export type getCustomersInput = TypeOf<typeof getCustomersSchema>;
 export type getRecentCustomersInput = TypeOf<typeof getRecentCustomersSchema>;
+export type emailOrPhoneInput = TypeOf<typeof emailOrPhoneSchema>
