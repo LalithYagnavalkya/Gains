@@ -16,9 +16,9 @@ const initialState = usersAdapter.getInitialState({
 const authBackendRoute: string = '/auth'
 
 export const authSlice = apiSlice.injectEndpoints({
-  endpoints: builder => ({
+  endpoints: (builder: any) => ({
     login: builder.mutation({
-      query: (credentials) => ({
+      query: (credentials: any) => ({
         url: authBackendRoute + '/login',
         method: 'POST',
         headers: {
@@ -32,8 +32,8 @@ export const authSlice = apiSlice.injectEndpoints({
         }
       }),
       async onCacheEntryAdded(
-        arg,
-        { dispatch, cacheDataLoaded, }
+        arg: any,
+        { dispatch, cacheDataLoaded }: { dispatch: any, cacheDataLoaded: any }
       ) {
         const authData = await cacheDataLoaded;
         if (authData && authData.data && !authData.data.error) {
@@ -48,8 +48,8 @@ export const authSlice = apiSlice.injectEndpoints({
         method: 'POST',
       }),
       async onCacheEntryAdded(
-        arg,
-        { dispatch, cacheDataLoaded, }
+        arg :any,
+        { dispatch, cacheDataLoaded }: { dispatch: any, cacheDataLoaded: any }
       ) {
         const authData = await cacheDataLoaded;
         if (authData && authData.data && !authData.data.error) {
