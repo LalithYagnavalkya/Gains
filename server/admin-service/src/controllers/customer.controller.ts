@@ -8,9 +8,9 @@ import User, { IUser } from "../models/user.model";
 
 // schemas
 import {
-    addCustomerInput, addOrEditEmailSchema, editCustomerInput, getCustomersInput, getCustomersSchema, joinedOnSchema,
+    addCustomerInput, addOrEditEmailSchema, editCustomerInput, emailOrPhoneInput, getCustomersInput, getCustomersSchema, joinedOnSchema,
     phoneSchema, usernameSchema, validUptoSchema, workoutSchmea
-} from '../schemas/admin.schema'
+} from '../schemas/customer.schema'
 
 // services
 import {
@@ -194,6 +194,12 @@ export const editCustomer = async (req: Request<editCustomerInput['params'], {},
 }
 
 export const getCustomers = async (req: Request, res: Response) => {
+    type queryType = {
+        partnerId: number;
+        role: string;
+        active: boolean;
+        paymentStatus?: { $in: string[] } | string[];
+    }
 
     try {
         // couldn't figure how to use query without getting overloaded error in routes file
@@ -201,9 +207,10 @@ export const getCustomers = async (req: Request, res: Response) => {
 
         // validating input
         const reqInput = getCustomersSchema.parse({ body: req.body, query: req.query })
-        const { page, type, limit, partnerId } = reqInput.query;
+        const { page, type, limit, partnerId, paymentStatus } = reqInput.query;
         const { _user } = reqInput.body;
         let _partnerId = _user.partnerId;
+        const _paymentStatuses = ['PENDING, PAID, UPCOMMING'];
 
         if (_user.role === 'SUPER_ADMIN' && partnerId) {
             _partnerId = partnerId
@@ -213,25 +220,39 @@ export const getCustomers = async (req: Request, res: Response) => {
             totalCount: 0,
         };
 
+        const query: queryType = {
+            partnerId: _partnerId,
+            role: 'USER',
+            active: true,
+        }
+
+        if (paymentStatus) {
+        query.paymentStatus = { '$in': paymentStatus }
+        }
+
         switch (type) {
-            case 'recentcustomers': {
-                const query = {
-                    partnerId: _partnerId,
-                    role: 'USER',
-                    active: true,
-                }
-                const { totalCount, data } = await paginateResults(User, query, page, limit, 'createdAt', -1, 'username');
+            case 'recentlyjoined': {
+                const { totalCount, data } = await paginateResults(User, query, page, limit, 'joinedOn', -1, '');
                 resObj['users'] = data ?? [];
                 resObj['totalCount'] = totalCount ?? [];
             }
-
                 break;
-
+            case 'recentlypaid': {
+                const { totalCount, data } = await paginateResults(User, query, page, limit, 'lastPayOffDate', -1, '');
+                resObj['users'] = data ?? [];
+                resObj['totalCount'] = totalCount ?? [];
+                break;
+            }
             default:
                 break;
         }
 
-        return res.status(200).json({ error: false, resObj })
+        return res.status(200).json({
+            error: false,
+            token: req.body.token,
+            ...resObj,
+        })
+
 
     } catch (error: any) {
         if (error.name === 'ZodError') {
@@ -241,3 +262,17 @@ export const getCustomers = async (req: Request, res: Response) => {
     }
 }
 
+export const checkIfEmailOrPhoneExists = async (req: Request<emailOrPhoneInput['params']>, res: Response) => {
+    const { email, phone } = req.params;
+
+    try {
+        const isFound = await User.find({ $or: [{ email }, { phone }] })
+
+        if (isFound) {
+            return true
+        }
+        return false;
+    } catch (e: any) {
+        return res.status(500).json({ error: true, message: e.message })
+    }
+}

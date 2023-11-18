@@ -9,17 +9,18 @@ import { forgotPassword, login, resetPassword } from "../controllers/user.contro
 
 //schemas
 import { createAdminSchema } from '../schemas/createUser.schema'
-import {forgotPasswordSchema, loginSchema, resetPassowrdSchema} from '../schemas/auth.schema'
+import { forgotPasswordSchema, loginSchema, resetPassowrdSchema } from '../schemas/auth.schema'
 
 dotenv.config({ path: "./src/config/config.env" });
 
 const router = Router();
 
-router.post("/login", validateResource(loginSchema), login );
+router.post("/login", validateResource(loginSchema), login);
 
-router.post("/forgotpassword", validateResource(forgotPasswordSchema), forgotPassword );
+router.post("/forgotpassword", validateResource(forgotPasswordSchema), forgotPassword);
 
 router.post('/resetpassword/:token', validateResource(resetPassowrdSchema), resetPassword)
+
 
 
 // router.get(

@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import User, { IUser } from "../models/user.model";
 
 // schemas
-import { addCustomerInput, addEmailInput, joinedOnInput, phoneInput, usernameInput, validUptoInput, wroukoutTypeInput } from "../schemas/admin.schema";
+import { addCustomerInput, addEmailInput, joinedOnInput, phoneInput, usernameInput, validUptoInput, wroukoutTypeInput } from "../schemas/customer.schema";
 import { UserBulkUpload as UserBulkUploadSchema } from "../types/types";
 
 // services

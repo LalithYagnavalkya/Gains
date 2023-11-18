@@ -118,15 +118,22 @@ export const getCustomersSchema = object({
         })
     }),
     query: object({
-        // _user: object({
-        //     _id: z.string(),
-        //     role: string(),
-        //     partnerId: z.number(),
-        // }),
+
         page: string().transform((val) => Number(val)),
 
-        type: z.enum(["recentCustomers", "username", "phone", "workoutType", "joinedOn", "validUpto"]).
+        type: z.enum(["recentlyJoined", "username", "phone", "workoutType", "joinedOn", "validUpto"]).
             transform((val) => val.toLowerCase()),
+
+        paymentStatus: z.union([
+            z.enum(['PENDING', 'PAID', 'UPCOMING_PAYMENT_DUE']),
+            z.array(z.enum(['PENDING', 'PAID', 'UPCOMING_PAYMENT_DUE'])),
+        ]).transform((val) => {
+            if (Array.isArray(val)) {
+                return val.map((item) => item.toLowerCase());
+            } else {
+                return [val.toLowerCase()];
+            }
+        }).optional(),
 
         limit: string().transform((val) => Number(val)),
 
@@ -143,6 +150,18 @@ export const getRecentCustomersSchema = object({
     })
 })
 
+export const emailOrPhoneSchema = object({
+    params: object({
+        email: string({
+            required_error: "email is required",
+        }).email("Not a valid email").optional(),
+        phone: string()
+            .length(10, 'Phone number must be 10 digits')
+            .optional(),
+    })
+});
+
+
 export type editCustomerInput = TypeOf<typeof editCustomerSchema>;
 export type addEmailInput = TypeOf<typeof addOrEditEmailSchema>;
 export type usernameInput = TypeOf<typeof usernameSchema>;
@@ -153,3 +172,4 @@ export type validUptoInput = TypeOf<typeof validUptoSchema>;
 export type addCustomerInput = TypeOf<typeof addCustomerSchema>;
 export type getCustomersInput = TypeOf<typeof getCustomersSchema>;
 export type getRecentCustomersInput = TypeOf<typeof getRecentCustomersSchema>;
+export type emailOrPhoneInput = TypeOf<typeof emailOrPhoneSchema>

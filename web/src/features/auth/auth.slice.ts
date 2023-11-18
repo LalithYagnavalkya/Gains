@@ -16,9 +16,9 @@ const initialState = usersAdapter.getInitialState({
 const authBackendRoute: string = '/auth'
 
 export const authSlice = apiSlice.injectEndpoints({
-  endpoints: builder => ({
+  endpoints: (builder: any) => ({
     login: builder.mutation({
-      query: (credentials) => ({
+      query: (credentials: any) => ({
         url: authBackendRoute + '/login',
         method: 'POST',
         headers: {
@@ -32,12 +32,12 @@ export const authSlice = apiSlice.injectEndpoints({
         }
       }),
       async onCacheEntryAdded(
-        arg,
-        { dispatch, cacheDataLoaded, }
+        arg: any,
+        { dispatch, cacheDataLoaded }: { dispatch: any, cacheDataLoaded: any }
       ) {
         const authData = await cacheDataLoaded;
         if (authData && authData.data && !authData.data.error) {
-          localStorage.setItem("currentUser", JSON.stringify({user: authData.data.user, token: authData.data.token }));
+          localStorage.setItem("currentUser", JSON.stringify({ user: authData.data.user, token: authData.data.token }));
           dispatch(setAuth({ isAuthenticated: true, user: authData.data.user, token: authData.data.token }));
         }
       },
@@ -48,13 +48,12 @@ export const authSlice = apiSlice.injectEndpoints({
         method: 'POST',
       }),
       async onCacheEntryAdded(
-        arg,
-        { dispatch, cacheDataLoaded, }
+        arg :any,
+        { dispatch, cacheDataLoaded }: { dispatch: any, cacheDataLoaded: any }
       ) {
         const authData = await cacheDataLoaded;
         if (authData && authData.data && !authData.data.error) {
-          localStorage.removeItem("currentUser");
-          dispatch(setAuth({ isAuthenticated: false, user:null, token: null }));
+          dispatch(setAuth({ isAuthenticated: false, user: null, token: null }));
         }
       },
       invalidatesTags: ['Auth'],

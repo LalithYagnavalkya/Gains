@@ -2,45 +2,60 @@ import { createEntityAdapter } from '@reduxjs/toolkit';
 import { apiSlice } from '../api/api.slice';
 
 
-const usersAdapter = createEntityAdapter();
+const customerAdapter = createEntityAdapter();
+const initialState = customerAdapter.getInitialState()
+const customerBackend: string = '/admin/customer'
 
-const initialState = usersAdapter.getInitialState({
-    isAuthenticated: false,
-    user: null,
-    token: null,
-});
-
-const authBackendRoute: string = '/auth'
 
 export const customerSlice = apiSlice.injectEndpoints({
-    endpoints: builder => ({
-        login: builder.mutation({
-            query: (credentials) => ({
-                url: authBackendRoute + '/login',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(credentials),
-                providesTags: ['Auth'],
+    endpoints: (builder: any) => ({
+        getCustomers: builder.query({
+            query: (data: any) => ({
+                url: customerBackend + '/getCustomers',
+                method: 'GET',
+                params: data,
+                // providesTags: ['Customer'],
 
-                // transformResponse: (res, state: any) => {
-                //     usersAdapter.setAll(initialState, { isAuthenticated: true, user: res.user, token: res.token })
-                // }
+                transformResponse: (responseData: any, state: any) => {
+                    console.log(responseData)
+                    customerAdapter.setAll(initialState, responseData)
+                },
+                providesTags: (result: any, error: any, arg: any) => [
+                    { type: 'Customer', id: "LIST" },
+                    ...result.ids.map((id: any) => ({ type: 'Customer', id }))
+                ]
             }),
-          
+
         }),
-        logout: builder.mutation({
-            query: () => ({
-                url: '/logout',
+
+        addCustomer: builder.mutation({
+            query: (data: any) => ({
+                url: customerBackend + '/addCustomer',
                 method: 'POST',
+                body: {
+                    ...data,
+                    // memberShipFee: Number(memberShiptFee)
+                }
             }),
-            invalidatesTags: ['Auth'],
+            invalidatesTags: [
+                { type: 'Customer', id: "LIST" }
+            ]
+        }),
+
+        checkIfUserNameOrPhoneExists: builder.query({
+            query: (data: any) => ({
+                url: customerBackend + '/checkIfUserNameOrPhoneExists',
+                method: 'GET',
+                params: data,
+               
+            }),
+
         }),
     }),
 });
 
 export const {
-    useLoginMutation,
-    useLogoutMutation,
+    useGetCustomersQuery,
+    useAddCustomerMutation,
+    useCheckIfUserNameOrPhoneExistsQuery,
 } = customerSlice;
