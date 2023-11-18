@@ -13,16 +13,27 @@ type Checked = DropdownMenuCheckboxItemProps["checked"]
 
 export const Customer: React.FC = () => {
   const dispatch = useDispatch();
+
+  const [pageNo, setPageNo] = React.useState(0);
+
+  const nextPage = () => {
+    setPageNo(prev => prev++)
+  }
+
+  const previousPage = () => {
+    setPageNo(prev => prev--)
+  }
+
   const { data: users, isLoading,
     isSuccess,
     isError,
-    error } = useGetCustomersQuery({ type: 'recentlyJoined', page: 1, limit: 5 });
+    error } = useGetCustomersQuery({ type: 'recentlyJoined', page: 1, limit: 10 });
 
-    if(error){
-     if(error.status === 401){
+  if (error) {
+    if (error.status === 401) {
       dispatch(logout())
-     }
     }
+  }
 
 
   return <div className="p-4 ">
@@ -32,7 +43,7 @@ export const Customer: React.FC = () => {
     </div>
     <div className="mx-auto container">
       {isLoading ? "loading" :
-        <DataTableDemo users={users} />
+        <DataTableDemo users={users} nextPage previousPage />
       }
 
     </div>

@@ -6,6 +6,7 @@ const customerAdapter = createEntityAdapter();
 const initialState = customerAdapter.getInitialState()
 const customerBackend: string = '/admin/customer'
 
+
 export const customerSlice = apiSlice.injectEndpoints({
     endpoints: (builder: any) => ({
         getCustomers: builder.query({
@@ -40,10 +41,21 @@ export const customerSlice = apiSlice.injectEndpoints({
                 { type: 'Customer', id: "LIST" }
             ]
         }),
+
+        checkIfUserNameOrPhoneExists: builder.query({
+            query: (data: any) => ({
+                url: customerBackend + '/checkIfUserNameOrPhoneExists',
+                method: 'GET',
+                params: data,
+               
+            }),
+
+        }),
     }),
 });
 
 export const {
     useGetCustomersQuery,
-    useAddCustomerMutation
+    useAddCustomerMutation,
+    useCheckIfUserNameOrPhoneExistsQuery,
 } = customerSlice;

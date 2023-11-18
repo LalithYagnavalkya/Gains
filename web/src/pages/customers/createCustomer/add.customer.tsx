@@ -21,12 +21,12 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { RupeeInput } from "@/components/ui/rupeeInput";
-import { useAddCustomerMutation } from "@/features/customer/customer.slice";
+import { useAddCustomerMutation, useCheckIfUserNameOrPhoneExistsQuery } from "@/features/customer/customer.slice";
 import { useToast } from "@/components/ui/use-toast";
 
 // schema
 const formSchema = z.object({
-    username: z.string().nonempty("Username is required."), 
+    username: z.string().nonempty("Username is required."),
     email: z.string()
         .email("Not a valid email"),
     phone: z.string().nullable().refine(data => data === null || data.length === 10, {
@@ -43,8 +43,13 @@ const formSchema = z.object({
 })
 
 const AddCustomer: React.FC = () => {
-    const [addNewCustomer, { isLoading ,isError }] = useAddCustomerMutation()
+    const [addNewCustomer, { isLoading, isError }] = useAddCustomerMutation()
     const { toast } = useToast()
+
+    const [uniqueEmailPhone, setUniqueEmailPhone] = React.useState({
+        email: '',
+        phone: '',
+    })
 
     const [isModalOpen, setModalOpen] = useState<Boolean>(false);
     const form = useForm<z.infer<typeof formSchema>>({
@@ -74,14 +79,14 @@ const AddCustomer: React.FC = () => {
                 ...values, membershipFee: memberShipFeeInNumber
             })
             console.log(values)
-            if (result.error?.data?.error){
+            if (result.error?.data?.error) {
                 console.log(result.error.data.message)
                 toast({
                     title: "Please Provide new Phone number",
                     description: result.error.data.message,
                 })
                 return;
-            }else{
+            } else {
                 closeModal()
             }
         }
@@ -122,10 +127,15 @@ const AddCustomer: React.FC = () => {
                                             control={form.control}
                                             name="email"
                                             render={({ field }) => (
-                                                <FormItem>
+                                                <FormItem >
                                                     <FormLabel>Email</FormLabel>
                                                     <FormControl>
-                                                        <Input autoComplete="off" placeholder="" {...field} />
+                                                        <Input autoComplete="off" placeholder="" {...field}
+                                                            onBlur={async (e) => {
+                                                                console.log(e.target.value)
+                                                                // const { data } = useCheckIfUserNameOrPhoneExistsQuery({ email: e.target.value });
+                                                                // data ? form.setError('email', { type: 'custome', message: 'Email alerady Exists' }) : null;
+                                                            }} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
