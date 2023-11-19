@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "@radix-ui/react-icons";
+import { CalendarIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { RupeeInput } from "@/components/ui/rupeeInput";
@@ -35,10 +35,15 @@ import {
 import {
     DropdownMenu,
     DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
+    DropdownMenuPortal,
     DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 // schema
@@ -326,19 +331,25 @@ const AddCustomer: React.FC = () => {
                                                     </Popover>
                                                     <DropdownMenu>
                                                         <DropdownMenuTrigger asChild>
-                                                            <Button variant="outline">V</Button>
+                                                            <Button variant="outline" size={'icon'}><PlusIcon /></Button>
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent className="w-56">
-                                                            <DropdownMenuLabel>Panel Position</DropdownMenuLabel>
-                                                            <DropdownMenuSeparator />
-                                                            <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
-                                                                <DropdownMenuRadioItem value="top">Top</DropdownMenuRadioItem>
-                                                                <DropdownMenuRadioItem value="bottom">Bottom</DropdownMenuRadioItem>
-                                                                <DropdownMenuRadioItem value="right">Right</DropdownMenuRadioItem>
-                                                            </DropdownMenuRadioGroup>
+                                                            <DropdownMenuGroup>
+                                                                <DropdownMenuItem>
+                                                                    <PlusIcon />&nbsp; 1 Month
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem>
+                                                                    <PlusIcon />&nbsp; 3 Month
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem>
+                                                                    <PlusIcon />&nbsp; 6 Month
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem>
+                                                                    <PlusIcon />&nbsp; 1 Year
+                                                                </DropdownMenuItem>
+                                                            </DropdownMenuGroup>
                                                         </DropdownMenuContent>
                                                     </DropdownMenu>
-
                                                 </div>
 
                                                 <FormDescription>
