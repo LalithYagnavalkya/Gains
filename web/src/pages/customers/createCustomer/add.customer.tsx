@@ -65,10 +65,14 @@ const formSchema = z.object({
 })
 
 const wrokoutTypes = [
-    { value: 'CARDIO', label: 'Cardio' },
-    { value: 'STRENGTH', label: 'Strength' },
-    { value: 'CALISTENICS', label: 'Calisthenics' },
-    { value: 'ZUMBA', label: 'Zumba' },
+    { value: ['CARDIO'], label: 'Cardio' },
+    { value: ['STRENGTH'], label: 'Strength' },
+    { value: ['CALISTENICS'], label: 'Calisthenics' },
+    { value: ['ZUMBA'], label: 'Zumba' },
+    { value: ['CARDIO', 'STRENGTH'], label: 'Cardio + Strength' },
+    { value: ['CARDIO', 'CALISTENICS'], label: 'Cardio + Calisthenics' },
+    { value: ['STRENGTH', 'CALISTENICS'], label: 'Strength + Calisthenics' },
+    { value: ['CARDIO', 'STRENGTH', 'CALISTENICS', 'ZUMBA'], label: 'All' },
 ]
 
 const AddCustomer: React.FC = () => {
