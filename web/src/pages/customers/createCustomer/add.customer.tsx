@@ -32,7 +32,15 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 // schema
 const formSchema = z.object({
     username: z.string().nonempty("Username is required."),
@@ -67,7 +75,7 @@ const AddCustomer: React.FC = () => {
 
     const [isModalOpen, setModalOpen] = useState<Boolean>(false);
     const [isCustomDate, setIsCustomData] = useState<Boolean>(false)
-
+    const [position, setPosition] = React.useState("bottom")
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -278,20 +286,20 @@ const AddCustomer: React.FC = () => {
                                             </FormItem>
                                         )}
                                     />
-                                    {isCustomDate ?
-                                        <FormField
-                                            control={form.control}
-                                            name="validUpto"
-                                            render={({ field }) => (
-                                                <FormItem className="flex flex-col">
-                                                    <FormLabel>Valid Upto</FormLabel>
+                                    <FormField
+                                        control={form.control}
+                                        name="validUpto"
+                                        render={({ field }) => (
+                                            <FormItem className="flex flex-col">
+                                                <FormLabel>Valid Upto</FormLabel>
+                                                <div className="flex">
                                                     <Popover>
                                                         <PopoverTrigger asChild>
                                                             <FormControl>
                                                                 <Button
                                                                     variant={"outline"}
                                                                     className={cn(
-                                                                        "w-[240px] pl-3 text-left font-normal",
+                                                                        "w-[190px] pl-3 text-left font-normal",
                                                                         !field.value && "text-muted-foreground"
                                                                     )}
                                                                 >
@@ -316,51 +324,30 @@ const AddCustomer: React.FC = () => {
                                                             />
                                                         </PopoverContent>
                                                     </Popover>
-                                                    {/* <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                    <FormControl>
-                                                        <SelectTrigger>
-                                                            <SelectValue placeholder="" />
-                                                        </SelectTrigger>
-                                                    </FormControl>
-                                                    <SelectContent>
-                                                        {wrokoutTypes.map(w => {
-                                                            return <><SelectItem value={w.value}>{w.label}</SelectItem> </>
-                                                        })}
-                                                    </SelectContent>
-                                                </Select> */}
-                                                    <FormDescription>
-                                                        When will the membership end?
-                                                    </FormDescription>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        /> : 
-                                            <FormField
-                                                control={form.control}
-                                                name="validUpto"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Workout Type</FormLabel>
-                                                        {/* <FormControl>
-                                                    <Input autoComplete="off" placeholder="" {...field} />
-                                                </FormControl>
-                                                <FormMessage /> */}
-                                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                            <FormControl>
-                                                                <SelectTrigger>
-                                                                    <SelectValue placeholder="" />
-                                                                </SelectTrigger>
-                                                            </FormControl>
-                                                            <SelectContent>
-                                                                {wrokoutTypes.map(w => {
-                                                                    return <><SelectItem value={w.value}>{w.label}</SelectItem> </>
-                                                                })}
-                                                            </SelectContent>
-                                                        </Select>
-                                                    </FormItem>
-                                                )}
-                                            />
-                                        }
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button variant="outline">V</Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent className="w-56">
+                                                            <DropdownMenuLabel>Panel Position</DropdownMenuLabel>
+                                                            <DropdownMenuSeparator />
+                                                            <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+                                                                <DropdownMenuRadioItem value="top">Top</DropdownMenuRadioItem>
+                                                                <DropdownMenuRadioItem value="bottom">Bottom</DropdownMenuRadioItem>
+                                                                <DropdownMenuRadioItem value="right">Right</DropdownMenuRadioItem>
+                                                            </DropdownMenuRadioGroup>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+
+                                                </div>
+
+                                                <FormDescription>
+                                                    When will the membership end?
+                                                </FormDescription>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
                                 </div>
                                 <div className="flex justify-between">
                                     <Button variant="outline" onClick={() => closeModal()} >Cancel</Button>
