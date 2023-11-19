@@ -24,7 +24,7 @@ router.post('/editCustomer/:userId', authenticateUser, authorizeRole(['SUPER_ADM
 // validation input in the api for query params
 router.get('/getCustomers', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), getCustomers)
 
-router.get('/checkIfEmailOrPhoneExists', validateResource(emailOrPhoneSchema), checkIfEmailOrPhoneExists)
+router.post('/checkIfEmailOrPhoneExists', validateResource(emailOrPhoneSchema), checkIfEmailOrPhoneExists)
 
 
 export default router;

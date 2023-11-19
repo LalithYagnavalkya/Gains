@@ -151,10 +151,10 @@ export const getRecentCustomersSchema = object({
 })
 
 export const emailOrPhoneSchema = object({
-    params: object({
+    body: object({
         email: string({
             required_error: "email is required",
-        }).email("Not a valid email").optional(),
+        }).optional(),
         phone: string()
             .length(10, 'Phone number must be 10 digits')
             .optional(),
