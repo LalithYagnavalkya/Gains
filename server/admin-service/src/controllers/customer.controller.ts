@@ -232,7 +232,7 @@ export const getCustomers = async (req: Request, res: Response) => {
 
         switch (type) {
             case 'recentlyjoined': {
-                const { totalCount, data } = await paginateResults(User, query, page, limit, 'joinedOn', -1, '');
+                const { totalCount, data } = await paginateResults(User, query, page, limit, 'createdAt', -1, '');
                 resObj['users'] = data ?? [];
                 resObj['totalCount'] = totalCount ?? [];
             }
@@ -262,16 +262,16 @@ export const getCustomers = async (req: Request, res: Response) => {
     }
 }
 
-export const checkIfEmailOrPhoneExists = async (req: Request<emailOrPhoneInput['params']>, res: Response) => {
-    const { email, phone } = req.params;
+export const checkIfEmailOrPhoneExists = async (req: Request<emailOrPhoneInput['body']>, res: Response) => {
+    const { email, phone } = req.body;
 
     try {
-        const isFound = await User.find({ $or: [{ email }, { phone }] })
+        const isFound = await User.findOne({ $or: [{ email: email ? email : "" }, { phone: phone ? phone: ""}] }).lean()
 
         if (isFound) {
-            return true
+            return res.status(409).json({ error: true, message: 'Email Already Exists' })
         }
-        return false;
+        return res.status(200).json({ error: false, message: 'Good to go!' });
     } catch (e: any) {
         return res.status(500).json({ error: true, message: e.message })
     }
