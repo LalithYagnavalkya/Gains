@@ -25,6 +25,13 @@ import { useAddCustomerMutation, useCheckIfUserNameOrPhoneExistsMutation, useGet
 import { useToast } from "@/components/ui/use-toast";
 import { logout } from "@/features/auth/user.slice";
 import { useDispatch } from "react-redux";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 // schema
 const formSchema = z.object({
@@ -44,6 +51,13 @@ const formSchema = z.object({
     workoutType: z.string().optional(),
 })
 
+const wrokoutTypes = [
+    { value: 'CARDIO', label: 'Cardio' },
+    { value: 'STRENGTH', label: 'Strength' },
+    { value: 'CALISTENICS', label: 'Calisthenics' },
+    { value: 'ZUMBA', label: 'Zumba' },
+]
+
 const AddCustomer: React.FC = () => {
     const [addNewCustomer, { isLoading, isError, isSuccess }] = useAddCustomerMutation()
     const [checkIfUserNameOrPhoneExists] = useCheckIfUserNameOrPhoneExistsMutation();
@@ -52,6 +66,7 @@ const AddCustomer: React.FC = () => {
     const dispatch = useDispatch();
 
     const [isModalOpen, setModalOpen] = useState<Boolean>(false);
+    const [isCustomDate, setIsCustomData] = useState<Boolean>(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -79,11 +94,11 @@ const AddCustomer: React.FC = () => {
                 ...values, membershipFee: memberShipFeeInNumber
             })
             // console.log(values)
-            if(result.status === 401){
+            if (result.status === 401) {
                 dispatch(logout())
             }
-            if (isSuccess){
-               refetch();
+            if (isSuccess) {
+                refetch();
             }
             if (result.error?.data?.error) {
                 console.log(result.error.data.message)
@@ -174,7 +189,6 @@ const AddCustomer: React.FC = () => {
                                 </div>
                                 <div className="flex gap-x-4">
                                     <div className="w-1/2">
-
                                         <FormField
                                             control={form.control}
                                             name="membershipFee"
@@ -190,19 +204,33 @@ const AddCustomer: React.FC = () => {
                                             )}
                                         />
                                     </div>
-                                    <FormField
-                                        control={form.control}
-                                        name="workoutType"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Workout Type</FormLabel>
-                                                <FormControl>
+                                    <div className="w-1/2">
+                                        <FormField
+                                            control={form.control}
+                                            name="workoutType"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Workout Type</FormLabel>
+                                                    {/* <FormControl>
                                                     <Input autoComplete="off" placeholder="" {...field} />
                                                 </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
+                                                <FormMessage /> */}
+                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                        <FormControl>
+                                                            <SelectTrigger>
+                                                                <SelectValue placeholder="" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            {wrokoutTypes.map(w => {
+                                                                return <><SelectItem value={w.value}>{w.label}</SelectItem> </>
+                                                            })}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
 
                                 </div>
                                 <div className="flex">
@@ -250,50 +278,89 @@ const AddCustomer: React.FC = () => {
                                             </FormItem>
                                         )}
                                     />
-                                    <FormField
-                                        control={form.control}
-                                        name="validUpto"
-                                        render={({ field }) => (
-                                            <FormItem className="flex flex-col">
-                                                <FormLabel>Valid Upto</FormLabel>
-                                                <Popover>
-                                                    <PopoverTrigger asChild>
-                                                        <FormControl>
-                                                            <Button
-                                                                variant={"outline"}
-                                                                className={cn(
-                                                                    "w-[240px] pl-3 text-left font-normal",
-                                                                    !field.value && "text-muted-foreground"
-                                                                )}
-                                                            >
-                                                                {field.value ? (
-                                                                    format(field.value, "PPP")
-                                                                ) : (
-                                                                    <span>Pick a date</span>
-                                                                )}
-                                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                            </Button>
-                                                        </FormControl>
-                                                    </PopoverTrigger>
-                                                    <PopoverContent className="w-auto p-0" align="start">
-                                                        <Calendar
-                                                            mode="single"
-                                                            selected={field.value}
-                                                            onSelect={field.onChange}
-                                                            disabled={(date) =>
-                                                                date < new Date(new Date().setMonth(new Date().getMonth() + 1))
-                                                            }
-                                                            initialFocus
-                                                        />
-                                                    </PopoverContent>
-                                                </Popover>
-                                                <FormDescription>
-                                                    When will the membership end?
-                                                </FormDescription>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
+                                    {isCustomDate ?
+                                        <FormField
+                                            control={form.control}
+                                            name="validUpto"
+                                            render={({ field }) => (
+                                                <FormItem className="flex flex-col">
+                                                    <FormLabel>Valid Upto</FormLabel>
+                                                    <Popover>
+                                                        <PopoverTrigger asChild>
+                                                            <FormControl>
+                                                                <Button
+                                                                    variant={"outline"}
+                                                                    className={cn(
+                                                                        "w-[240px] pl-3 text-left font-normal",
+                                                                        !field.value && "text-muted-foreground"
+                                                                    )}
+                                                                >
+                                                                    {field.value ? (
+                                                                        format(field.value, "PPP")
+                                                                    ) : (
+                                                                        <span>Pick a date</span>
+                                                                    )}
+                                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                                </Button>
+                                                            </FormControl>
+                                                        </PopoverTrigger>
+                                                        <PopoverContent className="w-auto p-0" align="start">
+                                                            <Calendar
+                                                                mode="single"
+                                                                selected={field.value}
+                                                                onSelect={field.onChange}
+                                                                disabled={(date) =>
+                                                                    date < new Date(new Date().setMonth(new Date().getMonth() + 1))
+                                                                }
+                                                                initialFocus
+                                                            />
+                                                        </PopoverContent>
+                                                    </Popover>
+                                                    {/* <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                    <FormControl>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        {wrokoutTypes.map(w => {
+                                                            return <><SelectItem value={w.value}>{w.label}</SelectItem> </>
+                                                        })}
+                                                    </SelectContent>
+                                                </Select> */}
+                                                    <FormDescription>
+                                                        When will the membership end?
+                                                    </FormDescription>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        /> : 
+                                            <FormField
+                                                control={form.control}
+                                                name="validUpto"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Workout Type</FormLabel>
+                                                        {/* <FormControl>
+                                                    <Input autoComplete="off" placeholder="" {...field} />
+                                                </FormControl>
+                                                <FormMessage /> */}
+                                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                            <FormControl>
+                                                                <SelectTrigger>
+                                                                    <SelectValue placeholder="" />
+                                                                </SelectTrigger>
+                                                            </FormControl>
+                                                            <SelectContent>
+                                                                {wrokoutTypes.map(w => {
+                                                                    return <><SelectItem value={w.value}>{w.label}</SelectItem> </>
+                                                                })}
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        }
                                 </div>
                                 <div className="flex justify-between">
                                     <Button variant="outline" onClick={() => closeModal()} >Cancel</Button>
