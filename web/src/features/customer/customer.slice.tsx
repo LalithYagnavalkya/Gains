@@ -7,6 +7,7 @@ const initialState = customerAdapter.getInitialState()
 const customerBackend: string = '/admin/customer'
 
 
+
 export const customerSlice = apiSlice.injectEndpoints({
     endpoints: (builder: any) => ({
         getCustomers: builder.query({
@@ -14,17 +15,20 @@ export const customerSlice = apiSlice.injectEndpoints({
                 url: customerBackend + '/getCustomers',
                 method: 'GET',
                 params: data,
-                // providesTags: ['Customer'],
 
-                transformResponse: (responseData: any, state: any) => {
-                    console.log(responseData)
-                    customerAdapter.setAll(initialState, responseData)
-                },
-                providesTags: (result: any, error: any, arg: any) => [
-                    { type: 'Customer', id: "LIST" },
-                    ...result.ids.map((id: any) => ({ type: 'Customer', id }))
-                ]
             }),
+            // transformResponse: (responseData: any, state: any) => {
+            //     console.log(responseData)
+            //     customerAdapter.setAll(initialState, responseData.users)
+            // },
+            providesTags : ['Customer']
+            // providesTags: (result: any, error: any, arg: any, obj: any) => {
+                // console.log(result)
+                // return [
+                //     { type: 'Customer', id: "LIST" },
+                //     ...result.map((_id: any) => ({ type: 'Customer', id: _id }))
+                // ]
+            // }
 
         }),
 
@@ -37,18 +41,19 @@ export const customerSlice = apiSlice.injectEndpoints({
                     // memberShipFee: Number(memberShiptFee)
                 }
             }),
+            invalidatesTags: ['Customer']
+        }),
+
+        checkIfUserNameOrPhoneExists: builder.mutation({
+            query: (data: any) => ({
+                url: customerBackend + '/checkIfEmailOrPhoneExists',
+                method: 'POST',
+                body: data,
+
+            }),
             invalidatesTags: [
                 { type: 'Customer', id: "LIST" }
             ]
-        }),
-
-        checkIfUserNameOrPhoneExists: builder.query({
-            query: (data: any) => ({
-                url: customerBackend + '/checkIfUserNameOrPhoneExists',
-                method: 'GET',
-                params: data,
-               
-            }),
 
         }),
     }),
@@ -57,5 +62,5 @@ export const customerSlice = apiSlice.injectEndpoints({
 export const {
     useGetCustomersQuery,
     useAddCustomerMutation,
-    useCheckIfUserNameOrPhoneExistsQuery,
+    useCheckIfUserNameOrPhoneExistsMutation,
 } = customerSlice;

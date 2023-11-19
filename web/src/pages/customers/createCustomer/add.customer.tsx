@@ -21,8 +21,10 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { RupeeInput } from "@/components/ui/rupeeInput";
-import { useAddCustomerMutation, useCheckIfUserNameOrPhoneExistsQuery } from "@/features/customer/customer.slice";
+import { useAddCustomerMutation, useCheckIfUserNameOrPhoneExistsMutation, useGetCustomersQuery } from "@/features/customer/customer.slice";
 import { useToast } from "@/components/ui/use-toast";
+import { logout } from "@/features/auth/user.slice";
+import { useDispatch } from "react-redux";
 
 // schema
 const formSchema = z.object({
@@ -43,15 +45,14 @@ const formSchema = z.object({
 })
 
 const AddCustomer: React.FC = () => {
-    const [addNewCustomer, { isLoading, isError }] = useAddCustomerMutation()
+    const [addNewCustomer, { isLoading, isError, isSuccess }] = useAddCustomerMutation()
+    const [checkIfUserNameOrPhoneExists] = useCheckIfUserNameOrPhoneExistsMutation();
+    const { data: users, refetch } = useGetCustomersQuery({ type: 'recentlyJoined', page: 1, limit: 10 });
     const { toast } = useToast()
-
-    const [uniqueEmailPhone, setUniqueEmailPhone] = React.useState({
-        email: '',
-        phone: '',
-    })
+    const dispatch = useDispatch();
 
     const [isModalOpen, setModalOpen] = useState<Boolean>(false);
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -70,7 +71,6 @@ const AddCustomer: React.FC = () => {
         setModalOpen(false);
     };
 
-
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         if (!isLoading) {
             // convert membership fee from string (1,200) to number 1200
@@ -78,7 +78,13 @@ const AddCustomer: React.FC = () => {
             const result = await addNewCustomer({
                 ...values, membershipFee: memberShipFeeInNumber
             })
-            console.log(values)
+            // console.log(values)
+            if(result.status === 401){
+                dispatch(logout())
+            }
+            if (isSuccess){
+               refetch();
+            }
             if (result.error?.data?.error) {
                 console.log(result.error.data.message)
                 toast({
@@ -133,8 +139,10 @@ const AddCustomer: React.FC = () => {
                                                         <Input autoComplete="off" placeholder="" {...field}
                                                             onBlur={async (e) => {
                                                                 console.log(e.target.value)
-                                                                // const { data } = useCheckIfUserNameOrPhoneExistsQuery({ email: e.target.value });
-                                                                // data ? form.setError('email', { type: 'custome', message: 'Email alerady Exists' }) : null;
+                                                                const res = await checkIfUserNameOrPhoneExists({ email: e.target.value });
+                                                                if (res?.error?.status === 409) {
+                                                                    form.setError('email', { type: 'custom', message: 'This email already exists' })
+                                                                }
                                                             }} />
                                                     </FormControl>
                                                     <FormMessage />
@@ -150,7 +158,14 @@ const AddCustomer: React.FC = () => {
                                                 <FormLabel>Phone</FormLabel>
                                                 <FormControl>
                                                     {/* <Input  placeholder="" {...field} /> */}
-                                                    <Input autoComplete="off" placeholder="" value={field.value ?? ""} onChange={field.onChange} onBlur={field.onBlur} name={field.name} ref={field.ref} />
+                                                    <Input autoComplete="off" placeholder="" {...field} value={field.value ?? ""} onChange={field.onChange}
+                                                        onBlur={async (e) => {
+                                                            console.log(e.target.value)
+                                                            const res = await checkIfUserNameOrPhoneExists({ phone: e.target.value });
+                                                            if (res?.error?.status === 409) {
+                                                                form.setError('phone', { type: 'custom', message: 'This phone number already exists' })
+                                                            }
+                                                        }} name={field.name} ref={field.ref} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>

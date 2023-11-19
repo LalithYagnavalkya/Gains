@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
 
@@ -14,27 +14,30 @@ type Checked = DropdownMenuCheckboxItemProps["checked"]
 export const Customer: React.FC = () => {
   const dispatch = useDispatch();
 
-  const [pageNo, setPageNo] = React.useState(0);
+  // const [pageNo, setPageNo] = React.useState(0);
 
-  const nextPage = () => {
-    setPageNo(prev => prev++)
-  }
+  // const nextPage = () => {
+  //   setPageNo(prev => prev++)
+  // }
 
-  const previousPage = () => {
-    setPageNo(prev => prev--)
-  }
+  // const previousPage = () => {
+  //   setPageNo(prev => prev--)
+  // }
 
   const { data: users, isLoading,
     isSuccess,
     isError,
     error } = useGetCustomersQuery({ type: 'recentlyJoined', page: 1, limit: 10 });
-
+    console.log(users)
   if (error) {
     if (error.status === 401) {
       dispatch(logout())
     }
   }
 
+  // useEffect(() => {
+
+  // }, [users])
 
   return <div className="p-4 ">
     <div className="mx-auto container flex justify-between items-center">
@@ -43,7 +46,7 @@ export const Customer: React.FC = () => {
     </div>
     <div className="mx-auto container">
       {isLoading ? "loading" :
-        <DataTableDemo users={users} nextPage previousPage />
+        <DataTableDemo users={users}  />
       }
 
     </div>
