@@ -168,7 +168,7 @@ const AddCustomer: React.FC = () => {
                                         <FormItem>
                                             <FormLabel>Name</FormLabel>
                                             <FormControl>
-                                                <Input autoComplete="off" placeholder="whats his name?" {...field} />
+                                                <Input autoComplete="off" placeholder="whats his/her name?" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
