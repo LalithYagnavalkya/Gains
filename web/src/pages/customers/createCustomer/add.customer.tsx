@@ -83,8 +83,8 @@ const AddCustomer: React.FC = () => {
     const dispatch = useDispatch();
 
     const [isModalOpen, setModalOpen] = useState<Boolean>(false);
-    const [isCustomDate, setIsCustomData] = useState<Boolean>(false)
-    const [position, setPosition] = React.useState("bottom")
+    const [validUptoDate, setValidUptoDate] = useState<Date>(new Date());
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -96,6 +96,16 @@ const AddCustomer: React.FC = () => {
 
         },
     })
+
+    const addMonthsInValidUptoField = (value: number) => {
+        const currentDate = form.getValues('validUpto') || new Date()
+        const newDate = new Date(currentDate);
+        newDate.setMonth(currentDate.getMonth() + value);
+        console.log(newDate)
+        setValidUptoDate(newDate)
+        console.log(form.getValues('validUpto'))
+    }
+
     const openModal = () => {
         setModalOpen(true);
     };
@@ -307,7 +317,7 @@ const AddCustomer: React.FC = () => {
                                         render={({ field }) => (
                                             <FormItem className="flex flex-col">
                                                 <FormLabel>Valid Upto</FormLabel>
-                                                <div className="flex">
+                                                <div className="flex gap-x-1">
                                                     <Popover>
                                                         <PopoverTrigger asChild>
                                                             <FormControl>
@@ -315,11 +325,11 @@ const AddCustomer: React.FC = () => {
                                                                     variant={"outline"}
                                                                     className={cn(
                                                                         "w-[190px] pl-3 text-left font-normal",
-                                                                        !field.value && "text-muted-foreground"
+                                                                        !validUptoDate && "text-muted-foreground"
                                                                     )}
                                                                 >
-                                                                    {field.value ? (
-                                                                        format(field.value, "PPP")
+                                                                    {validUptoDate ? (
+                                                                        format(validUptoDate, "PPP")
                                                                     ) : (
                                                                         <span>Pick a date</span>
                                                                     )}
@@ -330,8 +340,13 @@ const AddCustomer: React.FC = () => {
                                                         <PopoverContent className="w-auto p-0" align="start">
                                                             <Calendar
                                                                 mode="single"
-                                                                selected={field.value}
-                                                                onSelect={field.onChange}
+                                                                selected={validUptoDate}
+                                                                onSelect={(x: Date | undefined) => {
+                                                                    if (x) {
+                                                                        setValidUptoDate(new Date(x))
+                                                                    }
+                                                                    console.log(x)
+                                                                }}
                                                                 disabled={(date) =>
                                                                     date < new Date(new Date().setMonth(new Date().getMonth() + 1))
                                                                 }
@@ -345,16 +360,16 @@ const AddCustomer: React.FC = () => {
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent className="w-56">
                                                             <DropdownMenuGroup>
-                                                                <DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(1)}>
                                                                     <PlusIcon />&nbsp; 1 Month
                                                                 </DropdownMenuItem>
-                                                                <DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(3)}>
                                                                     <PlusIcon />&nbsp; 3 Month
                                                                 </DropdownMenuItem>
-                                                                <DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(6)}>
                                                                     <PlusIcon />&nbsp; 6 Month
                                                                 </DropdownMenuItem>
-                                                                <DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(12)}>
                                                                     <PlusIcon />&nbsp; 1 Year
                                                                 </DropdownMenuItem>
                                                             </DropdownMenuGroup>
