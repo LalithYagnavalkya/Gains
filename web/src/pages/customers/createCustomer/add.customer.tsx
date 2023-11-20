@@ -59,7 +59,7 @@ const formSchema = z.object({
     }),
     validUpto: z.date({
         required_error: "Valid upto date is required.",
-    }),
+    }).optional(),
     membershipFee: z.string(),
     workoutType: z.string().optional(),
 })
@@ -92,6 +92,7 @@ const AddCustomer: React.FC = () => {
             username: "",
             phone: '',
             joinedOn: new Date(),
+            validUpto: new Date(),
             workoutType: 'Cardio'
 
         },
@@ -111,11 +112,15 @@ const AddCustomer: React.FC = () => {
     };
 
     const closeModal = () => {
+        form.reset();
         setModalOpen(false);
     };
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+
         if (!isLoading) {
+
+
             // convert membership fee from string (1,200) to number 1200
             let memberShipFeeInNumber: number = parseFloat(values.membershipFee.replace(/,/g, ''));
 
@@ -124,15 +129,19 @@ const AddCustomer: React.FC = () => {
 
 
             const result = await addNewCustomer({
-                ...values, membershipFee: memberShipFeeInNumber, workoutType: workoutTypes
+                ...values, membershipFee: memberShipFeeInNumber,
+                workoutType: workoutTypes,
+                validUpto: validUptoDate
             })
             // console.log(values)
             if (result.status === 401) {
                 dispatch(logout())
             }
+
             if (isSuccess) {
                 refetch();
             }
+
             if (result.error?.data?.error) {
                 console.log(result.error.data.message)
                 toast({
@@ -344,12 +353,13 @@ const AddCustomer: React.FC = () => {
                                                                 onSelect={(x: Date | undefined) => {
                                                                     if (x) {
                                                                         setValidUptoDate(new Date(x))
+                                                                        field.value = validUptoDate
                                                                     }
                                                                     console.log(x)
                                                                 }}
-                                                                disabled={(date) =>
-                                                                    date < new Date(new Date().setMonth(new Date().getMonth() + 1))
-                                                                }
+                                                                // disabled={(date) =>
+                                                                //     date < new Date(new Date().setMonth(new Date().getMonth() + 1))
+                                                                // }
                                                                 initialFocus
                                                             />
                                                         </PopoverContent>
