@@ -65,14 +65,14 @@ const formSchema = z.object({
 })
 
 const wrokoutTypes = [
-    { value: ['CARDIO'], label: 'Cardio' },
-    { value: ['STRENGTH'], label: 'Strength' },
-    { value: ['CALISTENICS'], label: 'Calisthenics' },
-    { value: ['ZUMBA'], label: 'Zumba' },
-    { value: ['CARDIO', 'STRENGTH'], label: 'Cardio + Strength' },
-    { value: ['CARDIO', 'CALISTENICS'], label: 'Cardio + Calisthenics' },
-    { value: ['STRENGTH', 'CALISTENICS'], label: 'Strength + Calisthenics' },
-    { value: ['CARDIO', 'STRENGTH', 'CALISTENICS', 'ZUMBA'], label: 'All' },
+    { value: 'CARDIO', label: 'Cardio' },
+    { value: 'STRENGTH', label: 'Strength' },
+    { value: 'CALISTENICS', label: 'Calisthenics' },
+    { value: 'ZUMBA', label: 'Zumba' },
+    { value: 'CARDIO + STRENGTH', label: 'Cardio + Strength' },
+    { value: 'CARDIO + CALISTENICS', label: 'Cardio + Calisthenics' },
+    { value: 'STRENGTH + CALISTENICS', label: 'Strength + Calisthenics' },
+    { value: 'CARDIO + STRENGTH + CALISTENICS + ZUMBA', label: 'All' },
 ]
 
 const AddCustomer: React.FC = () => {
@@ -91,7 +91,8 @@ const AddCustomer: React.FC = () => {
             email: "",
             username: "",
             phone: '',
-            // joinedOn: new Date(),
+            joinedOn: new Date(),
+            workoutType: 'Cardio'
 
         },
     })
@@ -107,8 +108,13 @@ const AddCustomer: React.FC = () => {
         if (!isLoading) {
             // convert membership fee from string (1,200) to number 1200
             let memberShipFeeInNumber: number = parseFloat(values.membershipFee.replace(/,/g, ''));
+
+            // converting workouttypes to array
+            let workoutTypes: string[] = values.workoutType?.split('+').map(v => v.trim()) || []
+
+
             const result = await addNewCustomer({
-                ...values, membershipFee: memberShipFeeInNumber
+                ...values, membershipFee: memberShipFeeInNumber, workoutType: workoutTypes
             })
             // console.log(values)
             if (result.status === 401) {

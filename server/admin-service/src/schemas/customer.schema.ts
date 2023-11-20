@@ -91,7 +91,7 @@ export const addCustomerSchema = object({
 
         validUpto: z.string(),
 
-        workoutTypes: array(string()).optional(),
+        workoutType: array(string()).optional(),
 
         gender: z.string().optional(),
 
