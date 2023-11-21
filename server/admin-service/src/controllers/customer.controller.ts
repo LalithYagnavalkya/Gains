@@ -262,6 +262,10 @@ export const getCustomers = async (req: Request, res: Response) => {
     }
 }
 
+export const getCustomerById = async (req: Request, res: Response) => {
+    
+}
+
 export const checkIfEmailOrPhoneExists = async (req: Request<emailOrPhoneInput['body']>, res: Response) => {
     const { email, phone } = req.body;
 
