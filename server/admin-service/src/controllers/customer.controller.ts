@@ -8,7 +8,7 @@ import User, { IUser } from "../models/user.model";
 
 // schemas
 import {
-    addCustomerInput, addOrEditEmailSchema, editCustomerInput, emailOrPhoneInput, getCustomersInput, getCustomersSchema, joinedOnSchema,
+    addCustomerInput, addOrEditEmailSchema, editCustomerInput, emailOrPhoneInput, getCustomerByIdInput, getCustomersInput, getCustomersSchema, joinedOnSchema,
     phoneSchema, usernameSchema, validUptoSchema, workoutSchmea
 } from '../schemas/customer.schema'
 
@@ -227,7 +227,7 @@ export const getCustomers = async (req: Request, res: Response) => {
         }
 
         if (paymentStatus) {
-        query.paymentStatus = { '$in': paymentStatus }
+            query.paymentStatus = { '$in': paymentStatus }
         }
 
         switch (type) {
@@ -262,15 +262,26 @@ export const getCustomers = async (req: Request, res: Response) => {
     }
 }
 
-export const getCustomerById = async (req: Request, res: Response) => {
-    
+export const getCustomerById = async (req: Request<getCustomerByIdInput['params']>, res: Response) => {
+    const { userId } = req.params;
+
+    const user = await User.findById(userId)
+
+    if (!user) {
+        return res.status(404).json({ error: true, message: 'User not found!' })
+    }
+    return res.status(200).json({
+        error: false,
+        token: req.body.token,
+        user
+    })
 }
 
 export const checkIfEmailOrPhoneExists = async (req: Request<emailOrPhoneInput['body']>, res: Response) => {
     const { email, phone } = req.body;
 
     try {
-        const isFound = await User.findOne({ $or: [{ email: email ? email : "" }, { phone: phone ? phone: ""}] }).lean()
+        const isFound = await User.findOne({ $or: [{ email: email ? email : "" }, { phone: phone ? phone : "" }] }).lean()
 
         if (isFound) {
             return res.status(409).json({ error: true, message: 'Email Already Exists' })
