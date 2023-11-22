@@ -9,3 +9,5 @@ Admin panel which can track customers and their payments.
 - implement search feature in customers page.
 - implement pagination in customers page table.
 - all the find query's should have select statements.
+
+- saved a new desing in books mark for layout.
