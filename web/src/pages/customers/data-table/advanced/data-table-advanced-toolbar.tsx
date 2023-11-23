@@ -1,18 +1,19 @@
 "use client"
 
 import * as React from "react"
-import type {
+import {
   DataTableFilterableColumn,
   DataTableFilterOption,
   DataTableSearchableColumn,
-} from "@/types"
+} from "../../../../types/index"
 import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons"
-import type { Table } from "@tanstack/react-table"
+import { Table } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { DataTableAdvancedFilter } from "@/components/data-table/advanced/data-table-advanced-filter"
-import { DataTableViewOptions } from "@/components/data-table/data-table-view-options"
+// import { DataTableAdvancedFilter } from "@/components/data-table/advanced/data-table-advanced-filter"
+import { DataTableAdvancedFilter } from "./data-table-advanced-filter"
+import { DataTableViewOptions } from "../data-table-view-options"
 
 import { DataTableAdvancedFilterItem } from "./data-table-advanced-filter-item"
 import { DataTableMultiFilter } from "./data-table-multi-filter"

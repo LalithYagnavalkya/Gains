@@ -95,13 +95,6 @@ export function DataTableDemo(data: any) {
             </TableBody>)
         );
     };
-    const repeatedTableCells = (
-        <>
-            {renderTableCells()}
-            {renderTableCells()}
-            {renderTableCells()}
-        </>
-    );
     return (
         <div className="py-6">
             <div className="rounded-md border">
