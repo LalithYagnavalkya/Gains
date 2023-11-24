@@ -2,6 +2,7 @@ import * as React from "react"
 
 import {
     ColumnFiltersState,
+    PaginationState,
     SortingState,
     VisibilityState,
     flexRender,
@@ -30,9 +31,11 @@ export type Payment = {
 };
 import { columns } from './columns'
 import { Skeleton } from "@/components/ui/skeleton"
+import { useGetCustomersQuery } from "@/features/customer/customer.slice";
 
-export function DataTableDemo(data: any) {
+export function DataTableDemo() {
     const [isLoading, setIsLoading] = React.useState(false);
+   
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -41,22 +44,34 @@ export function DataTableDemo(data: any) {
         React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
 
+    const [{ pageIndex, pageSize }, setPagination] =
+        React.useState<PaginationState>({
+            pageIndex: 1,
+            pageSize: 10,
+        })
+
+    const fetchDataOptions = {
+        pageIndex,
+        pageSize,
+    }
+
+    const { data } = useGetCustomersQuery({ type: 'recentlyJoined', page: fetchDataOptions.pageIndex, limit: fetchDataOptions.pageSize });
     console.log(data)
+    const defaultData = React.useMemo(() => [], [])
+    const pagination = React.useMemo(
+        () => ({
+            pageIndex,
+            pageSize,
+        }),
+        [pageIndex, pageSize]
+    )
+
+
+    
     const table = useReactTable({
-        data: data?.users && data.users?.users ? data.users.users : [{
-            _id: "5kma53ae",
-            amount: 874,
-            status: "success",
-            email: "Silas22@gmail.com",
-        },
-        {
-            _id: "bhqecj4p",
-            amount: 721,
-            status: "failed",
-            email: "carmella@hotmail.com",
-        },
-        ],
+        data: data?.users? data.users : defaultData,
         columns,
+        pageCount: data?.users?.totalCount ?? -1,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
@@ -65,36 +80,17 @@ export function DataTableDemo(data: any) {
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
+        onPaginationChange: setPagination,
+        manualPagination: true,
         state: {
             sorting,
             columnFilters,
             columnVisibility,
             rowSelection,
+            pagination,
         },
     })
-    const renderTableCells = () => {
-        return (
-            (<TableBody>
-                {table.getHeaderGroups().map((headerGroup: any) => (
-                    <TableRow key={headerGroup.id}>
-                        {headerGroup.headers.map((header: any) => {
-                            if (header.id === 'actions') {
-                                return (
-                                    <></>
-                                )
-                            }
-                            return (
-                                <TableCell key={header.id}>
-                                    <Skeleton className="h-4 w-[200px]" />
-                                </TableCell>
-                            )
-                        })}
-                    </TableRow>
-                ))}
-
-            </TableBody>)
-        );
-    };
+    
     return (
         <div className="py-6">
             <div className="rounded-md border">

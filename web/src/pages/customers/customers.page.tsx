@@ -14,16 +14,6 @@ type Checked = DropdownMenuCheckboxItemProps["checked"]
 export const Customer: React.FC = () => {
   const dispatch = useDispatch();
 
-  // const [pageNo, setPageNo] = React.useState(0);
-
-  // const nextPage = () => {
-  //   setPageNo(prev => prev++)
-  // }
-
-  // const previousPage = () => {
-  //   setPageNo(prev => prev--)
-  // }
-
   const { data: users, isLoading,
     isSuccess,
     isError,
@@ -35,9 +25,6 @@ export const Customer: React.FC = () => {
     }
   }
 
-  // useEffect(() => {
-
-  // }, [users])
 
   return <div className="p-4 ">
     <div className="mx-auto container flex justify-between items-center">
@@ -46,7 +33,7 @@ export const Customer: React.FC = () => {
     </div>
     <div className="mx-auto container">
       {isLoading ? "loading" :
-        <DataTableDemo users={users}  />
+        <DataTableDemo  />
       }
 
     </div>
