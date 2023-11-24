@@ -199,6 +199,8 @@ const AddCustomer: React.FC = () => {
                                                                 const res = await checkIfUserNameOrPhoneExists({ email: e.target.value });
                                                                 if (res?.error?.status === 409) {
                                                                     form.setError('email', { type: 'custom', message: 'This email already exists' })
+                                                                }else if(res.data.error === false){
+                                                                    form.clearErrors('email')
                                                                 }
                                                             }} />
                                                     </FormControl>
@@ -221,6 +223,8 @@ const AddCustomer: React.FC = () => {
                                                             const res = await checkIfUserNameOrPhoneExists({ phone: e.target.value });
                                                             if (res?.error?.status === 409) {
                                                                 form.setError('phone', { type: 'custom', message: 'This phone number already exists' })
+                                                            } else if (res.data.error === false) {
+                                                                form.clearErrors('phone')
                                                             }
                                                         }} name={field.name} ref={field.ref} />
                                                 </FormControl>
