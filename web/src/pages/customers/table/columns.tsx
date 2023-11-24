@@ -1,3 +1,5 @@
+import { format } from 'date-fns'
+
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
@@ -9,12 +11,15 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { CaretSortIcon, DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { ColumnDef } from "@tanstack/react-table"
+import { StatusPill } from '@/components/status.pill'
 export type Payment = {
     id: string
     amount: number
     status: "pending" | "processing" | "success" | "failed"
     email: string
 }
+
+
 export const columns: ColumnDef<Payment>[] = [
     {
         accessorKey: "username",
@@ -27,21 +32,25 @@ export const columns: ColumnDef<Payment>[] = [
         accessorKey: "phone",
         header: ({ column }) => {
             return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Phone
-                    {/* <CaretSortIcon className="ml-2 h-4 w-4" /> */}
-                </Button>
+
+                <>Phone</>
+
+
             )
         },
         cell: ({ row }) => <div className="lowercase text-left">{row.getValue("phone")}</div>,
     },
     {
         accessorKey: "paymentStatus",
-        header:"payment status",
-        cell: ({ row }) => <div className="lowercase text-center w-1/2">{row.getValue("paymentStatus")}</div>,
+        header: "Status",
+        cell: ({ row }) => <div className="">
+            <StatusPill status={row.getValue("paymentStatus")} />
+        </div>,
+    },
+    {
+        accessorKey: "validUpto",
+        header: "Due Date",
+        cell: ({ row }) => <div className="">{format(new Date(row.getValue("validUpto")), 'MMM dd yyy')}</div>,
     },
     {
         id: "actions",
