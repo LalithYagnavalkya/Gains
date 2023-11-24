@@ -47,7 +47,7 @@ export function DataTableDemo() {
     const [{ pageIndex, pageSize }, setPagination] =
         React.useState<PaginationState>({
             pageIndex: 1,
-            pageSize: 10,
+            pageSize: 8,
         })
 
     const fetchDataOptions = {

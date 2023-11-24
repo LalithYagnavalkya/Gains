@@ -17,7 +17,7 @@ export const Customer: React.FC = () => {
   const { data: users, isLoading,
     isSuccess,
     isError,
-    error } = useGetCustomersQuery({ type: 'recentlyJoined', page: 1, limit: 10 });
+    error } = useGetCustomersQuery({ type: 'recentlyJoined', page: 1, limit: 8 });
     console.log(users)
   if (error) {
     if (error.status === 401) {
