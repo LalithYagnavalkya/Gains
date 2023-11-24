@@ -91,7 +91,7 @@ export const addCustomerSchema = object({
 
         validUpto: z.string(),
 
-        workoutTypes: array(string()).optional(),
+        workoutType: array(string()).optional(),
 
         gender: z.string().optional(),
 
@@ -142,6 +142,13 @@ export const getCustomersSchema = object({
     }),
 });
 
+export const getCustomerByIdSchema = object({
+    params: object({
+        userId: string({ required_error: 'please provide a user id' })
+            .refine(isObjectId, { message: 'Invalid userId, must be a valid ObjectId' }),
+    }),
+})
+
 export const getRecentCustomersSchema = object({
     query: object({
 
@@ -151,10 +158,10 @@ export const getRecentCustomersSchema = object({
 })
 
 export const emailOrPhoneSchema = object({
-    params: object({
+    body: object({
         email: string({
             required_error: "email is required",
-        }).email("Not a valid email").optional(),
+        }).optional(),
         phone: string()
             .length(10, 'Phone number must be 10 digits')
             .optional(),
@@ -171,5 +178,6 @@ export type joinedOnInput = TypeOf<typeof joinedOnSchema>;
 export type validUptoInput = TypeOf<typeof validUptoSchema>;
 export type addCustomerInput = TypeOf<typeof addCustomerSchema>;
 export type getCustomersInput = TypeOf<typeof getCustomersSchema>;
+export type getCustomerByIdInput = TypeOf<typeof getCustomerByIdSchema>;
 export type getRecentCustomersInput = TypeOf<typeof getRecentCustomersSchema>;
 export type emailOrPhoneInput = TypeOf<typeof emailOrPhoneSchema>

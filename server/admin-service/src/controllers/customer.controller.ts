@@ -8,7 +8,7 @@ import User, { IUser } from "../models/user.model";
 
 // schemas
 import {
-    addCustomerInput, addOrEditEmailSchema, editCustomerInput, emailOrPhoneInput, getCustomersInput, getCustomersSchema, joinedOnSchema,
+    addCustomerInput, addOrEditEmailSchema, editCustomerInput, emailOrPhoneInput, getCustomerByIdInput, getCustomersInput, getCustomersSchema, joinedOnSchema,
     phoneSchema, usernameSchema, validUptoSchema, workoutSchmea
 } from '../schemas/customer.schema'
 
@@ -227,12 +227,12 @@ export const getCustomers = async (req: Request, res: Response) => {
         }
 
         if (paymentStatus) {
-        query.paymentStatus = { '$in': paymentStatus }
+            query.paymentStatus = { '$in': paymentStatus }
         }
 
         switch (type) {
             case 'recentlyjoined': {
-                const { totalCount, data } = await paginateResults(User, query, page, limit, 'joinedOn', -1, '');
+                const { totalCount, data } = await paginateResults(User, query, page, limit, 'createdAt', -1, '');
                 resObj['users'] = data ?? [];
                 resObj['totalCount'] = totalCount ?? [];
             }
@@ -262,16 +262,31 @@ export const getCustomers = async (req: Request, res: Response) => {
     }
 }
 
-export const checkIfEmailOrPhoneExists = async (req: Request<emailOrPhoneInput['params']>, res: Response) => {
-    const { email, phone } = req.params;
+export const getCustomerById = async (req: Request<getCustomerByIdInput['params']>, res: Response) => {
+    const { userId } = req.params;
+
+    const user = await User.findById(userId)
+
+    if (!user) {
+        return res.status(404).json({ error: true, message: 'User not found!' })
+    }
+    return res.status(200).json({
+        error: false,
+        token: req.body.token,
+        user
+    })
+}
+
+export const checkIfEmailOrPhoneExists = async (req: Request<emailOrPhoneInput['body']>, res: Response) => {
+    const { email, phone } = req.body;
 
     try {
-        const isFound = await User.find({ $or: [{ email }, { phone }] })
+        const isFound = await User.findOne({ $or: [{ email: email ? email : "" }, { phone: phone ? phone : "" }] }).lean()
 
         if (isFound) {
-            return true
+            return res.status(409).json({ error: true, message: 'Email Already Exists' })
         }
-        return false;
+        return res.status(200).json({ error: false, message: 'Good to go!' });
     } catch (e: any) {
         return res.status(500).json({ error: true, message: e.message })
     }

@@ -215,7 +215,7 @@ export const editValidUpto = async (data: validUptoInput) => {
 export const createCustomer = async (data: addCustomerInput['body']): Promise<{ error: any, message: any }> => {
     try {
         const { username, email, phone, validUpto,
-            joinedOn, gender, workoutTypes, membershipFee, _user } = data;
+            joinedOn, gender, workoutType, membershipFee, _user } = data;
 
         const user = await User.create({
             email,
@@ -224,7 +224,7 @@ export const createCustomer = async (data: addCustomerInput['body']): Promise<{ 
             joinedOn : new Date(joinedOn),
             validUpto: new Date(validUpto),
             gender,
-            workoutTypes,
+            workoutType,
             membershipFee,
             partnerId: _user.partnerId
         })

@@ -17,13 +17,35 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "@radix-ui/react-icons";
+import { CalendarIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { RupeeInput } from "@/components/ui/rupeeInput";
-import { useAddCustomerMutation, useCheckIfUserNameOrPhoneExistsQuery } from "@/features/customer/customer.slice";
+import { useAddCustomerMutation, useCheckIfUserNameOrPhoneExistsMutation, useGetCustomersQuery } from "@/features/customer/customer.slice";
 import { useToast } from "@/components/ui/use-toast";
-
+import { logout } from "@/features/auth/user.slice";
+import { useDispatch } from "react-redux";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 // schema
 const formSchema = z.object({
     username: z.string().nonempty("Username is required."),
@@ -37,48 +59,89 @@ const formSchema = z.object({
     }),
     validUpto: z.date({
         required_error: "Valid upto date is required.",
-    }),
+    }).optional(),
     membershipFee: z.string(),
     workoutType: z.string().optional(),
 })
 
-const AddCustomer: React.FC = () => {
-    const [addNewCustomer, { isLoading, isError }] = useAddCustomerMutation()
-    const { toast } = useToast()
+const wrokoutTypes = [
+    { value: 'CARDIO', label: 'Cardio' },
+    { value: 'STRENGTH', label: 'Strength' },
+    { value: 'CALISTENICS', label: 'Calisthenics' },
+    { value: 'ZUMBA', label: 'Zumba' },
+    { value: 'CARDIO + STRENGTH', label: 'Cardio + Strength' },
+    { value: 'CARDIO + CALISTENICS', label: 'Cardio + Calisthenics' },
+    { value: 'STRENGTH + CALISTENICS', label: 'Strength + Calisthenics' },
+    { value: 'CARDIO + STRENGTH + CALISTENICS + ZUMBA', label: 'All' },
+]
 
-    const [uniqueEmailPhone, setUniqueEmailPhone] = React.useState({
-        email: '',
-        phone: '',
-    })
+const AddCustomer: React.FC = () => {
+    const [addNewCustomer, { isLoading, isError, isSuccess }] = useAddCustomerMutation()
+    const [checkIfUserNameOrPhoneExists] = useCheckIfUserNameOrPhoneExistsMutation();
+    const { data: users, refetch } = useGetCustomersQuery({ type: 'recentlyJoined', page: 1, limit: 10 });
+    const { toast } = useToast()
+    const dispatch = useDispatch();
 
     const [isModalOpen, setModalOpen] = useState<Boolean>(false);
+    const [validUptoDate, setValidUptoDate] = useState<Date>(new Date());
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             email: "",
             username: "",
             phone: '',
-            // joinedOn: new Date(),
+            joinedOn: new Date(),
+            validUpto: new Date(),
+            workoutType: 'Cardio'
 
         },
     })
+
+    const addMonthsInValidUptoField = (value: number) => {
+        const currentDate = form.getValues('validUpto') || new Date()
+        const newDate = new Date(currentDate);
+        newDate.setMonth(currentDate.getMonth() + value);
+        console.log(newDate)
+        setValidUptoDate(newDate)
+        console.log(form.getValues('validUpto'))
+    }
+
     const openModal = () => {
         setModalOpen(true);
     };
 
     const closeModal = () => {
+        form.reset();
         setModalOpen(false);
     };
 
-
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+
         if (!isLoading) {
+
+
             // convert membership fee from string (1,200) to number 1200
             let memberShipFeeInNumber: number = parseFloat(values.membershipFee.replace(/,/g, ''));
+
+            // converting workouttypes to array
+            let workoutTypes: string[] = values.workoutType?.split('+').map(v => v.trim()) || []
+
+
             const result = await addNewCustomer({
-                ...values, membershipFee: memberShipFeeInNumber
+                ...values, membershipFee: memberShipFeeInNumber,
+                workoutType: workoutTypes,
+                validUpto: validUptoDate
             })
-            console.log(values)
+            // console.log(values)
+            if (result.status === 401) {
+                dispatch(logout())
+            }
+
+            if (isSuccess) {
+                refetch();
+            }
+
             if (result.error?.data?.error) {
                 console.log(result.error.data.message)
                 toast({
@@ -114,7 +177,7 @@ const AddCustomer: React.FC = () => {
                                         <FormItem>
                                             <FormLabel>Name</FormLabel>
                                             <FormControl>
-                                                <Input autoComplete="off" placeholder="whats his name?" {...field} />
+                                                <Input autoComplete="off" placeholder="whats his/her name?" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -133,8 +196,12 @@ const AddCustomer: React.FC = () => {
                                                         <Input autoComplete="off" placeholder="" {...field}
                                                             onBlur={async (e) => {
                                                                 console.log(e.target.value)
-                                                                // const { data } = useCheckIfUserNameOrPhoneExistsQuery({ email: e.target.value });
-                                                                // data ? form.setError('email', { type: 'custome', message: 'Email alerady Exists' }) : null;
+                                                                const res = await checkIfUserNameOrPhoneExists({ email: e.target.value });
+                                                                if (res?.error?.status === 409) {
+                                                                    form.setError('email', { type: 'custom', message: 'This email already exists' })
+                                                                }else if(res.data.error === false){
+                                                                    form.clearErrors('email')
+                                                                }
                                                             }} />
                                                     </FormControl>
                                                     <FormMessage />
@@ -150,7 +217,16 @@ const AddCustomer: React.FC = () => {
                                                 <FormLabel>Phone</FormLabel>
                                                 <FormControl>
                                                     {/* <Input  placeholder="" {...field} /> */}
-                                                    <Input autoComplete="off" placeholder="" value={field.value ?? ""} onChange={field.onChange} onBlur={field.onBlur} name={field.name} ref={field.ref} />
+                                                    <Input autoComplete="off" placeholder="" {...field} value={field.value ?? ""} onChange={field.onChange}
+                                                        onBlur={async (e) => {
+                                                            console.log(e.target.value)
+                                                            const res = await checkIfUserNameOrPhoneExists({ phone: e.target.value });
+                                                            if (res?.error?.status === 409) {
+                                                                form.setError('phone', { type: 'custom', message: 'This phone number already exists' })
+                                                            } else if (res.data.error === false) {
+                                                                form.clearErrors('phone')
+                                                            }
+                                                        }} name={field.name} ref={field.ref} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -159,7 +235,6 @@ const AddCustomer: React.FC = () => {
                                 </div>
                                 <div className="flex gap-x-4">
                                     <div className="w-1/2">
-
                                         <FormField
                                             control={form.control}
                                             name="membershipFee"
@@ -175,19 +250,33 @@ const AddCustomer: React.FC = () => {
                                             )}
                                         />
                                     </div>
-                                    <FormField
-                                        control={form.control}
-                                        name="workoutType"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Workout Type</FormLabel>
-                                                <FormControl>
+                                    <div className="w-1/2">
+                                        <FormField
+                                            control={form.control}
+                                            name="workoutType"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Workout Type</FormLabel>
+                                                    {/* <FormControl>
                                                     <Input autoComplete="off" placeholder="" {...field} />
                                                 </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
+                                                <FormMessage /> */}
+                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                        <FormControl>
+                                                            <SelectTrigger>
+                                                                <SelectValue placeholder="" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            {wrokoutTypes.map(w => {
+                                                                return <><SelectItem value={w.value}>{w.label}</SelectItem> </>
+                                                            })}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
 
                                 </div>
                                 <div className="flex">
@@ -241,37 +330,67 @@ const AddCustomer: React.FC = () => {
                                         render={({ field }) => (
                                             <FormItem className="flex flex-col">
                                                 <FormLabel>Valid Upto</FormLabel>
-                                                <Popover>
-                                                    <PopoverTrigger asChild>
-                                                        <FormControl>
-                                                            <Button
-                                                                variant={"outline"}
-                                                                className={cn(
-                                                                    "w-[240px] pl-3 text-left font-normal",
-                                                                    !field.value && "text-muted-foreground"
-                                                                )}
-                                                            >
-                                                                {field.value ? (
-                                                                    format(field.value, "PPP")
-                                                                ) : (
-                                                                    <span>Pick a date</span>
-                                                                )}
-                                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                            </Button>
-                                                        </FormControl>
-                                                    </PopoverTrigger>
-                                                    <PopoverContent className="w-auto p-0" align="start">
-                                                        <Calendar
-                                                            mode="single"
-                                                            selected={field.value}
-                                                            onSelect={field.onChange}
-                                                            disabled={(date) =>
-                                                                date < new Date(new Date().setMonth(new Date().getMonth() + 1))
-                                                            }
-                                                            initialFocus
-                                                        />
-                                                    </PopoverContent>
-                                                </Popover>
+                                                <div className="flex gap-x-1">
+                                                    <Popover>
+                                                        <PopoverTrigger asChild>
+                                                            <FormControl>
+                                                                <Button
+                                                                    variant={"outline"}
+                                                                    className={cn(
+                                                                        "w-[190px] pl-3 text-left font-normal",
+                                                                        !validUptoDate && "text-muted-foreground"
+                                                                    )}
+                                                                >
+                                                                    {validUptoDate ? (
+                                                                        format(validUptoDate, "PPP")
+                                                                    ) : (
+                                                                        <span>Pick a date</span>
+                                                                    )}
+                                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                                </Button>
+                                                            </FormControl>
+                                                        </PopoverTrigger>
+                                                        <PopoverContent className="w-auto p-0" align="start">
+                                                            <Calendar
+                                                                mode="single"
+                                                                selected={validUptoDate}
+                                                                onSelect={(x: Date | undefined) => {
+                                                                    if (x) {
+                                                                        setValidUptoDate(new Date(x))
+                                                                        field.value = validUptoDate
+                                                                    }
+                                                                    console.log(x)
+                                                                }}
+                                                                // disabled={(date) =>
+                                                                //     date < new Date(new Date().setMonth(new Date().getMonth() + 1))
+                                                                // }
+                                                                initialFocus
+                                                            />
+                                                        </PopoverContent>
+                                                    </Popover>
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button variant="outline" size={'icon'}><PlusIcon /></Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent className="w-56">
+                                                            <DropdownMenuGroup>
+                                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(1)}>
+                                                                    <PlusIcon />&nbsp; 1 Month
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(3)}>
+                                                                    <PlusIcon />&nbsp; 3 Month
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(6)}>
+                                                                    <PlusIcon />&nbsp; 6 Month
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(12)}>
+                                                                    <PlusIcon />&nbsp; 1 Year
+                                                                </DropdownMenuItem>
+                                                            </DropdownMenuGroup>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </div>
+
                                                 <FormDescription>
                                                     When will the membership end?
                                                 </FormDescription>
