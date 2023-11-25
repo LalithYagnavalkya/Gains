@@ -3,8 +3,8 @@ import { Input } from "@/components/ui/input"
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
 
 import { DataTableDemo } from "./table/table"
-import { useGetCustomersQuery } from "@/features/customer/customer.slice"
-import AddCustomer from "./createCustomer/add.customer"
+import { useGetCustomersQuery } from "@/features/customer/customer.api"
+import AddCustomer from "./customerModals/add.customer"
 import { useDispatch } from "react-redux"
 import { logout } from "@/features/auth/user.slice"
 // import DemoPage from "./customerTable/customer.page"
@@ -30,6 +30,7 @@ export const Customer: React.FC = () => {
     <div className="mx-auto container flex justify-between items-center">
       <div className="items-center w-1/3"><Input type="email" placeholder="Search with names" /></div>
       <AddCustomer />
+      {/* <UpdatePayment /> */}
     </div>
     <div className="mx-auto container">
       {isLoading ? "loading" :

@@ -12,10 +12,11 @@ import {
 import { CaretSortIcon, DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { ColumnDef } from "@tanstack/react-table"
 import { StatusPill } from '@/components/status.pill'
+import UpatePaymentModal from '../customerModals/update.payment.modal'
 export type Payment = {
     id: string
     amount: number
-    status: "pending" | "processing" | "success" | "failed"
+    // status: "pending" | "processing" | "success" | "failed"
     email: string
 }
 
@@ -58,6 +59,7 @@ export const columns: ColumnDef<Payment>[] = [
         cell: ({ row }) => {
             const payment = row.original
 
+
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -67,11 +69,10 @@ export const columns: ColumnDef<Payment>[] = [
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actiosns</DropdownMenuLabel>
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(payment.id)}
                         >
-                            Copy payment ID
+                            <UpatePaymentModal payment={payment} />
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>View customer</DropdownMenuItem>

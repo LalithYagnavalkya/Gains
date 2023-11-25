@@ -30,11 +30,9 @@ export type Payment = {
     email: string
 };
 import { columns } from './columns'
-import { Skeleton } from "@/components/ui/skeleton"
-import { useGetCustomersQuery } from "@/features/customer/customer.slice";
+import { useGetCustomersQuery } from "@/features/customer/customer.api";
 
 export function DataTableDemo() {
-    const [isLoading, setIsLoading] = React.useState(false);
    
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -56,7 +54,6 @@ export function DataTableDemo() {
     }
 
     const { data } = useGetCustomersQuery({ type: 'recentlyJoined', page: fetchDataOptions.pageIndex, limit: fetchDataOptions.pageSize });
-    console.log(data)
     const defaultData = React.useMemo(() => [], [])
     const pagination = React.useMemo(
         () => ({
@@ -65,6 +62,8 @@ export function DataTableDemo() {
         }),
         [pageIndex, pageSize]
     )
+
+    // const updateModal
 
 
     

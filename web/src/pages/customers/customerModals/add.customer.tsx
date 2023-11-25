@@ -21,7 +21,7 @@ import { CalendarIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { RupeeInput } from "@/components/ui/rupeeInput";
-import { useAddCustomerMutation, useCheckIfUserNameOrPhoneExistsMutation, useGetCustomersQuery } from "@/features/customer/customer.slice";
+import { useAddCustomerMutation, useCheckIfUserNameOrPhoneExistsMutation, useGetCustomersQuery } from "@/features/customer/customer.api";
 import { useToast } from "@/components/ui/use-toast";
 import { logout } from "@/features/auth/user.slice";
 import { useDispatch } from "react-redux";
@@ -37,13 +37,6 @@ import {
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuPortal,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 // schema
