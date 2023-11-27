@@ -12,6 +12,7 @@ interface ITransaction extends Document {
 const transactionSchema = new mongoose.Schema(
     {
         userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        membershipId: { type: Schema.Types.ObjectId, ref: '', required: true},
         paymentAmount: { type: Number, required: true },
         paymentType: {type: String, enum: ['CASH', 'ONLINE']}
     },
