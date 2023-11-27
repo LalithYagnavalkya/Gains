@@ -30,3 +30,4 @@ Admin panel which can track customers and their payments.
     - paymentStatus
     - membershipFee
     - membershipDuriation
+- update models in all collections
