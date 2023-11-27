@@ -13,8 +13,8 @@ const UpatePaymentModal: React.FC<UpdatePaymentModalProps> = ({ payment,togglePa
     return <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
         <Card className="w-[545px]">
             <CardHeader>
-                <CardTitle>Add Customer</CardTitle>
-                <CardDescription>Fill up your customer details. Click confirm when you're done.</CardDescription>
+                <CardTitle><div className="capitalize">{payment.username}</div></CardTitle>
+                <CardDescription>Extend Due date or update payment status.</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="flex justify-between">
