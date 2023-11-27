@@ -10,6 +10,7 @@ Admin panel which can track customers and their payments.
 - should work on schedulers for updating payment status
 - design and complete update payment API  - current
 - add forgot password text in login page. and create UI
+- add navbar logout button inside profile avatar options (update navbar)
 
 ## long scope
 - every 'any' should be replaced with proper interface
