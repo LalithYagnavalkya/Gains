@@ -9,7 +9,7 @@ Admin panel which can track customers and their payments.
 - filters - filter by paymentStatus, joining date, added recently (createdAt: -1)
 - should work on schedulers for updating payment status
 - design and complete update payment API  - current
-
+- add forgot password text in login page. and create UI
 
 ## long scope
 - every 'any' should be replaced with proper interface
