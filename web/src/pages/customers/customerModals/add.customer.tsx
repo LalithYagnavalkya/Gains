@@ -97,7 +97,6 @@ const AddCustomer: React.FC = () => {
         newDate.setMonth(currentDate.getMonth() + value);
         console.log(newDate)
         setValidUptoDate(newDate)
-        console.log(form.getValues('validUpto'))
     }
 
     const openModal = () => {
