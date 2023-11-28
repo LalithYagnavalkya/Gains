@@ -24,7 +24,7 @@ const membershipSchema = new mongoose.Schema(
     { timestamps: true },
 );
 
-const PaymentDue: Model<IMembership> = mongoose.model<IMembership>("Membership", membershipSchema);
+const Membership: Model<IMembership> = mongoose.model<IMembership>("Membership", membershipSchema);
 
-export default PaymentDue;
+export default Membership;
 

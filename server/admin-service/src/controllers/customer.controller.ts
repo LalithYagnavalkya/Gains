@@ -19,6 +19,7 @@ import {
     editValidUpto, editWorkoutType, insertIntoDB
 } from "../services/admin.service";
 import { paginateResults } from "./shared.controller";
+import Membership from "../models/membership.model";
 
 export const uploadCustomers = async (req: Request, res: Response) => {
     try {
@@ -232,8 +233,17 @@ export const getCustomers = async (req: Request, res: Response) => {
 
         switch (type) {
             case 'recentlyjoined': {
-                const { totalCount, data } = await paginateResults(User, query, page, limit, 'createdAt', -1, '');
-                resObj['users'] = data ?? [];
+                const { totalCount, data: users } = await paginateResults(User, query, page, limit, 'createdAt', -1, '');
+                const memberships = await Membership.find({ userId: users.map(x => x._id) }).lean();
+
+                users.forEach(user => {
+                    const currentUserMembership = memberships.find(m => String(m.userId) === String(user._id))
+                    user.membershipFee = currentUserMembership.membershipFee;
+                    user.status = currentUserMembership.status;
+                    user.validUpto = currentUserMembership.validUpto;
+                })
+
+                resObj['users'] = users ?? [];
                 resObj['totalCount'] = totalCount ?? [];
             }
                 break;
