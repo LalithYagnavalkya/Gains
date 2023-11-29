@@ -12,7 +12,7 @@ Admin panel which can track customers and their payments.
 - add forgot password text in login page. and create UI
 - add navbar logout button inside profile avatar options (update navbar)
 
-## long scope
+## Long scope
 - every 'any' should be replaced with proper interface
 - all the find query's should have select statements.
 
