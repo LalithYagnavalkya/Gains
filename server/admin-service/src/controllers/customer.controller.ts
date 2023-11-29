@@ -11,6 +11,8 @@ import {
     addCustomerInput, addOrEditEmailSchema, editCustomerInput, emailOrPhoneInput, getCustomerByIdInput, getCustomersInput, getCustomersSchema, joinedOnSchema,
     phoneSchema, usernameSchema, validUptoSchema, workoutSchmea
 } from '../schemas/customer.schema'
+import { IUserInfo } from "../schemas/customer.controller.schema";
+import Membership from "../models/membership.model";
 
 // services
 import {
@@ -19,7 +21,6 @@ import {
     editValidUpto, editWorkoutType, insertIntoDB
 } from "../services/admin.service";
 import { paginateResults } from "./shared.controller";
-import Membership from "../models/membership.model";
 
 export const uploadCustomers = async (req: Request, res: Response) => {
     try {
@@ -235,12 +236,16 @@ export const getCustomers = async (req: Request, res: Response) => {
             case 'recentlyjoined': {
                 const { totalCount, data: users } = await paginateResults(User, query, page, limit, 'createdAt', -1, '');
                 const memberships = await Membership.find({ userId: users.map(x => x._id) }).lean();
+                const usersData: IUserInfo[] = []
 
-                users.forEach(user => {
+                users.forEach((user, index) => {
                     const currentUserMembership = memberships.find(m => String(m.userId) === String(user._id))
-                    user.membershipFee = currentUserMembership.membershipFee;
-                    user.status = currentUserMembership.status;
-                    user.validUpto = currentUserMembership.validUpto;
+                    usersData[index] = user;
+                    if (currentUserMembership) {
+                        usersData[index]['membershipFee'] = currentUserMembership?.membershipFee;
+                        usersData[index]['status'] = currentUserMembership?.status;
+                        usersData[index]['validUpto'] = currentUserMembership?.validUpto;
+                    }
                 })
 
                 resObj['users'] = users ?? [];
