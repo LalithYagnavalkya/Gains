@@ -2,9 +2,12 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 
 export interface IMembership extends Document {
     userId: Schema.Types.ObjectId;
-    transactionId?: Schema.Types.ObjectId;
-    paymentType: String,
+    lastPaymentTransactionId?: Schema.Types.ObjectId;
     status: String,
+    membershipFee: number,
+    membershipDuriation: number,
+    validUpto: Date,
+    active: true,
 }
 
 const membershipSchema = new mongoose.Schema(

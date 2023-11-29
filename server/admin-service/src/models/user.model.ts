@@ -13,15 +13,10 @@ export interface IUser extends Document {
 	password?: string;
 	role: string;
 	joinedOn?: Date;
-	validUpto?: Date;
-	lastPayoffDate?: Date;
-	paymentStatus: string;
 	gender?: string;
 	customerSerialNumber?: string,
 	workoutType: string[],
 	partnerId: number;
-	membershipFee?: number;
-	membershipDuriation?: number; //number of months
 }
 
 const userSchema = new mongoose.Schema(
