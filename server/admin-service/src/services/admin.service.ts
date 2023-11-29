@@ -196,11 +196,11 @@ export const editValidUpto = async (data: validUptoInput) => {
             return Promise.resolve({ error: true, message: 'Invalid Date' });
         }
 
-        const user = await User.findById(userId).select('validUpto role');
+        const userData = await Membership.findById({userId})
 
-        if (user && String(user?._id) === String(userId) && user.role === 'USER') {
-            user.validUpto = parsedDate;
-            await user.save();
+        if (userData) {
+            userData.validUpto = parsedDate;
+            await userData.save();
 
             return Promise.resolve({ error: false, message: 'Updated sucessfuly' })
         }
