@@ -32,3 +32,7 @@ Admin panel which can track customers and their payments.
     - membershipFee
     - membershipDuriation
 - update models in all collections
+
+
+## Quick Fixes
+- Customers page paginationation, inital previous button should be disabled
