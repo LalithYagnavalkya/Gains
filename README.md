@@ -37,3 +37,4 @@ Admin panel which can track customers and their payments.
 ## Quick Fixes
 - Customers page paginationation, inital previous button should be disabled
 - Frontend: add apiSlic end points in .env file 
+- Onces token expires and logouts. next login getCustomers api is always failing and signing out.
