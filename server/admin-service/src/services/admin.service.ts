@@ -9,6 +9,7 @@ import { UserBulkUpload as UserBulkUploadSchema } from "../types/types";
 
 // services
 import { parseDate, parseWorkoutTypes } from "../controllers/shared.controller";
+import Membership from "../models/membership.model";
 
 export const insertIntoDB = async (users: any, req: any, res: any) => {
 
@@ -43,7 +44,7 @@ export const insertIntoDB = async (users: any, req: any, res: any) => {
         await User.insertMany(listOfUsers);
 
         return res.status(200).json({ error: false, message: 'successfully inserted data' })
-    } catch (error:any) {
+    } catch (error: any) {
         return res.status(500).json({ error: true, message: error.message })
     }
 }
@@ -195,11 +196,11 @@ export const editValidUpto = async (data: validUptoInput) => {
             return Promise.resolve({ error: true, message: 'Invalid Date' });
         }
 
-        const user = await User.findById(userId).select('validUpto role');
+        const userData = await Membership.findById({userId})
 
-        if (user && String(user?._id) === String(userId) && user.role === 'USER') {
-            user.validUpto = parsedDate;
-            await user.save();
+        if (userData) {
+            userData.validUpto = parsedDate;
+            await userData.save();
 
             return Promise.resolve({ error: false, message: 'Updated sucessfuly' })
         }
@@ -221,16 +222,25 @@ export const createCustomer = async (data: addCustomerInput['body']): Promise<{ 
             email,
             phone,
             username,
-            joinedOn : new Date(joinedOn),
-            validUpto: new Date(validUpto),
+            joinedOn: new Date(joinedOn),
             gender,
             workoutType,
-            membershipFee,
             partnerId: _user.partnerId
         })
         if (!user) {
             return Promise.resolve({ error: true, message: 'User was not created' })
         }
+        const joinedOnDate = new Date(joinedOn);
+        const validUptoDate = new Date(validUpto);
+        const diffMonths = (validUptoDate.getFullYear() - joinedOnDate.getFullYear()) * 12 + (validUptoDate.getMonth() - joinedOnDate.getMonth());
+
+        await Membership.create({
+            userId: user._id,
+            membershipFee,
+            validUpto,
+            membershipDuriation: diffMonths,
+
+        })
         return Promise.resolve({ error: false, message: 'Created sucessfully' })
 
     } catch (error: any) {

@@ -1,66 +1,32 @@
-import { createEntityAdapter } from '@reduxjs/toolkit';
-import { apiSlice } from '../api/api.slice';
+import { createSlice } from '@reduxjs/toolkit';
+
+const userJSON = localStorage.getItem("currentUser");
+const user = userJSON ? JSON.parse(userJSON) : null;
 
 
-const customerAdapter = createEntityAdapter();
-const initialState = customerAdapter.getInitialState()
-const customerBackend: string = '/admin/customer'
-
-
-
-export const customerSlice = apiSlice.injectEndpoints({
-    endpoints: (builder: any) => ({
-        getCustomers: builder.query({
-            query: (data: any) => ({
-                url: customerBackend + '/getCustomers',
-                method: 'GET',
-                params: data,
-
-            }),
-            // transformResponse: (responseData: any, state: any) => {
-            //     console.log(responseData)
-            //     customerAdapter.setAll(initialState, responseData.users)
-            // },
-            providesTags : ['Customer']
-            // providesTags: (result: any, error: any, arg: any, obj: any) => {
-                // console.log(result)
-                // return [
-                //     { type: 'Customer', id: "LIST" },
-                //     ...result.map((_id: any) => ({ type: 'Customer', id: _id }))
-                // ]
-            // }
-
-        }),
-
-        addCustomer: builder.mutation({
-            query: (data: any) => ({
-                url: customerBackend + '/addCustomer',
-                method: 'POST',
-                body: {
-                    ...data,
-                    // memberShipFee: Number(memberShiptFee)
-                }
-            }),
-            invalidatesTags: ['Customer']
-        }),
-
-        checkIfUserNameOrPhoneExists: builder.mutation({
-            query: (data: any) => ({
-                url: customerBackend + '/checkIfEmailOrPhoneExists',
-                method: 'POST',
-                body: data,
-
-            }),
-            invalidatesTags: [
-                { type: 'Customer', id: "LIST" }
-            ]
-
-        }),
-    }),
+const customoerSlice = createSlice({
+    name: 'user',
+    initialState: {
+       isPaymentModalOpen: false,
+    },
+    reducers: {
+        togglePaymentModal(state, action) {
+            return {
+                ...state,
+                ...action.payload,
+            };
+        },
+        logout(state) {
+            localStorage.removeItem('currentUser')
+            return {
+                ...state,
+                isAuthenticated: false,
+                user: null,
+                token: null,
+            };
+        },
+    },
 });
 
-export const {
-    useGetCustomersQuery,
-    useAddCustomerMutation,
-    useCheckIfUserNameOrPhoneExistsMutation,
-} = customerSlice;
+export const { togglePaymentModal } = customoerSlice.actions;
+export default customoerSlice.reducer;

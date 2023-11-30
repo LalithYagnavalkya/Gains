@@ -22,6 +22,21 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import { format } from 'date-fns'
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { ColumnDef } from "@tanstack/react-table"
+import { StatusPill } from '@/components/status.pill'
+import UpatePaymentModal from '../customerModals/update.payment.modal'
+
 
 export type Payment = {
     id: string
@@ -29,13 +44,10 @@ export type Payment = {
     status: "pending" | "processing" | "success" | "failed"
     email: string
 };
-import { columns } from './columns'
-import { Skeleton } from "@/components/ui/skeleton"
-import { useGetCustomersQuery } from "@/features/customer/customer.slice";
+import { useGetCustomersQuery } from "@/features/customer/customer.api";
 
-export function DataTableDemo() {
-    const [isLoading, setIsLoading] = React.useState(false);
-   
+export function DataTableDemo({paymentModal, togglePaymentModal, SetPaymentModalData } : any) {
+
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -47,7 +59,7 @@ export function DataTableDemo() {
     const [{ pageIndex, pageSize }, setPagination] =
         React.useState<PaginationState>({
             pageIndex: 1,
-            pageSize: 10,
+            pageSize: 8,
         })
 
     const fetchDataOptions = {
@@ -56,7 +68,6 @@ export function DataTableDemo() {
     }
 
     const { data } = useGetCustomersQuery({ type: 'recentlyJoined', page: fetchDataOptions.pageIndex, limit: fetchDataOptions.pageSize });
-    console.log(data)
     const defaultData = React.useMemo(() => [], [])
     const pagination = React.useMemo(
         () => ({
@@ -66,10 +77,69 @@ export function DataTableDemo() {
         [pageIndex, pageSize]
     )
 
+    const columns: ColumnDef<Payment>[] = [
+        {
+            accessorKey: "username",
+            header: "Name",
+            cell: ({ row }) => (
+                <div className="capitalize">{row.getValue("username")}</div>
+            ),
+        },
+        {
+            accessorKey: "phone",
+            header: ({ column }) => {
+                return (
+                    <>Phone</>
+                )
+            },
+            cell: ({ row }) => <div className="lowercase text-left">{row.getValue("phone")}</div>,
+        },
+        {
+            accessorKey: "paymentStatus",
+            header: "Status",
+            cell: ({ row }) => <div className="">
+                <StatusPill status={row.getValue("paymentStatus")} />
+            </div>,
+        },
+        {
+            accessorKey: "validUpto",
+            header: "Due Date",
+            cell: ({ row }) => <div className="">{format(new Date(row.getValue("validUpto")), 'MMM dd yyy')}</div>,
+        },
+        {
+            id: "actions",
+            enableHiding: false,
+            cell: ({ row }) => {
+                const rowData = row.original
 
-    
+
+                return (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">Open menu</span>
+                                <DotsHorizontalIcon className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem
+                            onClick={() => {togglePaymentModal(true); SetPaymentModalData(rowData)}}
+                            >
+                                Update Payment
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>View customer</DropdownMenuItem>
+                            <DropdownMenuItem>View payment details</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )
+            },
+        },
+    ]
+
     const table = useReactTable({
-        data: data?.users? data.users : defaultData,
+        data: data?.users ? data.users : defaultData,
         columns,
         pageCount: data?.users?.totalCount ?? -1,
         onSortingChange: setSorting,
@@ -90,7 +160,7 @@ export function DataTableDemo() {
             pagination,
         },
     })
-    
+
     return (
         <div className="py-6">
             <div className="rounded-md border">
