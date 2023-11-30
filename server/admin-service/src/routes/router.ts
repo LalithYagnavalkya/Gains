@@ -1,9 +1,12 @@
 import { Router } from "express";
 import customerRoutes from './customer.route'
+import paymentRoutes from './paymemt.route'
 const router = Router();
 
 
 router.use('/customer', customerRoutes )
+
+router.use('/payment', paymentRoutes )
 
 
 

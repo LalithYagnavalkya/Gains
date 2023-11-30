@@ -5,6 +5,7 @@ import { apiSlice } from '../api/api.slice';
 const customerAdapter = createEntityAdapter();
 const initialState = customerAdapter.getInitialState()
 const customerBackend: string = '/admin/customer'
+const paymentBackend: string = '/admin/payment'
 
 
 
@@ -21,13 +22,13 @@ export const customerSlice = apiSlice.injectEndpoints({
             //     console.log(responseData)
             //     customerAdapter.setAll(initialState, responseData.users)
             // },
-            providesTags : ['Customer']
+            providesTags: ['Customer']
             // providesTags: (result: any, error: any, arg: any, obj: any) => {
-                // console.log(result)
-                // return [
-                //     { type: 'Customer', id: "LIST" },
-                //     ...result.map((_id: any) => ({ type: 'Customer', id: _id }))
-                // ]
+            // console.log(result)
+            // return [
+            //     { type: 'Customer', id: "LIST" },
+            //     ...result.map((_id: any) => ({ type: 'Customer', id: _id }))
+            // ]
             // }
 
         }),
@@ -56,6 +57,18 @@ export const customerSlice = apiSlice.injectEndpoints({
             ]
 
         }),
+        updateMembership: builder.mutation({
+            query: (data: any) => ({
+                url: customerBackend + '/updateMembership',
+                method: 'POST',
+                body: {
+                    ...data,
+                    // memberShipFee: Number(memberShiptFee)
+                }
+            }),
+            // invalidatesTags: ['Customer']
+        }),
+
     }),
 });
 
@@ -63,4 +76,5 @@ export const {
     useGetCustomersQuery,
     useAddCustomerMutation,
     useCheckIfUserNameOrPhoneExistsMutation,
+    useUpdateMembershipMutation,
 } = customerSlice;

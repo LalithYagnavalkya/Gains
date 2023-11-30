@@ -6,6 +6,7 @@ import { z } from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
 import { RupeeInput } from "@/components/ui/rupeeInput";
+import { useUpdateMembershipMutation } from "@/features/customer/customer.api";
 
 type Payment = any
 
@@ -20,6 +21,8 @@ const formSchema = z.object({
     validUpto: z.date(),
 })
 const UpatePaymentModal: React.FC<UpdatePaymentModalProps> = ({ payment, togglePaymentModal }: any) => {
+
+    const [updateMembership, { isLoading, isError, isSuccess }] = useUpdateMembershipMutation()
 
     let { membershipFee } = payment;
     membershipFee = String(membershipFee)
@@ -38,8 +41,14 @@ const UpatePaymentModal: React.FC<UpdatePaymentModalProps> = ({ payment, toggleP
 
     const closeModal = () => togglePaymentModal(false);
 
-    const onSubmit = () => {
-
+    const onSubmit = async () => {
+        if (!isLoading) {
+            await updateMembership({
+                // ...values, membershipFee: memberShipFeeInNumber,
+                // workoutType: workoutTypes,
+                // validUpto: validUptoDate
+            })
+        }
     }
 
     return <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
@@ -66,7 +75,7 @@ const UpatePaymentModal: React.FC<UpdatePaymentModalProps> = ({ payment, toggleP
                         />
                         <div className="flex justify-between">
                             <Button variant="outline" onClick={closeModal} >Cancel</Button>
-                            <Button type="button">Confirm</Button>
+                            <Button type="submit">Confirm</Button>
                         </div>
                     </form>
                 </Form>
