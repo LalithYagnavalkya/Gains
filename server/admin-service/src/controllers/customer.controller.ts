@@ -243,7 +243,7 @@ export const getCustomers = async (req: Request, res: Response) => {
                     usersData[index] = user;
                     if (currentUserMembership) {
                         usersData[index]['membershipFee'] = currentUserMembership?.membershipFee;
-                        usersData[index]['status'] = currentUserMembership?.status;
+                        usersData[index]['paymentStatus'] = currentUserMembership?.paymentStatus;
                         usersData[index]['validUpto'] = currentUserMembership?.validUpto;
                     }
                 })

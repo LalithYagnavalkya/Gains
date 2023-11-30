@@ -3,7 +3,7 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 export interface IMembership extends Document {
     userId: Schema.Types.ObjectId;
     lastPaymentTransactionId?: Schema.Types.ObjectId;
-    status: String,
+    paymentStatus: String,
     membershipFee: number,
     membershipDuriation: number,
     validUpto: Date,
@@ -14,7 +14,7 @@ const membershipSchema = new mongoose.Schema(
     {
         userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         lastPaymentTransactionId: { type: Schema.Types.ObjectId, ref: 'Transaction' },
-        status: { type: String, enum: ['PENDING', 'PAID', 'UPCOMMING', 'PAST_DUE'], default: 'PENDING' },
+        paymentStatus: { type: String, enum: ['PENDING', 'PAID', 'UPCOMMING', 'PAST_DUE'], default: 'PENDING' },
         membershipFee: { type: Number, required: true },
         membershipDuriation: {type: Number, required: true},
         // Assume user is in middle of the month October 15th, and user next payment is on november 1st.

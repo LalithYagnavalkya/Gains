@@ -7,7 +7,7 @@ import { IMembership } from "../models/membership.model";
 export interface IUserInfo extends IUser {
     userId?: Schema.Types.ObjectId;
     lastPaymentTransactionId?: Schema.Types.ObjectId;
-    status?: String,
+    paymentStatus?: String,
     membershipFee?: number,
     membershipDuriation?: number,
     validUpto?: Date,
