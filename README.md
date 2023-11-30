@@ -3,7 +3,7 @@ Admin panel which can track customers and their payments.
 
 
 # Todo
-- update add customer API - CURRENT
+- update add customer API - DONE
 - design and complete update payment API  - CURRENT
 - proper authentication and authorization.
 - implement search feature in customers page.
