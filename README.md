@@ -3,7 +3,6 @@ Admin panel which can track customers and their payments.
 
 
 # Todo
-- update add customer API - DONE
 - design and complete update payment API  - CURRENT
 - proper authentication and authorization.
 - implement search feature in customers page.
@@ -11,6 +10,8 @@ Admin panel which can track customers and their payments.
 - should work on schedulers for updating payment status
 - add forgot password text in login page. and create UI
 - add navbar logout button inside profile avatar options (update navbar)
+- create transaction obj during customer creation
+- create transaction obj during update payment
 
 ## Long scope
 - every 'any' should be replaced with proper interface
