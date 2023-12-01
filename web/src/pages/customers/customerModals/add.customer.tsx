@@ -32,6 +32,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -39,6 +40,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Toaster } from "@/components/ui/toaster";
 // schema
 const formSchema = z.object({
     username: z.string().nonempty("Username is required."),
@@ -95,7 +97,6 @@ const AddCustomer: React.FC = () => {
         const currentDate = form.getValues('validUpto') || new Date()
         const newDate = new Date(currentDate);
         newDate.setMonth(currentDate.getMonth() + value);
-        console.log(newDate)
         setValidUptoDate(newDate)
     }
 
@@ -125,12 +126,17 @@ const AddCustomer: React.FC = () => {
                 workoutType: workoutTypes,
                 validUpto: validUptoDate
             })
-            // console.log(values)
+
+            setValidUptoDate(new Date())
+
             if (result.status === 401) {
                 dispatch(logout())
             }
 
-            if (isSuccess) {
+            if (result.data.error === false) {
+                toast({
+                    description: "🎉 Hurray!, new Customer!!",
+                })
                 refetch();
             }
 
@@ -191,7 +197,9 @@ const AddCustomer: React.FC = () => {
                                                                 const res = await checkIfUserNameOrPhoneExists({ email: e.target.value });
                                                                 if (res?.error?.status === 409) {
                                                                     form.setError('email', { type: 'custom', message: 'This email already exists' })
-                                                                }else if(res.data.error === false){
+                                                                } else if (res?.error?.status === 400) {
+                                                                    form.setError('email', { type: 'custom', message: 'Invalid email' })
+                                                                } else if (res.data.error === false) {
                                                                     form.clearErrors('email')
                                                                 }
                                                             }} />
@@ -215,6 +223,8 @@ const AddCustomer: React.FC = () => {
                                                             const res = await checkIfUserNameOrPhoneExists({ phone: e.target.value });
                                                             if (res?.error?.status === 409) {
                                                                 form.setError('phone', { type: 'custom', message: 'This phone number already exists' })
+                                                            } else if (res?.error?.status === 400) {
+                                                                form.setError('phone', { type: 'custom', message: 'Phone number must be 10 digits' })
                                                             } else if (res.data.error === false) {
                                                                 form.clearErrors('phone')
                                                             }
