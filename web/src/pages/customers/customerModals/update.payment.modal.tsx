@@ -17,6 +17,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 type Payment = any
 
@@ -34,7 +35,8 @@ const UpatePaymentModal: React.FC<UpdatePaymentModalProps> = ({ payment, toggleP
 
     const [updateMembership, { isLoading, isError, isSuccess }] = useUpdateMembershipMutation();
     const [isAmountDisabled, toggleAmount] = React.useState<boolean>(true);
-    const [validUptoDate, setValidUptoDate] = React.useState<Date>(new Date());
+    const [validUptoDate, setValidUptoDate] = React.useState<Date>(new Date(payment.validUpto));
+    const { toast } = useToast()
 
 
     let { membershipFee } = payment;
@@ -62,13 +64,24 @@ const UpatePaymentModal: React.FC<UpdatePaymentModalProps> = ({ payment, toggleP
         setValidUptoDate(newDate)
     }
 
-    const onSubmit = async () => {
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         if (!isLoading) {
-            await updateMembership({
-                // ...values, membershipFee: memberShipFeeInNumber,
-                // workoutType: workoutTypes,
-                // validUpto: validUptoDate
+
+            // convert membership fee from string (1,200) to number 1200
+            let memberShipFeeInNumber: number = parseFloat(values.membershipFee.replace(/,/g, ''));
+
+
+            const result = await updateMembership({
+                ...values, _id: payment._id,
+                validUpto: validUptoDate,
+                membershipFee: memberShipFeeInNumber,
             })
+            if (result.data.error === false) {
+                toast({
+                    description: "Payment updated",
+                })
+                closeModal()
+            }
         }
     }
 
