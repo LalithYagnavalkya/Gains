@@ -59,14 +59,14 @@ export const customerSlice = apiSlice.injectEndpoints({
         }),
         updateMembership: builder.mutation({
             query: (data: any) => ({
-                url: customerBackend + '/updateMembership',
+                url: paymentBackend + '/updateMembership/' + String(data._id),
                 method: 'POST',
                 body: {
                     ...data,
                     // memberShipFee: Number(memberShiptFee)
                 }
             }),
-            // invalidatesTags: ['Customer']
+            invalidatesTags: ['Customer']
         }),
 
     }),
