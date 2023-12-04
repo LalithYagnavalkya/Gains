@@ -10,14 +10,16 @@ Admin panel which can track customers and their payments.
 - should work on schedulers for updating payment status
 - add forgot password text in login page. and create UI
 - add navbar logout button inside profile avatar options (update navbar)
-- create transaction obj during customer creation
+- create transaction obj during customer creation - DONE
 - create transaction obj during update payment
 
 ## Long scope
 - every 'any' should be replaced with proper interface
 - all the find query's should have select statements.
-
+- payment type is always gonna be 'CASH' try to capture that in future.
 - saved a new desing in books mark for layout.
+- payment's should be handled in different service(payment-service)
+- services should be divided based on services not on roles. (i.e admin-service is wrong)
 
 
 ### paymentdue refactor thought process
