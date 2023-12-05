@@ -9,12 +9,14 @@ import validateResource from "../middleware/validateResource";
 import { dashboardSchema } from "../schemas/dashboard.schema";
 
 // controllers
-import { getCounts } from "../controllers/dashboard.controller";
+import { getCounts, getRecentTransactions } from "../controllers/dashboard.controller";
 
 dotenv.config({ path: "./src/config/config.env" });
 const router = Router();
 
-router.post('/getCounts/', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), validateResource(dashboardSchema), getCounts)
+router.get('/getCounts/', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), validateResource(dashboardSchema), getCounts)
+
+router.get('/getRecentTransactions/', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), validateResource(dashboardSchema), getRecentTransactions)
 
 
 export default router;

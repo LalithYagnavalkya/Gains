@@ -18,17 +18,40 @@ export const getCounts = async (req: Request<{}, {}, dashbaordInput['body']>, re
 
 
 export const getRecentTransactions = async (req: Request<{}, {}, dashbaordInput['body']>, res: Response) => {
-    // {
-    //     name,
-    //     timestamp,
-    //     amount,
-    //     total transactions this month,
-    //     sum of all transactions.
-    // }
-    const { _user } = req.body;
-    const transactions: ITransaction[] = await Transaction.find({partnerId: _user.partnerId, transactionType: 'CREDIT'}).populate('userId');
+    try {
 
-    
+        const { _user } = req.body;
 
-    
+        // Get the current date
+        const currentDate = new Date();
+        const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
+        const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+        const transactionFilter = {
+            partnerId: _user.partnerId, 
+            transactionType: 'CREDIT',
+            $and: [
+                { createdAt: { $gte: startOfMonth }},
+                { createdAt: { $lte: endOfMonth }}
+            ]
+        }
+
+        const transactions: ITransaction[] = await Transaction.find(transactionFilter).populate('userId', 'username email').sort({ createdAt: -1 }).lean();
+        const totalTransactionCount: number = await Transaction.countDocuments(transactionFilter);
+
+        const totalAmount = transactions.reduce((acc: number, tran: ITransaction) => {
+            acc += tran.paymentAmount
+            return acc
+        }, 0)
+
+        res.status(200).json({
+            error: false,
+            numberOfTransactionsCurrentMonth: transactions.length,
+            totalRevenueCurrentMonth: totalAmount,
+            transactions,
+            totalTransactionsCurrrentMonth: totalTransactionCount,
+        })
+    } catch (error : any) {
+        res.status(500).json({ error: true, message: error.message })
+    }
 }
