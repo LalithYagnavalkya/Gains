@@ -9,6 +9,7 @@ export interface IMembership extends Document {
     validUpto: Date,
     active: true,
     lastPaymentDate: Date,
+    partnerId: number
 }
 
 const membershipSchema = new mongoose.Schema(
@@ -24,7 +25,8 @@ const membershipSchema = new mongoose.Schema(
         // On October 23rd, seven days before the validUpto. user paymentStatus will become UPCOMMING
         // if user did not pay on 1st, paymentStatus will be PENDING.
         active: { type: Boolean, required: true, default: true },
-        validUpto: { type: Date, required: true }
+        validUpto: { type: Date, required: true },
+        partnerId: { type: Number, required: true }
     },
     { timestamps: true },
 );
