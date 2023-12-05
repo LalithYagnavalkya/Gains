@@ -7,12 +7,14 @@ interface ITransaction extends Document {
     paymentType?: string;
     errorMessage?: string;
     errorStack?: Schema.Types.Mixed;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const transactionSchema = new mongoose.Schema(
     {
         userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-        membershipId: { type: Schema.Types.ObjectId, ref: '', required: true},
+        membershipId: { type: Schema.Types.ObjectId, ref: 'Membership', required: true},
         paymentAmount: { type: Number, required: true },
         paymentType: {type: String, enum: ['CASH', 'ONLINE']}
     },

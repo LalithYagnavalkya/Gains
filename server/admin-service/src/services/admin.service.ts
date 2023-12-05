@@ -10,6 +10,7 @@ import { UserBulkUpload as UserBulkUploadSchema } from "../types/types";
 // services
 import { parseDate, parseWorkoutTypes } from "../controllers/shared.controller";
 import Membership from "../models/membership.model";
+import Transaction from "../models/transaction.model";
 
 export const insertIntoDB = async (users: any, req: any, res: any) => {
 
@@ -234,13 +235,22 @@ export const createCustomer = async (data: addCustomerInput['body']): Promise<{ 
         const validUptoDate = new Date(validUpto);
         const diffMonths = (validUptoDate.getFullYear() - joinedOnDate.getFullYear()) * 12 + (validUptoDate.getMonth() - joinedOnDate.getMonth());
 
-        await Membership.create({
+        const membershipObj = await Membership.create({
             userId: user._id,
             membershipFee,
             validUpto,
             membershipDuriation: diffMonths,
 
         })
+
+        //create a transaction
+        await Transaction.create({
+            userId: user._id,
+            membershipId: membershipObj._id,
+            paymentAmount: membershipFee,
+            paymentType: 'CASH'
+        })
+
         return Promise.resolve({ error: false, message: 'Created sucessfully' })
 
     } catch (error: any) {

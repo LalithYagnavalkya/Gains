@@ -224,7 +224,7 @@ export function DataTableDemo({paymentModal, togglePaymentModal, SetPaymentModal
                         variant="outline"
                         size="sm"
                         onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
+                        disabled={!table.getCanPreviousPage() || pagination.pageIndex === 1}
                     >
                         Previous
                     </Button>
