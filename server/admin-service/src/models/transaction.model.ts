@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 // Define the interface for the Transaction document
-interface ITransaction extends Document {
+export interface ITransaction extends Document {
     userId: Schema.Types.ObjectId;
     paymentAmount: number;
     paymentType?: string;
