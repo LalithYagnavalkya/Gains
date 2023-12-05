@@ -9,6 +9,7 @@ interface ITransaction extends Document {
     errorStack?: Schema.Types.Mixed;
     createdAt: Date;
     updatedAt: Date;
+    partnerId: number;
 }
 
 const transactionSchema = new mongoose.Schema(
@@ -16,7 +17,9 @@ const transactionSchema = new mongoose.Schema(
         userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         membershipId: { type: Schema.Types.ObjectId, ref: 'Membership', required: true},
         paymentAmount: { type: Number, required: true },
-        paymentType: {type: String, enum: ['CASH', 'ONLINE']}
+        paymentType: {type: String, enum: ['CASH', 'ONLINE']},
+        partnerId: {type: Number, required: true},
+        transactionType: {type: String, enum: ['CREDIT', 'DEBIT']}
     },
     { timestamps: true },
 );
