@@ -9,6 +9,7 @@ interface ITransaction extends Document {
     errorStack?: Schema.Types.Mixed;
     createdAt: Date;
     updatedAt: Date;
+    transactionType: string;
     partnerId: number;
 }
 
