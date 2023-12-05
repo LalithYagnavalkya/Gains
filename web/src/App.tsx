@@ -3,7 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 //pages
 import { Forgot, Login, Reset } from "./pages/auth";
-import { Home } from "./pages/dashboard/dashboard";
+import { Home } from "./pages/dashboard/dashboard.page";
 import {Customer} from "./pages/customers/customers.page";
 
 // others
