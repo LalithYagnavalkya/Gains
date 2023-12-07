@@ -36,6 +36,7 @@ export const getRecentTransactions = async (req: Request<{}, {}, dashbaordInput[
             ]
         }
 
+        // use pagination later
         const transactions: ITransaction[] = await Transaction.find(transactionFilter).populate('userId', 'username email').sort({ createdAt: -1 }).lean();
         const totalTransactionCount: number = await Transaction.countDocuments(transactionFilter);
 

@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { IndianRupee } from "lucide-react"
+import { useGetRecentTransactionsQuery } from "@/features/dashboard/dashboard.api"
 
 // export const metadata: Metadata = {
 //     title: "Dashboard",
@@ -19,6 +20,8 @@ type CardProps = React.ComponentProps<typeof Card>
 
 
 export const Home = ({ className, ...props }: CardProps) => {
+    const {data} = useGetRecentTransactionsQuery();
+    // console.log(data)
     return (
         <>
             <div className="md:hidden">
@@ -121,7 +124,7 @@ export const Home = ({ className, ...props }: CardProps) => {
                             <CardContent>
                                 <div className="text-2xl font-bold">+2350</div>
                                 <p className="text-xs text-muted-foreground">
-                                   Due date in next week
+                                    Due date in next week
                                 </p>
                             </CardContent>
                         </Card>
@@ -148,7 +151,7 @@ export const Home = ({ className, ...props }: CardProps) => {
                             <CardContent>
                                 <div className="text-2xl font-bold">₹4,200</div>
                                 <p className="text-xs text-muted-foreground">
-                                total transactions today
+                                    total transactions today
                                 </p>
                             </CardContent>
                         </Card>
