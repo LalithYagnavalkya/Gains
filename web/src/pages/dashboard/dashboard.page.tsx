@@ -20,8 +20,16 @@ type CardProps = React.ComponentProps<typeof Card>
 
 
 export const Home = ({ className, ...props }: CardProps) => {
-    const { data: recentTransactionsData, isLoading} = useGetRecentTransactionsQuery();
-    
+    const { data: recentTransactionsData, isLoading } = useGetRecentTransactionsQuery();
+
+    const formatNumber = (num: number) => {
+        let temp = String(num)
+        // Remove any non-digit characters from the input (e.g., commas)
+        const sanitizedValue = temp.replace(/[^0-9]/g, '');
+        // Format the number with commas
+        return sanitizedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    // if()
     return (
         <>
             <div className="md:hidden">
@@ -68,7 +76,7 @@ export const Home = ({ className, ...props }: CardProps) => {
                                 <IndianRupee className="text-[#A1A1AA] h-4 w-4" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">₹45,231.89</div>
+                                <div className="text-2xl font-bold">₹{recentTransactionsData?.totalRevenueCurrentMonth ? formatNumber(recentTransactionsData.totalRevenueCurrentMonth) + " ": '0 '}</div>
                                 <p className="text-xs text-muted-foreground">
                                     +20.1% from last month
                                 </p>
@@ -170,12 +178,12 @@ export const Home = ({ className, ...props }: CardProps) => {
                             <CardHeader>
                                 <CardTitle>Recent Sales</CardTitle>
                                 <CardDescription>
-                                    You made {recentTransactionsData?.numberOfTransactionsCurrentMonth ? recentTransactionsData.numberOfTransactionsCurrentMonth + " ": '0 '} sales this month.
+                                    You made {recentTransactionsData?.numberOfTransactionsCurrentMonth ? recentTransactionsData.numberOfTransactionsCurrentMonth + " " : '0 '} sales this month.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
                                 {!isLoading &&
-                                <RecentSales transactions = {recentTransactionsData?.transactions} />
+                                    <RecentSales transactions={recentTransactionsData?.transactions} />
                                 }
                             </CardContent>
                         </Card>
