@@ -20,8 +20,8 @@ type CardProps = React.ComponentProps<typeof Card>
 
 
 export const Home = ({ className, ...props }: CardProps) => {
-    const {data} = useGetRecentTransactionsQuery();
-    // console.log(data)
+    const { data: recentTransactionsData, isLoading} = useGetRecentTransactionsQuery();
+    
     return (
         <>
             <div className="md:hidden">
@@ -166,15 +166,17 @@ export const Home = ({ className, ...props }: CardProps) => {
                                 <Overview />
                             </CardContent>
                         </Card>
-                        <Card className="col-span-3">
+                        <Card className="col-span-3 overflow-hidden">
                             <CardHeader>
                                 <CardTitle>Recent Sales</CardTitle>
                                 <CardDescription>
-                                    You made 265 sales this month.
+                                    You made {recentTransactionsData?.numberOfTransactionsCurrentMonth ? recentTransactionsData.numberOfTransactionsCurrentMonth + " ": '0 '} sales this month.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <RecentSales />
+                                {!isLoading &&
+                                <RecentSales transactions = {recentTransactionsData?.transactions} />
+                                }
                             </CardContent>
                         </Card>
                     </div>
