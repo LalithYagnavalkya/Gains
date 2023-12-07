@@ -240,7 +240,8 @@ export const createCustomer = async (data: addCustomerInput['body']): Promise<{ 
             membershipFee,
             validUpto,
             membershipDuriation: diffMonths,
-            partnerId: _user.partnerId
+            partnerId: _user.partnerId,
+            paymentStatus: 'PAID'
 
         })
 
