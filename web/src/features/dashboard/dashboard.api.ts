@@ -2,13 +2,9 @@ import { createEntityAdapter } from '@reduxjs/toolkit';
 import { apiSlice } from '../api/api.slice';
 import { Transaction } from './types';
 
-const usersAdapter = createEntityAdapter();
+const dashboardAdapter = createEntityAdapter();
 
-const initialState = usersAdapter.getInitialState({
-    isAuthenticated: false,
-    user: null,
-    token: null,
-});
+const initialState = dashboardAdapter.getInitialState();
 
 const dashbaordRoute: string = '/admin/dashboard'
 
@@ -18,16 +14,13 @@ export const dashboardAPI = apiSlice.injectEndpoints({
             query: (credentials: any) => ({
                 url: dashbaordRoute + '/getRecentTransactions',
                 method: 'GET',
-                
+
             }),
-            transformResponse: (res: Transaction, state: any) => {
-                console.log(res)
-                // usersAdapter.setAll(initialState, { isAuthenticated: true, user: res.user, token: res.token })
-            },
-            providesTags: ['DashboardTransactions'],
            
+            providesTags: ['DashboardTransactions'],
+
         }),
-       
+
     }),
 });
 
