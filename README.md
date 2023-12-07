@@ -13,6 +13,7 @@ Admin panel which can track customers and their payments.
 - create transaction obj during update payment
 - should add partner id in all levels
 - add loaders for all modal popups
+- rename paymentType to paymentMethod in transactions collections.
 
 ## Long scope
 - every 'any' should be replaced with proper interface

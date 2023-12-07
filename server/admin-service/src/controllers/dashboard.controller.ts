@@ -47,7 +47,6 @@ export const getRecentTransactions = async (req: Request<{}, {}, dashbaordInput[
 
         res.status(200).json({
             error: false,
-            numberOfTransactionsCurrentMonth: transactions.length,
             totalRevenueCurrentMonth: totalAmount,
             transactions,
             totalTransactionsCurrrentMonth: totalTransactionCount,
