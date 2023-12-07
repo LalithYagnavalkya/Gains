@@ -40,7 +40,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Toaster } from "@/components/ui/toaster";
+
 // schema
 const formSchema = z.object({
     username: z.string().nonempty("Username is required."),

@@ -240,6 +240,8 @@ export const createCustomer = async (data: addCustomerInput['body']): Promise<{ 
             membershipFee,
             validUpto,
             membershipDuriation: diffMonths,
+            partnerId: _user.partnerId,
+            paymentStatus: 'PAID'
 
         })
 
@@ -248,7 +250,9 @@ export const createCustomer = async (data: addCustomerInput['body']): Promise<{ 
             userId: user._id,
             membershipId: membershipObj._id,
             paymentAmount: membershipFee,
-            paymentType: 'CASH'
+            paymentType: 'CASH',
+            partnerId: _user.partnerId,
+            transactionType: 'CREDIT'
         })
 
         return Promise.resolve({ error: false, message: 'Created sucessfully' })

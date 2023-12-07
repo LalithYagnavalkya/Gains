@@ -11,8 +11,13 @@ export const updatMembershipSchema = object({
             .refine(isObjectId, { message: 'Invalid userId, must be a valid ObjectId' }),
     }),
     body: object({
-        membershipFee: number({required_error: 'please provide membership fee'}),
+        membershipFee: number({ required_error: 'please provide membership fee' }),
         validUpto: z.string(),
+        _user: object({
+            _id: z.string(),
+            role: string(),
+            partnerId: z.number(),
+        })
 
     })
 })

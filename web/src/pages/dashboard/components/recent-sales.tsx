@@ -1,10 +1,39 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import React, { useEffect } from "react";
 
 
-export function RecentSales() {
+export function RecentSales(props: any) {
+    const [state, setState] = React.useState([])
+    useEffect(() => { setState(props.transactions) }, [props])
+
+
+    const formatNumber = (num : number) => {
+        let temp = String(num)
+        // Remove any non-digit characters from the input (e.g., commas)
+        const sanitizedValue = temp.replace(/[^0-9]/g, '');
+        // Format the number with commas
+        return  sanitizedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
     return (
-        <div className="space-y-8">
-            <div className="flex items-center">
+        <div className="h-[350px] overflow-y-auto">
+            <div className="space-y-8">
+                {state.map((t: any) => {
+                    return <div className="flex items-center pr-4">
+                        <Avatar className="h-9 w-9">
+                            <AvatarImage src="/avatars/01.png" alt="Avatar" />
+                            <AvatarFallback>{(t.userId.username.substring(0, 2)).toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                        <div className="ml-4 space-y-1">
+                            <p className="text-sm font-medium leading-none">{t.userId.username}</p>
+                            <p className="text-sm text-muted-foreground">
+                                {t.userId.email}
+                            </p>
+                        </div>
+                        <div className="ml-auto font-medium">+₹{formatNumber(t.paymentAmount)}</div>
+                    </div>
+                })}
+                {/* <div className="flex items-center">
                 <Avatar className="h-9 w-9">
                     <AvatarImage src="/avatars/01.png" alt="Avatar" />
                     <AvatarFallback>OM</AvatarFallback>
@@ -62,6 +91,7 @@ export function RecentSales() {
                     <p className="text-sm text-muted-foreground">sofia.davis@email.com</p>
                 </div>
                 <div className="ml-auto font-medium">+$39.00</div>
+            </div> */}
             </div>
         </div>
     )
