@@ -35,12 +35,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                         <p className="px-1 leading-5 text-muted-foreground pb-6">
                            We will send you an email to reset your password.
                         </p>
-                        <Label className="pl-2" htmlFor="email">
+                        {/* <Label className="pl-2" htmlFor="email">
                             Email
-                        </Label>
+                        </Label> */}
                         <Input
                             id="email"
-                            placeholder="name@example.com"
+                            placeholder="Enter your email here"
                             type="email"
                             autoCapitalize="none"
                             autoComplete="email"
@@ -49,7 +49,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                         />
                     </div>
                    
-                    <Button className="mt-3 w-fit flex justify-self-center" disabled={isLoading}>
+                    <Button className="mt-3 w-full flex justify-self-center" disabled={isLoading}>
                         {isLoading && (
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                         )}
