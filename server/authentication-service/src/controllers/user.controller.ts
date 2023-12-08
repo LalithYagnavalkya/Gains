@@ -71,7 +71,7 @@ export const forgotPassword = async (req: Request<{}, {}, forgotPasswordInput['b
 
     await sendEmail({
         to: user.email,
-        from: "nodeAdmin@techvedhas.com",
+        from: "Gains",
         subject: "Reset your password",
         text: `To reset your password, click on the following link: http://localhost:3000/reset-password?token=${token}`,
     });
