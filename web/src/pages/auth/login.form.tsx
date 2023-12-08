@@ -3,7 +3,7 @@
 // modules
 import * as React from "react"
 import { z } from "zod"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -24,7 +24,7 @@ const formSchema = z.object({
 })
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     const navigate = useNavigate();
-    const [login, {data, isLoading, isError }] = useLoginMutation();
+    const [login, { data, isLoading, isError }] = useLoginMutation();
     const [isPasswordWrong, setIsPasswordWrong] = React.useState(false)
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -35,9 +35,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 navigate('/app/home');
             } else {
             }
-        } catch (error :any) {
-            if(error.status === 401)
-            setIsPasswordWrong(true);
+        } catch (error: any) {
+            if (error.status === 401)
+                setIsPasswordWrong(true);
         }
     }
     const form = useForm<z.infer<typeof formSchema>>({
@@ -69,7 +69,16 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Password</FormLabel>
+                                <FormLabel className="flex justify-between">
+                                    <div>
+                                        Password
+                                    </div>
+                                    <Link to='/forgotpassword'>
+                                        <p className="text-sm font-mediuml text-muted-foreground hover:text-primary hover:cursor-pointer">
+                                            Forgot Password?
+                                        </p>
+                                    </Link>
+                                </FormLabel>
                                 <FormControl>
                                     <Input type="password" placeholder="Enter you password" {...field} />
                                 </FormControl>
