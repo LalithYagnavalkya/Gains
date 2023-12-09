@@ -26,6 +26,7 @@ export const getRecentTransactions = async (req: Request<{}, {}, dashbaordInput[
         const currentDate = new Date();
         const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
         const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        const today = new Date().getDate();
 
         const transactionFilter = {
             partnerId: _user.partnerId, 
@@ -37,19 +38,25 @@ export const getRecentTransactions = async (req: Request<{}, {}, dashbaordInput[
         }
 
         // use pagination later
-        const transactions: ITransaction[] = await Transaction.find(transactionFilter).populate('userId', 'username email').sort({ createdAt: -1 }).lean();
-        const totalTransactionCount: number = await Transaction.countDocuments(transactionFilter);
+        const [transactions, totalTransactionCount] = await Promise.all([
+            Transaction.find(transactionFilter).populate('userId', 'username email').sort({ createdAt: -1 }).lean(),
+            Transaction.countDocuments(transactionFilter)
+        ])
 
-        const totalAmount = transactions.reduce((acc: number, tran: ITransaction) => {
-            acc += tran.paymentAmount
+        const totalAmount = transactions.reduce((acc, tran: ITransaction) => {
+            if (tran.createdAt?.getDate() === today){
+                acc.todayAmount = acc.todayAmount + tran.paymentAmount
+            }
+            acc.totalAmount += tran.paymentAmount
             return acc
-        }, 0)
+        }, {totalAmount: 0, todayAmount: 0})
 
         res.status(200).json({
             error: false,
-            totalRevenueCurrentMonth: totalAmount,
+            totalRevenueCurrentMonth: totalAmount?.totalAmount,
+            todayRevenue: totalAmount.todayAmount,
             transactions,
-            totalTransactionsCurrrentMonth: totalTransactionCount,
+            totalTransactionsCurrrentMonthCount: totalTransactionCount,
         })
     } catch (error : any) {
         res.status(500).json({ error: true, message: error.message })
