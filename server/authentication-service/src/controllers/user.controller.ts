@@ -55,34 +55,40 @@ export const login = async (req: Request<{}, {}, loginInput['body']>, res: Respo
 export const forgotPassword = async (req: Request<{}, {}, forgotPasswordInput['body']>, res: Response) => {
 
     const message =
-        "If a user with that email is registered you will receive a password reset email";
+        "👀 If the provided email is registered with Gains, you will receive a password reset email";
 
     const {
         email,
     } = req.body;
 
-    let user = await User.findOne({ email }).select('email').lean();
+    try {
 
-    if (!user || user.active === false) {
-        return res.send(message);
-    }
 
-    const token = generateToken(user._id);
+        let user = await User.findOne({ email }).select('email').lean();
 
-    await sendEmail({
-        to: user.email,
-        from: "Gains",
-        subject: "Reset your password",
-        html: `
+        if (!user || user.active === false) {
+            return res.send(message);
+        }
+
+        const token = generateToken(user._id);
+
+        await sendEmail({
+            to: user.email,
+            from: "Gains",
+            subject: "Reset your password",
+            html: `
         <div style="background-color: #000000; color: #FAFAFA; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); font-family: Arial, sans-serif;">
             <h2 style="color: #FAFAFA; font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">Reset Your Password</h2>
             <p style="color: #A3A3A4; margin-bottom: 20px;">To reset your password, click on the following link:</p>
-            <a href="http://localhost:3000/reset-password?token=${token}" style="display: inline-block; padding: 10px 20px; background-color: #000000; color: #FFFFFF; text-decoration: none; border: 1px solid #1B1B1D; border-radius: 5px; transition: background-color 0.3s, color 0.3s;">Reset Password</a>
-        </div>
-        `,
-    });
+            <a href="${process.env.WEBAPP_ADDRESS}/resetpassword?token=${token}" style="display: inline-block; padding: 10px 20px; background-color: #000000; color: #FFFFFF; text-decoration: none; border: 1px solid #1B1B1D; border-radius: 5px; transition: background-color 0.3s, color 0.3s;">Reset Password</a>
+            </div>
+            `,
+        });
 
-    return res.send(message);
+        return res.status(200).json({ error: false, message });
+    } catch (error) {
+        return res.status(500).json({ error: true, message: 'Something went wrong!' });
+    }
 }
 
 export const resetPassword = async (req: Request<resetPassowrdInput['params'], {}, resetPassowrdInput['body']>, res: Response) => {
