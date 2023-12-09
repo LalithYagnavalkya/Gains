@@ -20,17 +20,21 @@ export const forgotPasswordSchema = object({
 });
 
 export const resetPassowrdSchema = object({
-    params: object({
-        token: string(),
-    }),
     body: object({
         password: string({
             required_error: "password",
-        }).min(6, "password too short - should be 6 chars minimum"),
-        passwordConfirmation: string({
+        }).min(8, { message: 'Password must be at least 8 characters long' })
+            .max(20, { message: 'Password must not exceed 20 characters' })
+            .refine((password) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/.test(password), {
+                message: 'Password must contain at least one lowercase letter, one uppercase letter, and one digit',
+            }),
+        confirmPassword: string({
             required_error: "passwordConfirmation is required",
+        }),
+        token: string({
+            required_error: 'required Info'
         })
-    }).refine((data) => data.password === data.passwordConfirmation, {
+    }).refine((data) => data.password === data.confirmPassword, {
         message: "passwords do not match",
         path: ["passwordConfirmation"],
     })
