@@ -3,16 +3,15 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/ui/icon"
-import { useNavigate } from "react-router-dom"
 import { useForgotPasswordMutation } from "@/features/auth/auth.slice"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useToast } from "@/components/ui/use-toast"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
@@ -22,7 +21,8 @@ const formSchema = z.object({
 })
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-    const navigate = useNavigate();
+    const { toast } = useToast()
+
     const [forgotPassword, { isLoading: isForgotAPILoading }] = useForgotPasswordMutation();
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
@@ -38,8 +38,13 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             if (!isForgotAPILoading) {
                 setIsLoading(true)
 
-                await forgotPassword(values)
+                const result = await forgotPassword(values)
 
+                if(result?.data.error === false){
+                    toast({
+                        description: result.data.message,
+                    })
+                }
 
                 setTimeout(() => {
                     setIsLoading(false)
