@@ -28,7 +28,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     const [isPasswordWrong, setIsPasswordWrong] = React.useState(false)
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
         try {
             const resData = await login(values).unwrap()
             if (!resData.error && !isError) {
