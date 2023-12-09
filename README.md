@@ -23,23 +23,8 @@ Admin panel which can track customers and their payments.
 - payment's should be handled in different service(payment-service)
 - services should be divided based on services not on roles. (i.e admin-service is wrong)
 
-
-### paymentdue refactor thought process
-- payment due collection should be renamed to membership collection
-- every user should have a doc in membership collection, i.e, relation between user and membership should be one to one
-- all fields related to membership should be removed from user collection and saved in membership collections
-- scheduler should only targert membership collection.
-- when making a payment, membership valid upto should be updated and a transaction doc in transaction collection should
-  be created
-- fields that need to be removed from user collection
-    - vaildUpto
-    - paymentStatus
-    - membershipFee
-    - membershipDuriation
-- update models in all collections
-
-
 ## Quick Fixes
 - Customers page paginationation, inital previous button should be disabled
 - Frontend: add apiSlic end points in .env file 
 - Onces token expires and logouts. next login getCustomers api is always failing and signing out.
+g
