@@ -69,14 +69,14 @@ export const forgotPassword = async (req: Request<{}, {}, forgotPasswordInput['b
 
     const token = generateToken(user._id);
 
-    await sendEmail({
+    const result = await sendEmail({
         to: user.email,
-        from: "Gains",
+        from: "lalithyagnavalkyatirunagari@gmail.com",
         subject: "Reset your password",
         text: `To reset your password, click on the following link: http://localhost:3000/reset-password?token=${token}`,
     });
 
-    return res.send(message);
+        return res.send(message);
 }
 
 export const resetPassword = async (req: Request<resetPassowrdInput['params'], {}, resetPassowrdInput['body']>, res: Response) => {
