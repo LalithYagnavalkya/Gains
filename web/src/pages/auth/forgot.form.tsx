@@ -34,7 +34,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     })
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            console.log(values)
             if (!isForgotAPILoading) {
                 setIsLoading(true)
 
@@ -51,7 +50,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 }, 3000)
             }
         } catch (error) {
-
+            toast({
+                description: "Something went wrong!",
+            })
         }
     }
 
