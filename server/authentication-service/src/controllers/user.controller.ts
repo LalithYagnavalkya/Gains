@@ -35,7 +35,7 @@ export const login = async (req: Request<{}, {}, loginInput['body']>, res: Respo
         }
 
         //generate token
-        let token = generateToken(user._id)
+        let token = generateToken(user._id, null)
 
         const userObj = {
             _id: user._id,
@@ -64,13 +64,18 @@ export const forgotPassword = async (req: Request<{}, {}, forgotPasswordInput['b
     try {
 
 
-        let user = await User.findOne({ email }).select('email').lean();
+        let user = await User.findOne({ email }).select('email');
 
         if (!user || user.active === false) {
             return res.send(message);
         }
 
-        const token = generateToken(user._id);
+        const token = generateToken(user._id, '15m');
+
+        user.token = token;
+
+        user.save();
+
 
         await sendEmail({
             to: user.email,
@@ -91,29 +96,39 @@ export const forgotPassword = async (req: Request<{}, {}, forgotPasswordInput['b
     }
 }
 
-export const resetPassword = async (req: Request<resetPassowrdInput['params'], {}, resetPassowrdInput['body']>, res: Response) => {
+export const resetPassword = async (req: Request<{}, {}, resetPassowrdInput['body']>, res: Response) => {
 
-    const { token } = req.params;
-    const { password } = req.body;
+    const { password, token, confirmPassword } = req.body;
     const message = 'Could not reset password'
 
     try {
 
-        const decoded = verifyToken(token)
-        const user = await User.findById(decoded?.userId).select('password');
-
-        if (!user) {
-            return res.status(400).send(message);
+        if (password !== confirmPassword){
+            return res.status(404).json({error: true, message: 'Passwords dont match.'})
         }
 
+        const decoded = verifyToken(token)
+        const user = await User.findById(decoded?.userId).select('password token');
+
+
+        if (!user) {
+            return res.status(400).json({error: true, message: 'user not found'});
+        }
+
+        if (user.token !== token) {
+            return res.status(401).json({ error: true, message: 'Token Expired!' })
+        }
         const hashedPassword = await bcrypt.hash(password, Number(process.env.BCRYPT_SALT_ROUNDS as String));
 
         //update password
         user.password = hashedPassword;
 
+        // override the token with empty string
+        user.token = "";
+
         user.save();
 
-        return res.send("Successfully updated password");
+        return res.status(200).json({ error: false, message: '🎉 Updated Password Successfully!' });
 
     } catch (e: any) {
         return res.status(500).send(message);
