@@ -205,7 +205,7 @@ const UpatePaymentModal: React.FC<UpdatePaymentModalProps> = ({ payment, toggleP
                         />
                         <div className="flex justify-between">
                             <Button variant="outline" onClick={closeModal} >Cancel</Button>
-                            <Button type="submit" className="bg-[#69d84a]">Update Payment</Button>
+                            <Button type="submit" className=" hover:bg-green-paid hover:text-white">Update Payment</Button>
                         </div>
                     </form>
                 </Form>
