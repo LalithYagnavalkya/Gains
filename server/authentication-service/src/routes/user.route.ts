@@ -19,7 +19,7 @@ router.post("/login", validateResource(loginSchema), login);
 
 router.post("/forgotpassword", validateResource(forgotPasswordSchema), forgotPassword);
 
-router.post('/resetpassword/:token', validateResource(resetPassowrdSchema), resetPassword)
+router.post('/resetpassword', validateResource(resetPassowrdSchema), resetPassword)
 
 
 
