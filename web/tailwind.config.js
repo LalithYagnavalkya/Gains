@@ -50,7 +50,7 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        'green-paid': "#4F9F3E",
+        'green-paid': "#4CAF50",
         'red-pending': '#F02828',
         'pill-text': '#FFFFFF'
       },

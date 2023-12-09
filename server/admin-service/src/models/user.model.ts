@@ -17,6 +17,7 @@ export interface IUser extends Document {
 	customerSerialNumber?: string,
 	workoutType: string[],
 	partnerId: number;
+	token?: string;
 }
 
 const userSchema = new mongoose.Schema(
@@ -41,7 +42,8 @@ const userSchema = new mongoose.Schema(
 		partnerId: { type: Number, required: true },
 		workoutType: [{ type: String }],
 		customerSerialNumber: { type: String },
-		},
+		token: { type: String }
+	},
 	{ timestamps: true },
 );
 
