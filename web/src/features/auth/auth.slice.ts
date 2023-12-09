@@ -48,7 +48,7 @@ export const authSlice = apiSlice.injectEndpoints({
         method: 'POST',
       }),
       async onCacheEntryAdded(
-        arg :any,
+        arg: any,
         { dispatch, cacheDataLoaded }: { dispatch: any, cacheDataLoaded: any }
       ) {
         const authData = await cacheDataLoaded;
@@ -58,10 +58,18 @@ export const authSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: ['Auth'],
     }),
+    forgotPassword: builder.mutation({
+      query: (email: string) => ({
+        url: authBackendRoute + '/forgotpassword',
+        method: 'POST',
+        body: email
+      }),
+    })
   }),
 });
 
 export const {
   useLoginMutation,
   useLogoutMutation,
+  useForgotPasswordMutation
 } = authSlice;
