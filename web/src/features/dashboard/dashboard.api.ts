@@ -12,7 +12,7 @@ export const dashboardAPI = apiSlice.injectEndpoints({
     endpoints: (builder: any) => ({
         getRecentTransactions: builder.query({
             query: (credentials: any) => ({
-                url: dashbaordRoute + '/getRecentTransactions',
+                url: dashbaordRoute + '/fetchDashboardTransactionsData',
                 method: 'GET',
 
             }),
