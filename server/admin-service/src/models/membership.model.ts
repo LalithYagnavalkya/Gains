@@ -10,6 +10,8 @@ export interface IMembership extends Document {
     active: true,
     lastPaymentDate: Date,
     partnerId: number
+    createdAt: Date,
+    updatedAt: Date
 }
 
 const membershipSchema = new mongoose.Schema(
