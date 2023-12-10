@@ -32,4 +32,5 @@ export const dashboardAPI = apiSlice.injectEndpoints({
 
 export const {
     useGetRecentTransactionsQuery,
+    useDashboardCustomerStatsQuery
 } = dashboardAPI;
