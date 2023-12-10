@@ -20,6 +20,16 @@ export const dashboardAPI = apiSlice.injectEndpoints({
             providesTags: ['DashboardTransactions'],
 
         }),
+        dashboardCustomerStats: builder.query({
+            query: () => ({
+                url: dashbaordRoute + '/dashboardCustomerStats',
+                method: 'GET',
+
+            }),
+           
+            providesTags: ['DashboardCustomerStats'],
+
+        }),
 
     }),
 });
