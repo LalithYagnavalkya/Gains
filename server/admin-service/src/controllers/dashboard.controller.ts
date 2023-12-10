@@ -126,7 +126,7 @@ export const fetchDashboardTransactionsData = async (req: Request<{}, {}, dashba
             error: false,
             totalDayRevenue: totalAmount?.totalCurrentDayRevenue,
             todayMonthRevenue: totalAmount.totalCurrentMonthRevenue,
-            currentMonthCount: totalAmount.currentMonthCount,
+            currentMonthTransactionsCount: totalAmount.currentMonthCount,
             dashboardGraphData: graphData,
             transactions,
         })
