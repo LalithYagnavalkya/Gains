@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { IndianRupee } from "lucide-react"
-import { useGetRecentTransactionsQuery } from "@/features/dashboard/dashboard.api"
+import { useDashboardCustomerStatsQuery, useGetRecentTransactionsQuery } from "@/features/dashboard/dashboard.api"
 import { useDispatch } from "react-redux"
 import { logout } from "@/features/auth/user.slice"
 import { formatNumber } from "@/utils/uitls"
@@ -24,10 +24,8 @@ type CardProps = React.ComponentProps<typeof Card>
 
 export const Home = ({ className, ...props }: CardProps) => {
     const { data: dashboardTransactionData, isLoading, isError } = useGetRecentTransactionsQuery();
+    const { data: dashboardCustomerData } = useDashboardCustomerStatsQuery();
     const dispatch = useDispatch();
-
-    console.log(dashboardTransactionData, isError)
-
 
     return (
         <>
@@ -77,7 +75,7 @@ export const Home = ({ className, ...props }: CardProps) => {
                             <CardContent>
                                 <div className="text-2xl font-bold">₹{dashboardTransactionData?.todayMonthRevenue ? formatNumber(dashboardTransactionData.todayMonthRevenue) + " " : '0 '}</div>
                                 <p className="text-xs text-muted-foreground">
-                                    +20.1% from last month
+                                   made in current month
                                 </p>
                             </CardContent>
                         </Card>
@@ -102,9 +100,9 @@ export const Home = ({ className, ...props }: CardProps) => {
                                 </svg>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">+2350</div>
+                                <div className="text-2xl font-bold">+{dashboardCustomerData?.currentMonthCustomers ? formatNumber(dashboardCustomerData.currentMonthCustomers   ) + " " : '0 '}</div>
                                 <p className="text-xs text-muted-foreground">
-                                    +180.1% from last month
+                                    added this month
                                 </p>
                             </CardContent>
                         </Card>
@@ -129,7 +127,7 @@ export const Home = ({ className, ...props }: CardProps) => {
                                 </svg>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">+2350</div>
+                                <div className="text-2xl font-bold">+{dashboardCustomerData?.upcomingCount ? formatNumber(dashboardCustomerData.upcomingCount) + " " : '0 '}</div>
                                 <p className="text-xs text-muted-foreground">
                                     Due date in next week
                                 </p>
