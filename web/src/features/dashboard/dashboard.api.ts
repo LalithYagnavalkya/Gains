@@ -2,8 +2,6 @@ import { createEntityAdapter } from '@reduxjs/toolkit';
 import { apiSlice } from '../api/api.slice';
 import { Transaction } from './types';
 
-const dashboardAdapter = createEntityAdapter();
-
 const dashbaordRoute: string = '/admin/dashboard'
 
 export const dashboardAPI = apiSlice.injectEndpoints({
