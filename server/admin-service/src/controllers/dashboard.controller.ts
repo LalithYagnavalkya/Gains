@@ -17,7 +17,7 @@ export const getCounts = async (req: Request<{}, {}, dashbaordInput['body']>, re
 }
 
 
-export const getRecentTransactions = async (req: Request<{}, {}, dashbaordInput['body']>, res: Response) => {
+export const fetchDashboardTransactionsData = async (req: Request<{}, {}, dashbaordInput['body']>, res: Response) => {
     let graphData = [
         {
             month: 0,
@@ -100,28 +100,18 @@ export const getRecentTransactions = async (req: Request<{}, {}, dashbaordInput[
             ]
         }
 
-        // transactionFilter for current month
-        const transactionFilterMonth = {
-            partnerId: _user.partnerId,
-            transactionType: 'CREDIT',
-            $and: [
-                { createdAt: { $gte: startOfMonth } },
-                { createdAt: { $lte: endOfMonth } }
-            ]
-        }
-
         // use pagination later
-        const [transactions, totalTransactionsCurrrentMonthCount] = await Promise.all([
-            Transaction.find(transactionFilter).populate('userId', 'username email').sort({ createdAt: -1 }).lean(),
-            Transaction.countDocuments(transactionFilterMonth)
-        ])
+        const transactions = await Transaction.find(transactionFilter).populate('userId', 'username email').sort({ createdAt: -1 }).lean()
+        
 
         const totalAmount = transactions.reduce((acc, tran: ITransaction) => {
+
             if (tran.createdAt?.getMonth() === currentDate.getMonth()  && tran.createdAt?.getDate() === currentDate.getDate()) {
-                acc.totalCurrentDayRevenue += + tran.paymentAmount
+                acc.totalCurrentDayRevenue += + tran.paymentAmount;
             }
             if (tran.createdAt?.getMonth() === currentDate.getMonth()) {
-                acc.totalCurrentMonthRevenue += tran.paymentAmount
+                acc.totalCurrentMonthRevenue += tran.paymentAmount;
+                acc.currentMonthCount += 1; 
             }
             let foundMonthData = graphData.find(item => item.month === tran.createdAt?.getMonth())
             if (foundMonthData){
@@ -129,14 +119,15 @@ export const getRecentTransactions = async (req: Request<{}, {}, dashbaordInput[
             }
 
 
-            return acc
-        }, { totalCurrentMonthRevenue: 0, totalCurrentDayRevenue: 0 })
+            return acc;
+        }, { totalCurrentMonthRevenue: 0, totalCurrentDayRevenue: 0, currentMonthCount: 0 })
 
         res.status(200).json({
             error: false,
             totalDayRevenue: totalAmount?.totalCurrentDayRevenue,
             todayMonthRevenue: totalAmount.totalCurrentMonthRevenue,
-            totalTransactionsCurrrentMonthCount,
+            currentMonthCount: totalAmount.currentMonthCount,
+            dashboardGraphData: graphData,
             transactions,
         })
     } catch (error: any) {
