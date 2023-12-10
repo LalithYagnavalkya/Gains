@@ -12,6 +12,7 @@ import { IndianRupee } from "lucide-react"
 import { useGetRecentTransactionsQuery } from "@/features/dashboard/dashboard.api"
 import { useDispatch } from "react-redux"
 import { logout } from "@/features/auth/user.slice"
+import { formatNumber } from "@/utils/uitls"
 
 // export const metadata: Metadata = {
 //     title: "Dashboard",
@@ -22,22 +23,12 @@ type CardProps = React.ComponentProps<typeof Card>
 
 
 export const Home = ({ className, ...props }: CardProps) => {
-    const { data: recentTransactionsData, isLoading, isError } = useGetRecentTransactionsQuery();
+    const { data: dashboardTransactionData, isLoading, isError } = useGetRecentTransactionsQuery();
     const dispatch = useDispatch();
 
+    console.log(dashboardTransactionData, isError)
 
-    // console.log(recentTransactionsData,isError)
 
-    // if (!isLoading && isError){
-    //     dispatch(logout())
-    // }
-    const formatNumber = (num: number) => {
-        let temp = String(num)
-        // Remove any non-digit characters from the input (e.g., commas)
-        const sanitizedValue = temp.replace(/[^0-9]/g, '');
-        // Format the number with commas
-        return sanitizedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
     return (
         <>
             <div className="md:hidden">
@@ -84,7 +75,7 @@ export const Home = ({ className, ...props }: CardProps) => {
                                 <IndianRupee className="text-[#A1A1AA] h-4 w-4" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">₹{recentTransactionsData?.totalRevenueCurrentMonth ? formatNumber(recentTransactionsData.totalRevenueCurrentMonth) + " ": '0 '}</div>
+                                <div className="text-2xl font-bold">₹{dashboardTransactionData?.todayMonthRevenue ? formatNumber(dashboardTransactionData.todayMonthRevenue) + " " : '0 '}</div>
                                 <p className="text-xs text-muted-foreground">
                                     +20.1% from last month
                                 </p>
@@ -165,7 +156,7 @@ export const Home = ({ className, ...props }: CardProps) => {
                                 </svg>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">₹4,200</div>
+                                <div className="text-2xl font-bold">₹{dashboardTransactionData?.totalDayRevenue ? formatNumber(dashboardTransactionData.totalDayRevenue) + " " : '0'}</div>
                                 <p className="text-xs text-muted-foreground">
                                     total transactions today
                                 </p>
@@ -179,19 +170,19 @@ export const Home = ({ className, ...props }: CardProps) => {
                                 <CardTitle>Overview</CardTitle>
                             </CardHeader>
                             <CardContent className="pl-2">
-                                <Overview />
+                                <Overview data={dashboardTransactionData?.dashboardGraphData } />
                             </CardContent>
                         </Card>
                         <Card className="col-span-3 overflow-hidden">
                             <CardHeader>
                                 <CardTitle>Recent Sales</CardTitle>
                                 <CardDescription>
-                                    You made {recentTransactionsData?.numberOfTransactionsCurrentMonth ? recentTransactionsData.numberOfTransactionsCurrentMonth + " " : '0 '} sales this month.
+                                    You made {dashboardTransactionData?.currentMonthTransactionsCount ? dashboardTransactionData.currentMonthTransactionsCount + " " : '0 '} sales this month.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
                                 {!isLoading &&
-                                    <RecentSales transactions={recentTransactionsData?.transactions} />
+                                    <RecentSales transactions={dashboardTransactionData?.transactions} />
                                 }
                             </CardContent>
                         </Card>
