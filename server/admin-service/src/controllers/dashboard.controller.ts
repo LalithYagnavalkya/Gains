@@ -5,16 +5,51 @@ import Transaction, { ITransaction } from "../models/transaction.model";
 
 //schemas
 import { dashbaordInput } from "../schemas/dashboard.schema";
+import Membership from "../models/membership.model";
 
-export const getCounts = async (req: Request<{}, {}, dashbaordInput['body']>, res: Response) => {
+export const dashboardCustomerStats = async (req: Request<{}, {}, dashbaordInput['body']>, res: Response) => {
     try {
         const { _user } = req.body;
 
-        return res.status(200).json({ error: false, message: 'Payment updated successfully' })
+        const currentDate = new Date();
+
+        // Last month's start date
+        const lastMonthStartDate = new Date(currentDate);
+        lastMonthStartDate.setMonth(currentDate.getMonth() - 1);
+        lastMonthStartDate.setDate(1);
+
+        // This month's start date
+        const thisMonthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
+        const membershipFilter = {
+            partnerId: _user.partnerId,
+            $and: [
+                { createdAt: { $gte: lastMonthStartDate } },
+                { createdAt: { $lte: currentDate } }
+            ]
+        };
+
+        const memberships = await Membership.find(membershipFilter).lean();
+
+        const { upcomingCount, currentMonthCustomers, lastMonthCustomers } = memberships.reduce((acc, m) => {
+            if (m.paymentStatus === 'UPCOMING') {
+                acc.upcomingCount += 1;
+            }
+            if (m.createdAt.getMonth() === currentDate.getMonth()) {
+                acc.currentMonthCustomers += 1;
+            }
+            if (m.createdAt.getMonth() === lastMonthStartDate.getMonth()) {
+                acc.lastMonthCustomers += 1;
+            }
+            return acc;
+        }, { upcomingCount: 0, currentMonthCustomers: 0, lastMonthCustomers: 0 });
+
+        return res.status(200).json({ error: false, upcomingCount, currentMonthCustomers, lastMonthCustomers });
     } catch (error) {
-        return res.status(500).json({ error: true, message: "Couldn't update the payment" })
+        console.error(error);
+        return res.status(500).json({ error: true, message: "Couldn't retrieve dashboard statistics" });
     }
-}
+};
 
 
 export const fetchDashboardTransactionsData = async (req: Request<{}, {}, dashbaordInput['body']>, res: Response) => {
@@ -102,19 +137,19 @@ export const fetchDashboardTransactionsData = async (req: Request<{}, {}, dashba
 
         // use pagination later
         const transactions = await Transaction.find(transactionFilter).populate('userId', 'username email').sort({ createdAt: -1 }).lean()
-        
+
 
         const totalAmount = transactions.reduce((acc, tran: ITransaction) => {
 
-            if (tran.createdAt?.getMonth() === currentDate.getMonth()  && tran.createdAt?.getDate() === currentDate.getDate()) {
+            if (tran.createdAt?.getMonth() === currentDate.getMonth() && tran.createdAt?.getDate() === currentDate.getDate()) {
                 acc.totalCurrentDayRevenue += + tran.paymentAmount;
             }
             if (tran.createdAt?.getMonth() === currentDate.getMonth()) {
                 acc.totalCurrentMonthRevenue += tran.paymentAmount;
-                acc.currentMonthCount += 1; 
+                acc.currentMonthCount += 1;
             }
             let foundMonthData = graphData.find(item => item.month === tran.createdAt?.getMonth())
-            if (foundMonthData){
+            if (foundMonthData) {
                 foundMonthData.total += tran.paymentAmount;
             }
 
