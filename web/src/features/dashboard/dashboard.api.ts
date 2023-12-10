@@ -4,14 +4,12 @@ import { Transaction } from './types';
 
 const dashboardAdapter = createEntityAdapter();
 
-const initialState = dashboardAdapter.getInitialState();
-
 const dashbaordRoute: string = '/admin/dashboard'
 
 export const dashboardAPI = apiSlice.injectEndpoints({
     endpoints: (builder: any) => ({
         getRecentTransactions: builder.query({
-            query: (credentials: any) => ({
+            query: () => ({
                 url: dashbaordRoute + '/fetchDashboardTransactionsData',
                 method: 'GET',
 
