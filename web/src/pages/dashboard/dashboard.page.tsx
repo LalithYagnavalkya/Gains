@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { IndianRupee } from "lucide-react"
 import { useGetRecentTransactionsQuery } from "@/features/dashboard/dashboard.api"
+import { useDispatch } from "react-redux"
+import { logout } from "@/features/auth/user.slice"
 
 // export const metadata: Metadata = {
 //     title: "Dashboard",
@@ -20,8 +22,15 @@ type CardProps = React.ComponentProps<typeof Card>
 
 
 export const Home = ({ className, ...props }: CardProps) => {
-    const { data: recentTransactionsData, isLoading } = useGetRecentTransactionsQuery();
+    const { data: recentTransactionsData, isLoading, isError } = useGetRecentTransactionsQuery();
+    const dispatch = useDispatch();
 
+
+    // console.log(recentTransactionsData,isError)
+
+    // if (!isLoading && isError){
+    //     dispatch(logout())
+    // }
     const formatNumber = (num: number) => {
         let temp = String(num)
         // Remove any non-digit characters from the input (e.g., commas)
@@ -29,7 +38,6 @@ export const Home = ({ className, ...props }: CardProps) => {
         // Format the number with commas
         return sanitizedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
-    // if()
     return (
         <>
             <div className="md:hidden">
