@@ -10,16 +10,16 @@ export function RecentSales(props: any) {
     const formatNumber = (num : number) => {
         let temp = String(num)
         // Remove any non-digit characters from the input (e.g., commas)
-        const sanitizedValue = temp.replace(/[^0-9]/g, '');
+        const sanitizedValue = temp?.replace(/[^0-9]/g, '');
         // Format the number with commas
-        return  sanitizedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return  sanitizedValue?.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
 
     return (
         <div className="h-[350px] overflow-y-auto">
             <div className="space-y-8">
                 {state.map((t: any) => {
-                    return <div className="flex items-center pr-4">
+                    return <div key={t._id} className="flex items-center pr-4">
                         <Avatar className="h-9 w-9">
                             <AvatarImage src="/avatars/01.png" alt="Avatar" />
                             <AvatarFallback>{(t.userId.username.substring(0, 2)).toUpperCase()}</AvatarFallback>
