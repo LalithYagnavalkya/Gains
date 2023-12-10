@@ -16,7 +16,7 @@ const router = Router();
 
 router.get('/getCounts/', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), validateResource(dashboardSchema), getCounts)
 
-router.get('/fetchDashboardTransactionsData/', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), validateResource(dashboardSchema), fetchDashboardTransactionsData)
+router.get('/fetchDashboardTransactionsData', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), validateResource(dashboardSchema), fetchDashboardTransactionsData)
 
 
 export default router;
