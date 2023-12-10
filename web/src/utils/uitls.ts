@@ -1,4 +1,4 @@
-const formatNumber = (num: number) => {
+export const formatNumber = (num: number) => {
     let temp = String(num)
     // Remove any non-digit characters from the input (e.g., commas)
     const sanitizedValue = temp.replace(/[^0-9]/g, '');
