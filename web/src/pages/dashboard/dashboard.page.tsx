@@ -13,7 +13,7 @@ import { useDashboardCustomerStatsQuery, useGetRecentTransactionsQuery } from "@
 import { useDispatch } from "react-redux"
 import { logout } from "@/features/auth/user.slice"
 import { formatNumber } from "@/utils/uitls"
-
+import { Skeleton } from "@/components/ui/skeleton"
 // export const metadata: Metadata = {
 //     title: "Dashboard",
 //     description: "Example dashboard app built using the components.",
@@ -23,9 +23,13 @@ type CardProps = React.ComponentProps<typeof Card>
 
 
 export const Home = ({ className, ...props }: CardProps) => {
-    const { data: dashboardTransactionData, isLoading, isError } = useGetRecentTransactionsQuery();
+    const { data: dashboardTransactionData, isLoading, isError, error } = useGetRecentTransactionsQuery();
     const { data: dashboardCustomerData } = useDashboardCustomerStatsQuery();
     const dispatch = useDispatch();
+
+    if (error && error.status === 401) {
+        dispatch(logout())
+    }
 
     return (
         <>
@@ -75,7 +79,7 @@ export const Home = ({ className, ...props }: CardProps) => {
                             <CardContent>
                                 <div className="text-2xl font-bold">₹{dashboardTransactionData?.todayMonthRevenue ? formatNumber(dashboardTransactionData.todayMonthRevenue) + " " : '0 '}</div>
                                 <p className="text-xs text-muted-foreground">
-                                   made in current month
+                                    made in current month
                                 </p>
                             </CardContent>
                         </Card>
@@ -100,7 +104,7 @@ export const Home = ({ className, ...props }: CardProps) => {
                                 </svg>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">+{dashboardCustomerData?.currentMonthCustomers ? formatNumber(dashboardCustomerData.currentMonthCustomers   ) + " " : '0 '}</div>
+                                <div className="text-2xl font-bold">+{dashboardCustomerData?.currentMonthCustomers ? formatNumber(dashboardCustomerData.currentMonthCustomers) + " " : '0 '}</div>
                                 <p className="text-xs text-muted-foreground">
                                     added this month
                                 </p>
@@ -179,7 +183,21 @@ export const Home = ({ className, ...props }: CardProps) => {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                {!isLoading &&
+                                {!isLoading ? 
+                                    <div className="space-y-8">
+                                       {
+                                            Array.from({ length: 5 }, (_, index) => (
+                                                <div key={index} className="flex items-center space-x-4 w-full">
+                                                    <Skeleton className="h-12 w-12 rounded-full" />
+                                                    <div className="space-y-2 w-full">
+                                                        <Skeleton className="h-4 w-full" />
+                                                        <Skeleton className="h-4 w-4/5" />
+                                                    </div>
+                                                </div>
+                                            ))
+                                       }
+                                    </div>
+                                :
                                     <RecentSales transactions={dashboardTransactionData?.transactions} />
                                 }
                             </CardContent>
