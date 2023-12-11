@@ -8,16 +8,13 @@ Admin panel which can track customers and their payments.
 - filters - filter by paymentStatus, joining date, added recently (createdAt: -1)
 - should work on schedulers for updating payment status
 - add navbar logout button inside profile avatar options (update navbar)
-- create transaction obj during customer creation - DONE
-- create transaction obj during update payment
-- should add partner id in all levels
-- add loaders for all modal popups
-- rename paymentType to paymentMethod in transactions collections.
+- add loaders every where
+- logout user if the token is expired.
 
 ## Long scope
 - every 'any' should be replaced with proper interface
 - all the find query's should have select statements.
-- payment type is always gonna be 'CASH' try to capture that in future.
+- payment type is always gonna be 'CASH' try to capture that in fu ture.
 - saved a new desing in books mark for layout.
 - payment's should be handled in different service(payment-service)
 - services should be divided based on services not on roles. (i.e admin-service is wrong)
