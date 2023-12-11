@@ -183,7 +183,7 @@ export const Home = ({ className, ...props }: CardProps) => {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                {!isLoading ? 
+                                {isLoading ? 
                                     <div className="space-y-8">
                                        {
                                             Array.from({ length: 5 }, (_, index) => (
