@@ -2,9 +2,13 @@ import cluster from "cluster";
 import os from "os"; // Node's built-in os module
 import app from "./app";
 import { config } from "dotenv";
+import {EventEmitter} from "events";
+const eventEmitter = new EventEmitter();
+
 config({
   path: "./src/config/config.env",
 });
+
 const numCPUs = os.cpus().length;
 console.log(process.env.PORT);
 if (cluster.isPrimary && process.env.ENVIRONMENT_NAME !== "Dev") {
@@ -16,6 +20,7 @@ if (cluster.isPrimary && process.env.ENVIRONMENT_NAME !== "Dev") {
   cluster.on("exit", (worker, code, signal) => {
     console.log(`Worker ${worker.process.pid} died`);
     // Replace the dead worker
+    eventEmitter.emit("restart");
     cluster.fork();
   });
 } else {
