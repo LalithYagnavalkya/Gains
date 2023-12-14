@@ -35,10 +35,11 @@ import {
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { ColumnDef } from "@tanstack/react-table"
 import { StatusPill } from '@/components/status.pill'
+import { useNavigate } from "react-router-dom"
 
 
 export type Payment = {
-    id: string
+    _id: string
     amount: number
     status: "pending" | "processing" | "success" | "failed"
     email: string
@@ -46,6 +47,7 @@ export type Payment = {
 
 export function DataTableDemo({ paymentModal, togglePaymentModal, SetPaymentModalData, data, pagination, handlePagination }: any) {
 
+    const navigate = useNavigate();
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -108,7 +110,7 @@ export function DataTableDemo({ paymentModal, togglePaymentModal, SetPaymentModa
                                 Update Payment
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>View customer</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => navigate(rowData?._id)}>View customer</DropdownMenuItem>
                             <DropdownMenuItem>View payment details</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
