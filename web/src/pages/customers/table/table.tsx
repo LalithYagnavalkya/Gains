@@ -35,7 +35,6 @@ import {
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { ColumnDef } from "@tanstack/react-table"
 import { StatusPill } from '@/components/status.pill'
-import UpatePaymentModal from '../customerModals/update.payment.modal'
 
 
 export type Payment = {
@@ -44,9 +43,8 @@ export type Payment = {
     status: "pending" | "processing" | "success" | "failed"
     email: string
 };
-import { useGetCustomersQuery } from "@/features/customer/customer.api";
 
-export function DataTableDemo({paymentModal, togglePaymentModal, SetPaymentModalData } : any) {
+export function DataTableDemo({ paymentModal, togglePaymentModal, SetPaymentModalData, data, pagination, handlePagination }: any) {
 
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -56,26 +54,7 @@ export function DataTableDemo({paymentModal, togglePaymentModal, SetPaymentModal
         React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
 
-    const [{ pageIndex, pageSize }, setPagination] =
-        React.useState<PaginationState>({
-            pageIndex: 1,
-            pageSize: 8,
-        })
-
-    const fetchDataOptions = {
-        pageIndex,
-        pageSize,
-    }
-
-    const { data } = useGetCustomersQuery({ type: 'recentlyJoined', page: fetchDataOptions.pageIndex, limit: fetchDataOptions.pageSize });
     const defaultData = React.useMemo(() => [], [])
-    const pagination = React.useMemo(
-        () => ({
-            pageIndex,
-            pageSize,
-        }),
-        [pageIndex, pageSize]
-    )
 
     const columns: ColumnDef<Payment>[] = [
         {
@@ -124,7 +103,7 @@ export function DataTableDemo({paymentModal, togglePaymentModal, SetPaymentModal
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem
-                            onClick={() => {togglePaymentModal(true); SetPaymentModalData(rowData)}}
+                                onClick={() => { togglePaymentModal(true); SetPaymentModalData(rowData) }}
                             >
                                 Update Payment
                             </DropdownMenuItem>
@@ -141,7 +120,7 @@ export function DataTableDemo({paymentModal, togglePaymentModal, SetPaymentModal
     const table = useReactTable({
         data: data?.users ? data.users : defaultData,
         columns,
-        pageCount: data?.users?.totalCount ?? -1,
+        pageCount: data?.totalCount ?? -1,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
@@ -150,7 +129,7 @@ export function DataTableDemo({paymentModal, togglePaymentModal, SetPaymentModal
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
-        onPaginationChange: setPagination,
+        onPaginationChange: handlePagination,
         manualPagination: true,
         state: {
             sorting,
@@ -232,7 +211,7 @@ export function DataTableDemo({paymentModal, togglePaymentModal, SetPaymentModal
                         variant="outline"
                         size="sm"
                         onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
+                        disabled={pagination.pageIndex === Math.ceil(table.getPageCount() / pagination.pageSize)}
                     >
                         Next
                     </Button>
