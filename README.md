@@ -20,6 +20,6 @@ Admin panel which can track customers and their payments.
 - services should be divided based on services not on roles. (i.e admin-service is wrong)
 
 ## Quick Fixes
-- Customers page paginationation, inital previous button should be disabled
+- Customers page paginationation, inital previous button should be disabled - DONE
 - Frontend: add apiSlic end points in .env file 
 - Onces token expires and logouts. next login getCustomers api is always failing and signing out.
