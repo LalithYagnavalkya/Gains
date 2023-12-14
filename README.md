@@ -4,7 +4,7 @@ Admin panel which can track customers and their payments.
 
 # Todo
 - proper authentication and authorization.
-- implement search feature in customers page. - CURRENT
+- implement search feature in customers page. - DONE
 - filters - filter by paymentStatus, joining date, added recently (createdAt: -1)
 - should work on schedulers for updating payment status
 - add navbar logout button inside profile avatar options (update navbar)
