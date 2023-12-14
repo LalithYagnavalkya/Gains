@@ -201,6 +201,7 @@ export const getCustomers = async (req: Request, res: Response) => {
         role: string;
         active: boolean;
         paymentStatus?: { $in: string[] } | string[];
+        $or?: Array<{ [key: string]: { $regex: string } }> | string[];
     }
 
     try {
@@ -209,7 +210,7 @@ export const getCustomers = async (req: Request, res: Response) => {
 
         // validating input
         const reqInput = getCustomersSchema.parse({ body: req.body, query: req.query })
-        const { page, type, limit, partnerId, paymentStatus } = reqInput.query;
+        const { page, type, limit, partnerId, paymentStatus, usernameOrPhone } = reqInput.query;
         const { _user } = reqInput.body;
         let _partnerId = _user.partnerId;
         const _paymentStatuses = ['PENDING, PAID, UPCOMMING'];
@@ -230,6 +231,9 @@ export const getCustomers = async (req: Request, res: Response) => {
 
         if (paymentStatus) {
             query.paymentStatus = { '$in': paymentStatus }
+        }
+        if(usernameOrPhone){
+            query['$or'] = [{ username: { $regex: usernameOrPhone } }, { phone: {$regex: usernameOrPhone}}]
         }
 
         switch (type) {

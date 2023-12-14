@@ -28,5 +28,4 @@ router.get('/getCustomer/:userId', authenticateUser, authorizeRole(['SUPER_ADMIN
 
 router.post('/checkIfEmailOrPhoneExists', validateResource(emailOrPhoneSchema), checkIfEmailOrPhoneExists)
 
-
 export default router;
