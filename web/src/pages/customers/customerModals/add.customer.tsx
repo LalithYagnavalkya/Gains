@@ -73,7 +73,6 @@ const wrokoutTypes = [
 const AddCustomer: React.FC = () => {
     const [addNewCustomer, { isLoading, isError, isSuccess }] = useAddCustomerMutation()
     const [checkIfUserNameOrPhoneExists] = useCheckIfUserNameOrPhoneExistsMutation();
-    const { data: users, refetch } = useGetCustomersQuery({ type: 'recentlyJoined', page: 1, limit: 10 });
     const { toast } = useToast()
     const dispatch = useDispatch();
 
@@ -137,7 +136,6 @@ const AddCustomer: React.FC = () => {
                 toast({
                     description: "🎉 Hurray!, new Customer!!",
                 })
-                refetch();
             }
 
             if (result.error?.data?.error) {
