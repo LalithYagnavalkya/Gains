@@ -35,9 +35,9 @@ const NavComponent: React.FC<{ item: navItemType }> = ({ item }) => {
 const Navbar: React.FC = () => {
     const dispatch = useDispatch();
     return (
-        <nav className="p-4 border-b">
+        <nav className="border-b">
             <div className="container mx-auto">
-                <div className="flex justify-between items-center">
+                <div className="py-3 flex justify-between items-center">
                     <Logo />
                     <NavigationMenu className="flex space-x-4">
                         <NavigationMenuList>
