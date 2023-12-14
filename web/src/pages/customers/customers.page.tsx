@@ -12,7 +12,6 @@ import { useDebounce } from "@/hooks/use-debounce"
 import { PaginationState } from "@tanstack/react-table"
 // import DemoPage from "./customerTable/customer.page"
 
-type Checked = DropdownMenuCheckboxItemProps["checked"]
 
 export const Customer: React.FC = () => {
   const dispatch = useDispatch();
@@ -57,8 +56,7 @@ export const Customer: React.FC = () => {
     <div className="mx-auto container">
       {isLoading || isFetching ? (
         <div className="flex h-[80vh] w-full justify-center items-center">
-          {/* rounded-ful add this later */}
-          <div className="animate-spin l h-8 w-8 border-t-4 border-primary border-solid"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-primary"></div>
         </div>
       ) :
         <DataTableDemo
