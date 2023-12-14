@@ -29,7 +29,7 @@ export const Customer: React.FC = () => {
   }
 
   const { data, isLoading, isFetching, error } = useGetCustomersQuery({ type: 'recentlyJoined', page: fetchDataOptions.pageIndex, limit: fetchDataOptions.pageSize, usernameOrPhone: debounceValue });
-  
+
   const pagination = React.useMemo(
     () => ({
       pageIndex,
@@ -47,8 +47,8 @@ export const Customer: React.FC = () => {
   const [paymentModalData, SetPaymentModalData] = React.useState<any>({})
 
 
-  return <div className="p-4 ">
-    <div className="mx-auto container flex justify-between items-center">
+  return <>
+    <div className="mx-auto container flex justify-between pt-4 items-center">
       <div className="items-center w-1/3"><Input type="email" placeholder="Search with names" onChange={(event) => setValue(event.target.value)} /></div>
       <AddCustomer />
       {paymentModal && <UpdatePaymentModal payment={paymentModalData} togglePaymentModal={togglePaymentModal} />}
@@ -70,5 +70,6 @@ export const Customer: React.FC = () => {
       }
 
     </div>
-  </div >
+  </>
+
 }
