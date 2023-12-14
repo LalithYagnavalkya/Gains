@@ -124,6 +124,8 @@ export const getCustomersSchema = object({
         type: z.enum(["recentlyJoined", "username", "phone", "workoutType", "joinedOn", "validUpto"]).
             transform((val) => val.toLowerCase()),
 
+        usernameOrPhone: z.string().optional(),
+
         paymentStatus: z.union([
             z.enum(['PENDING', 'PAID', 'UPCOMING_PAYMENT_DUE']),
             z.array(z.enum(['PENDING', 'PAID', 'UPCOMING_PAYMENT_DUE'])),

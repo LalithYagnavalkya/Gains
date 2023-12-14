@@ -23,7 +23,7 @@ export const login = async (req: Request<{}, {}, loginInput['body']>, res: Respo
         let user = await User.findOne({ email: email }).select('username email password profilePic role');
 
         if (!user || user.active === false) {
-            return res.status(400).json({ error: true, message: "Email not found" })
+            return res.status(401).json({ error: true, message: "Wrong credentials" })
         }
         if (user.password) {
             const isUser = await bcrypt.compare(password, user.password);
