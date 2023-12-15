@@ -281,7 +281,7 @@ export const getCustomers = async (req: Request, res: Response) => {
     }
 }
 
-export const getCustomerById = async (req: Request<getCustomerByIdInput['params']>, res: Response) => {
+export const getCustomerDetails = async (req: Request<getCustomerByIdInput['params']>, res: Response) => {
     const { userId } = req.params;
 
     const user = await User.findById(userId)
