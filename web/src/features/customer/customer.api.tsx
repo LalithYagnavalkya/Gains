@@ -68,6 +68,14 @@ export const customerSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['Customer']
         }),
+        getCustomerDetails: builder.query({
+            query: (data: any) => ({
+                url: customerBackend + '/getCustomerDetails/' + String(data.id),
+                method: 'GET',
+            }),
+            providesTags: ['singleCustomer']
+            // invalidatesTags: ['Customer']
+        }),
 
     }),
 });
@@ -77,4 +85,5 @@ export const {
     useAddCustomerMutation,
     useCheckIfUserNameOrPhoneExistsMutation,
     useUpdateMembershipMutation,
+    useGetCustomerDetailsQuery,
 } = customerSlice;
