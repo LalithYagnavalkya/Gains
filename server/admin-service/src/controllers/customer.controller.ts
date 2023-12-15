@@ -8,7 +8,7 @@ import User, { IUser } from "../models/user.model";
 
 // schemas
 import {
-    addCustomerInput, addOrEditEmailSchema, editCustomerInput, emailOrPhoneInput, getCustomerByIdInput, getCustomersInput, getCustomersSchema, joinedOnSchema,
+    addCustomerInput, addOrEditEmailSchema, editCustomerInput, emailOrPhoneInput, getCustomerDetailsInput, getCustomersInput, getCustomersSchema, getRecentCustomersInput, joinedOnSchema,
     phoneSchema, usernameSchema, validUptoSchema, workoutSchmea
 } from '../schemas/customer.schema'
 import { IUserInfo } from "../schemas/customer.controller.schema";
@@ -281,10 +281,10 @@ export const getCustomers = async (req: Request, res: Response) => {
     }
 }
 
-export const getCustomerDetails = async (req: Request<getCustomerByIdInput['params']>, res: Response) => {
+export const getCustomerDetails = async (req: Request<getCustomerDetailsInput['params']>, res: Response) => {
     const { userId } = req.params;
 
-    const user = await User.findById(userId)
+    const user = await User.findById(userId).lean();
 
     if (!user) {
         return res.status(404).json({ error: true, message: 'User not found!' })

@@ -25,12 +25,11 @@ export default function SingleCustomerPage() {
     const [currentPage, setCurrentPage] = useState('Profile')
     
     console.log(data)
-    return <div className="mx-auto container">
+    return <div className="mx-auto container py-4">
 
         {/* hero section */}
-        <div className="bg-slate-900 py-4">
-            <AvatarIcon className="h-[60px] w-[60px]" />
-            
+        <div className="bg-slate-900">
+           ss
                 {/* <Avatar>
                     <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                     <AvatarFallback>CN</AvatarFallback>
