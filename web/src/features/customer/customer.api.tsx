@@ -73,6 +73,9 @@ export const customerSlice = apiSlice.injectEndpoints({
                 url: customerBackend + '/getCustomerDetails/' + String(data.id),
                 method: 'GET',
             }),
+             transformResponse: (responseData: any, state: any) => {
+                return responseData.data; 
+            },
             providesTags: ['singleCustomer']
             // invalidatesTags: ['Customer']
         }),
