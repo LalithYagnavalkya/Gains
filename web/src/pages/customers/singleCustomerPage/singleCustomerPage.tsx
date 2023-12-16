@@ -1,12 +1,11 @@
-import { Separator } from "@/components/ui/separator";
-import { ProfileForm } from "./profile-form";
-import { SidebarNav } from "../components/sideNav";
 import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useParams } from "react-router-dom";
-import { AvatarIcon } from "@radix-ui/react-icons";
 import { useGetCustomerDetailsQuery } from "@/features/customer/customer.api";
+import { useDispatch } from "react-redux";
+import { logout } from "@/features/auth/user.slice";
+import { Skeleton } from "@/components/ui/skeleton";
+import { format } from "date-fns";
+import { StatusPill } from "@/components/status.pill";
 const sidebarNavItems = [
     {
         title: "Profile",
@@ -21,39 +20,58 @@ const sidebarNavItems = [
 ]
 export default function SingleCustomerPage() {
     const { customerId } = useParams();
-    const {data} = useGetCustomerDetailsQuery({id: customerId})
+    const dispatch = useDispatch();
+    const { data, isLoading, isFetching, error } = useGetCustomerDetailsQuery({ id: customerId })
     const [currentPage, setCurrentPage] = useState('Profile')
-    
     console.log(data)
-    return <div className="mx-auto container py-4">
-
-        {/* hero section */}
-        <div className="bg-slate-900">
-           ss
-                {/* <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                    <AvatarFallback>CN</AvatarFallback>
-                </Avatar> */}
+    if (error) {
+        if (error.status === 401) {
+            dispatch(logout())
+        }
+    }
+    return <>
+        <div className="md:hidden">
+            <img
+                src="/examples/dashboard-light.png"
+                width={1280}
+                height={866}
+                alt="Dashboard"
+                className="block dark:hidden"
+            />
+            <img
+                src="/examples/dashboard-dark.png"
+                width={1280}
+                height={866}
+                alt="Dashboard"
+                className="hidden dark:block"
+            />
         </div>
-        {/* <Tabs defaultValue="account" className="w-[400px]">
-            <TabsList>
-                <TabsTrigger value="account">Account</TabsTrigger>
-                <TabsTrigger value="password">Password</TabsTrigger>
-            </TabsList>
-            <TabsContent value="account">Make changes to your account here.</TabsContent>
-            <TabsContent value="password">Change your password here.</TabsContent>
-        </Tabs> */}
-    </div>
-    // return (
-    //     <div className="space-y-6">
-    //         <div>
-    //             <h3 className="text-lg font-medium">Profile</h3>
-    //             <p className="text-sm text-muted-foreground">
-    //                 This is how others will see you on the site.
-    //             </p>
-    //         </div>
-    //         <Separator />
-    //         <ProfileForm />
-    //     </div>
-    // )
+        <div className=" space-y-4 p-8 pt-6">
+            <div className="flex justify-between ">
+                <div className="flex-col items-center justify-between space-y-2">
+                    <div>
+                        <h2 className="text-3xl font-bold tracking-tight capitalize">
+                            {data?.username ? data.username : <Skeleton className="h-12 w-[150px]" />}
+                        </h2>
+                    </div>
+                    <div>
+                        {isLoading || isFetching ? <Skeleton className="h-12 w-[150px]" /> :
+                            <>
+                                <div className="tracking-tight font-light">{data?.membershipDetails?.lastPaymentDate ? format(new Date(data.membershipDetails.lastPaymentDate), 'mmmm dd yyy') : format(new Date(data?.joinedOn), 'MMMM do yyy')}</div>
+                                <div className="text-left text-sm font-bold text-muted-foreground leading-none">{data?.membershipDetails?.lastPaymentDate ? "Last Paid" : "Joined On"} </div>
+                            </>
+                        }
+                    </div>
+                </div>
+                <div className="">
+                    {isLoading || isFetching ? <Skeleton className="h-12 w-[150px]" /> :
+                        <StatusPill status={data?.membershipDetails.paymentStatus} />
+                    }
+                </div>
+            </div>
+            <div>
+                
+            </div>
+        </div>
+    </>
 }
