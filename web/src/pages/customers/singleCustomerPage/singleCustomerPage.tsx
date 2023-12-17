@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetCustomerDetailsQuery } from "@/features/customer/customer.api";
 import { useDispatch } from "react-redux";
@@ -6,6 +6,11 @@ import { logout } from "@/features/auth/user.slice";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { StatusPill } from "@/components/status.pill";
+import { Button } from "@/components/ui/button";
+import UpdatePaymentModal from '../customerModals/update.payment.modal'
+import { ProfileForm } from "./profile-form";
+import { Card } from "@/components/ui/card";
+
 const sidebarNavItems = [
     {
         title: "Profile",
@@ -22,8 +27,40 @@ export default function SingleCustomerPage() {
     const { customerId } = useParams();
     const dispatch = useDispatch();
     const { data, isLoading, isFetching, error } = useGetCustomerDetailsQuery({ id: customerId })
+
     const [currentPage, setCurrentPage] = useState('Profile')
-    console.log(data)
+
+    let paymentModalData = {
+        _id: "",
+        username: 'data.username',
+        membershipFee: 0,
+        validUpto: '',
+        paymentStatus: ''
+    };
+    let userModal = {
+        _id: "",
+        username: 'data.username',
+        membershipFee: '',
+        validUpto: '',
+        paymentStatus: '',
+        phone: string,
+    email: string,
+    workoutType: string[],
+    joinedOn: string,
+    validUpto: string,
+    }
+    const [paymentModal, togglePaymentModal] = React.useState<any>(false);
+
+    if (!isLoading && !isFetching && data) {
+        paymentModalData = {
+            _id: String(data._id),
+            username: data.username,
+            membershipFee: data.membershipDetails?.membershipFee,
+            validUpto: data.membershipDetails?.validUpto,
+            paymentStatus: data.membershipDetails?.paymentStatus,
+        }
+    }
+
     if (error) {
         if (error.status === 401) {
             dispatch(logout())
@@ -57,10 +94,19 @@ export default function SingleCustomerPage() {
                     <div>
                         {isLoading || isFetching ? <Skeleton className="h-12 w-[150px]" /> :
                             <>
-                                <div className="tracking-tight font-light">{data?.membershipDetails?.lastPaymentDate ? format(new Date(data.membershipDetails.lastPaymentDate), 'mmmm dd yyy') : format(new Date(data?.joinedOn), 'MMMM do yyy')}</div>
+                                <div className="tracking-tight font-light">{data?.membershipDetails?.lastPaymentDate ? format(new Date(data.membershipDetails.lastPaymentDate), 'MMMM do yyy') : format(new Date(data?.joinedOn), 'MMMM do yyy')}</div>
                                 <div className="text-left text-sm font-bold text-muted-foreground leading-none">{data?.membershipDetails?.lastPaymentDate ? "Last Paid" : "Joined On"} </div>
                             </>
                         }
+                    </div>
+                    <div className="pt-2">
+                        <Button
+                            variant={"outline"}
+                            onClick={() => { togglePaymentModal(true) }}
+                        >
+                            Update Payment
+                        </Button>
+                        {!isLoading && !isFetching && paymentModal && <UpdatePaymentModal payment={paymentModalData} togglePaymentModal={togglePaymentModal} />}
                     </div>
                 </div>
                 <div className="">
@@ -69,8 +115,18 @@ export default function SingleCustomerPage() {
                     }
                 </div>
             </div>
+
+            {/* Userpage */}
             <div>
-                
+
+            </div>
+            <div className="w-full">
+                <Card>
+                    <div className="p-4">
+
+                    <ProfileForm  />
+                    </div>
+                </Card>
             </div>
         </div>
     </>

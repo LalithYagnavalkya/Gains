@@ -19,7 +19,13 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { ChevronDown } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
-type Payment = any
+type Payment = {
+    _id: string, // user _id
+    username: string,
+    membershipFee: number,
+    validUpto: string,
+    paymentStatus: string,
+}
 
 interface UpdatePaymentModalProps {
     payment: Payment; // Assuming Payment is a type/interface you have defined
@@ -35,7 +41,7 @@ const UpatePaymentModal: React.FC<UpdatePaymentModalProps> = ({ payment, toggleP
 
     const [updateMembership, { isLoading, isError, isSuccess }] = useUpdateMembershipMutation();
     const [isAmountDisabled, toggleAmount] = React.useState<boolean>(true);
-    const [validUptoDate, setValidUptoDate] = React.useState<Date>(new Date(payment.validUpto));
+    const [validUptoDate, setValidUptoDate] = React.useState<Date>(payment?.validUpto ? new Date(payment?.validUpto) : new Date());
     const { toast } = useToast()
 
 

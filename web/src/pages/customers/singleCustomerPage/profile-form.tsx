@@ -12,6 +12,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { useState } from "react"
+import { useCheckIfUserNameOrPhoneExistsMutation } from "@/features/customer/customer.api"
+import { format } from "date-fns"
+import { CalendarIcon } from "@radix-ui/react-icons"
+import { Calendar } from "@/components/ui/calendar"
+import { RupeeInput } from "@/components/ui/rupeeInput"
 
 const profileFormSchema = z.object({
     username: z
@@ -22,43 +29,66 @@ const profileFormSchema = z.object({
         .max(30, {
             message: "Username must not be longer than 30 characters.",
         }),
+    phone: z.string()
+        .length(10, 'Phone number must be 10 digits'),
     email: z
         .string({
             required_error: "Please select an email to display.",
         })
         .email(),
-    bio: z.string().max(160).min(4),
-    urls: z
-        .array(
-            z.object({
-                value: z.string().url({ message: "Please enter a valid URL." }),
-            })
-        )
-        .optional(),
+    joinedOn: z.string().optional(),
+
+    validUpto: z.date(),
+
+    membershipFee: z.string(),
+
+    workoutTypes: z.array(z.string()).optional(),
 })
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
-// This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-    bio: "I own a computer.",
-    urls: [
-        { value: "https://shadcn.com" },
-        { value: "http://twitter.com/shadcn" },
-    ],
+type props = {
+    username: string,
+    phone: string,
+    email: string,
+    workoutType: string[],
+    joinedOn: string,
+    validUpto: string,
+    paymentStatus: string,
+    membershipFee: string,
 }
+const wrokoutTypes = [
+    { value: 'CARDIO', label: 'Cardio' },
+    { value: 'STRENGTH', label: 'Strength' },
+    { value: 'CALISTENICS', label: 'Calisthenics' },
+    { value: 'ZUMBA', label: 'Zumba' },
+    { value: 'CARDIO + STRENGTH', label: 'Cardio + Strength' },
+    { value: 'CARDIO + CALISTENICS', label: 'Cardio + Calisthenics' },
+    { value: 'STRENGTH + CALISTENICS', label: 'Strength + Calisthenics' },
+    { value: 'CARDIO + STRENGTH + CALISTENICS + ZUMBA', label: 'All' },
+]
+// This can come from your database or API.
 
-export function ProfileForm() {
+export function ProfileForm({ username, phone, email, workoutType, joinedOn: string }: props) {
+    const defaultValues: Partial<ProfileFormValues> = {
+        username: username,
+        phone: phone,
+        validUpto: new Date(),
+    }
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(profileFormSchema),
         defaultValues,
         mode: "onChange",
     })
+    const [checkIfUserNameOrPhoneExists] = useCheckIfUserNameOrPhoneExistsMutation();
+    const [validUptoDate, setValidUptoDate] = useState<Date>(new Date());
 
-    const { fields, append } = useFieldArray({
-        name: "urls",
-        control: form.control,
-    })
+    const addMonthsInValidUptoField = (value: number) => {
+        const currentDate = form.getValues('validUpto') || new Date()
+        const newDate = new Date(currentDate);
+        newDate.setMonth(currentDate.getMonth() + value);
+        setValidUptoDate(newDate)
+    }
 
     function onSubmit(data: ProfileFormValues) {
         toast({
@@ -73,104 +103,240 @@ export function ProfileForm() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
                 <FormField
                     control={form.control}
                     name="username"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Username</FormLabel>
+                            <FormLabel>Name</FormLabel>
                             <FormControl>
-                                <Input placeholder="shadcn" {...field} />
+                                <Input autoComplete="off" placeholder="whats his/her name?" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                This is your public display name. It can be your real name or a
-                                pseudonym. You can only change this once every 30 days.
-                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-                <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select a verified email to display" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    <SelectItem value="m@example.com">m@example.com</SelectItem>
-                                    <SelectItem value="m@google.com">m@google.com</SelectItem>
-                                    <SelectItem value="m@support.com">m@support.com</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <FormDescription>
-                                You can manage verified email addresses in your{" "}
-                                <Link to="/examples/forms">email settings</Link>.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="bio"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Bio</FormLabel>
-                            <FormControl>
-                                <Textarea
-                                    placeholder="Tell us a little bit about yourself"
-                                    className="resize-none"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                You can <span>@mention</span> other users and organizations to
-                                link to them.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <div>
-                    {fields.map((field, index) => (
+                <div className="flex gap-x-4">
+                    <div className="w-3/4">
+
                         <FormField
                             control={form.control}
-                            key={field.id}
-                            name={`urls.${index}.value`}
+                            name="email"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className={cn(index !== 0 && "sr-only")}>
-                                        URLs
-                                    </FormLabel>
-                                    <FormDescription className={cn(index !== 0 && "sr-only")}>
-                                        Add links to your website, blog, or social media profiles.
-                                    </FormDescription>
+                                <FormItem >
+                                    <FormLabel>Email</FormLabel>
                                     <FormControl>
-                                        <Input {...field} />
+                                        <Input autoComplete="off" placeholder="" {...field}
+                                            onBlur={async (e) => {
+                                                console.log(e.target.value)
+                                                const res = await checkIfUserNameOrPhoneExists({ email: e.target.value });
+                                                if (res?.error?.status === 409) {
+                                                    form.setError('email', { type: 'custom', message: 'This email already exists' })
+                                                } else if (res?.error?.status === 400) {
+                                                    form.setError('email', { type: 'custom', message: 'Invalid email' })
+                                                } else if (res.data.error === false) {
+                                                    form.clearErrors('email')
+                                                }
+                                            }} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-                    ))}
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        className="mt-2"
-                        onClick={() => append({ value: "" })}
-                    >
-                        Add URL
-                    </Button>
+                    </div>
+                    <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Phone</FormLabel>
+                                <FormControl>
+                                    {/* <Input  placeholder="" {...field} /> */}
+                                    <Input autoComplete="off" placeholder="" {...field} value={field.value ?? ""} onChange={field.onChange}
+                                        onBlur={async (e) => {
+                                            console.log(e.target.value)
+                                            const res = await checkIfUserNameOrPhoneExists({ phone: e.target.value });
+                                            if (res?.error?.status === 409) {
+                                                form.setError('phone', { type: 'custom', message: 'This phone number already exists' })
+                                            } else if (res?.error?.status === 400) {
+                                                form.setError('phone', { type: 'custom', message: 'Phone number must be 10 digits' })
+                                            } else if (res.data.error === false) {
+                                                form.clearErrors('phone')
+                                            }
+                                        }} name={field.name} ref={field.ref} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                 </div>
-                <Button type="submit">Update profile</Button>
+                <div className="flex gap-x-4">
+                    <div className="w-1/2">
+                        <FormField
+                            control={form.control}
+                            name="membershipFee"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Fee</FormLabel>
+                                    <FormControl>
+                                        {/* <Input placeholder="" {...field} /> */}
+                                        <RupeeInput autoComplete="off" placeholder="" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    {/* <div className="w-1/2">
+                        <FormField
+                            control={form.control}
+                            name="workoutType"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Workout Type</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {wrokoutTypes.map(w => {
+                                                return <><SelectItem value={w.value}>{w.label}</SelectItem> </>
+                                            })}
+                                        </SelectContent>
+                                    </Select>
+                                </FormItem>
+                            )}
+                        />
+                    </div> */}
+
+                </div>
+                {/* <div className="flex">
+                    <FormField
+                        control={form.control}
+                        name="joinedOn"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Joined On</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-[240px] pl-3 text-left font-normal",
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, "PPP")
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            disabled={(date: any) =>
+                                                date > new Date() || date < new Date("1900-01-01")
+                                            }
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormDescription>
+                                    Joined on Date is used for payment scheduler.
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="validUpto"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Valid Upto</FormLabel>
+                                <div className="flex gap-x-1">
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <FormControl>
+                                                <Button
+                                                    variant={"outline"}
+                                                    className={cn(
+                                                        "w-[190px] pl-3 text-left font-normal",
+                                                        !validUptoDate && "text-muted-foreground"
+                                                    )}
+                                                >
+                                                    {validUptoDate ? (
+                                                        format(validUptoDate, "PPP")
+                                                    ) : (
+                                                        <span>Pick a date</span>
+                                                    )}
+                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                </Button>
+                                            </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                            <Calendar
+                                                mode="single"
+                                                selected={validUptoDate}
+                                                onSelect={(x: Date | undefined) => {
+                                                    if (x) {
+                                                        setValidUptoDate(new Date(x))
+                                                        field.value = validUptoDate
+                                                    }
+                                                    console.log(x)
+                                                }}
+                                                // disabled={(date) =>
+                                                //     date < new Date(new Date().setMonth(new Date().getMonth() + 1))
+                                                // }
+                                                initialFocus
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline" size={'icon'}><PlusIcon /></Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent className="w-56">
+                                            <DropdownMenuGroup>
+                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(1)}>
+                                                    <PlusIcon />&nbsp; 1 Month
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(3)}>
+                                                    <PlusIcon />&nbsp; 3 Month
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(6)}>
+                                                    <PlusIcon />&nbsp; 6 Month
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(12)}>
+                                                    <PlusIcon />&nbsp; 1 Year
+                                                </DropdownMenuItem>
+                                            </DropdownMenuGroup>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
+
+                                <FormDescription>
+                                    When will the membership end?
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div> */}
+                <div className="flex justify-between">
+                    {/* <Button variant="outline" onClick={() => closeModal()} >Cancel</Button> */}
+                    <Button type="submit">Update profile</Button>
+                </div>
             </form>
         </Form>
     )
