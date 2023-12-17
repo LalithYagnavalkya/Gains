@@ -73,6 +73,8 @@ export function ProfileForm({ username, phone, email, workoutType, joinedOn: str
     const defaultValues: Partial<ProfileFormValues> = {
         username: username,
         phone: phone,
+        email: email,
+
         validUpto: new Date(),
     }
     const form = useForm<ProfileFormValues>({
@@ -333,7 +335,7 @@ export function ProfileForm({ username, phone, email, workoutType, joinedOn: str
                         )}
                     />
                 </div> */}
-                <div className="flex justify-between">
+                <div className="flex justify-end">
                     {/* <Button variant="outline" onClick={() => closeModal()} >Cancel</Button> */}
                     <Button type="submit">Update profile</Button>
                 </div>

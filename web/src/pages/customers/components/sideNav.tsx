@@ -9,7 +9,7 @@ interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
     items: {
         title: string
     }[],
-    setCurrentPage: (arg: string) => void
+    setCurrentPage?: (arg: string) => void
 }
 
 export function SidebarNav({ className, items, setCurrentPage, ...props }: SidebarNavProps) {
@@ -34,7 +34,7 @@ export function SidebarNav({ className, items, setCurrentPage, ...props }: Sideb
                         "justify-start",
                         "cursor-pointer"
                     )}
-                    onClick={() => setCurrentPage(item.title)}
+                    // onClick={() => setCurrentPage(item.title)}
                 >
                     {item.title}
                 </div>

@@ -9,7 +9,8 @@ import { StatusPill } from "@/components/status.pill";
 import { Button } from "@/components/ui/button";
 import UpdatePaymentModal from '../customerModals/update.payment.modal'
 import { ProfileForm } from "./profile-form";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { SidebarNav } from "../components/sideNav";
 
 const sidebarNavItems = [
     {
@@ -39,15 +40,14 @@ export default function SingleCustomerPage() {
     };
     let userModal = {
         _id: "",
-        username: 'data.username',
+        username: '',
         membershipFee: '',
         validUpto: '',
         paymentStatus: '',
-        phone: string,
-    email: string,
-    workoutType: string[],
-    joinedOn: string,
-    validUpto: string,
+        phone: '',
+        email: '',
+        workoutType: [''],
+        joinedOn: '',
     }
     const [paymentModal, togglePaymentModal] = React.useState<any>(false);
 
@@ -58,6 +58,17 @@ export default function SingleCustomerPage() {
             membershipFee: data.membershipDetails?.membershipFee,
             validUpto: data.membershipDetails?.validUpto,
             paymentStatus: data.membershipDetails?.paymentStatus,
+        }
+        userModal = {
+            _id: String(data._id),
+            username: data.username,
+            membershipFee: data.membershipDetails?.membershipFee,
+            validUpto: data.membershipDetails?.validUpto,
+            paymentStatus: data.membershipDetails?.paymentStatus,
+            phone: data.phone,
+            email: data.email,
+            workoutType: data.workoutType,
+            joinedOn: data.joinedOn,
         }
     }
 
@@ -83,23 +94,56 @@ export default function SingleCustomerPage() {
                 className="hidden dark:block"
             />
         </div>
-        <div className=" space-y-4 p-8 pt-6">
-            <div className="flex justify-between ">
-                <div className="flex-col items-center justify-between space-y-2">
-                    <div>
-                        <h2 className="text-3xl font-bold tracking-tight capitalize">
-                            {data?.username ? data.username : <Skeleton className="h-12 w-[150px]" />}
-                        </h2>
-                    </div>
-                    <div>
-                        {isLoading || isFetching ? <Skeleton className="h-12 w-[150px]" /> :
-                            <>
-                                <div className="tracking-tight font-light">{data?.membershipDetails?.lastPaymentDate ? format(new Date(data.membershipDetails.lastPaymentDate), 'MMMM do yyy') : format(new Date(data?.joinedOn), 'MMMM do yyy')}</div>
-                                <div className="text-left text-sm font-bold text-muted-foreground leading-none">{data?.membershipDetails?.lastPaymentDate ? "Last Paid" : "Joined On"} </div>
-                            </>
-                        }
-                    </div>
-                    <div className="pt-2">
+
+
+        <div className="w-full space-y-4 p-8 pt-6">
+
+            <div className="flex justify-between gap-x-4">
+                <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0 w-1/4">
+                    <aside className="lg:w-1/2 min-w-full"> {/* Adjust the width or min-width as needed */}
+                        <SidebarNav items={sidebarNavItems} />
+                    </aside>
+                    {/* The rest of your content... */}
+                </div>
+                {/* Userpage */}
+                {!isLoading && !isFetching && <>
+                    <Card className="w-full">
+                        <CardHeader>
+                            <CardTitle className="">
+                                <div className="flex justify-between">
+                                    <div className="flex-col items-center justify-between space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <h2 className="text-3xl font-bold tracking-tight capitalize">
+                                                {data?.username ? data.username : <Skeleton className="h-12 w-[150px]" />}
+                                            </h2>
+                                            {/* <h2 className="text-2xl font-light tracking-tight capitalize">Details</h2> */}
+                                        </div>
+
+                                    </div>
+                                    <div className="flex justify-center items-center">
+                                        {isLoading || isFetching ? <Skeleton className="h-12 w-[150px]" /> :
+                                            <StatusPill status={data?.membershipDetails.paymentStatus} />
+                                        }
+                                    </div>
+                                </div>
+                            </CardTitle>
+                            <CardDescription>Edit and update your cutomer details</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <ProfileForm {...userModal} />
+                        </CardContent>
+                    </Card>
+                </>}
+            </div>
+
+        </div>
+
+
+    </>
+}
+
+
+{/* <div className="pt-4">
                         <Button
                             variant={"outline"}
                             onClick={() => { togglePaymentModal(true) }}
@@ -107,27 +151,4 @@ export default function SingleCustomerPage() {
                             Update Payment
                         </Button>
                         {!isLoading && !isFetching && paymentModal && <UpdatePaymentModal payment={paymentModalData} togglePaymentModal={togglePaymentModal} />}
-                    </div>
-                </div>
-                <div className="">
-                    {isLoading || isFetching ? <Skeleton className="h-12 w-[150px]" /> :
-                        <StatusPill status={data?.membershipDetails.paymentStatus} />
-                    }
-                </div>
-            </div>
-
-            {/* Userpage */}
-            <div>
-
-            </div>
-            <div className="w-full">
-                <Card>
-                    <div className="p-4">
-
-                    <ProfileForm  />
-                    </div>
-                </Card>
-            </div>
-        </div>
-    </>
-}
+                    </div> */}
