@@ -8,7 +8,7 @@ import User, { IUser } from "../models/user.model";
 
 // schemas
 import {
-    addCustomerInput, addOrEditEmailSchema, editCustomerInput, emailOrPhoneInput, getCustomerByIdInput, getCustomersInput, getCustomersSchema, joinedOnSchema,
+    addCustomerInput, addOrEditEmailSchema, editCustomerInput, emailOrPhoneInput, getCustomerDetailsInput, getCustomersInput, getCustomersSchema, getRecentCustomersInput, joinedOnSchema,
     phoneSchema, usernameSchema, validUptoSchema, workoutSchmea
 } from '../schemas/customer.schema'
 import { IUserInfo } from "../schemas/customer.controller.schema";
@@ -281,19 +281,37 @@ export const getCustomers = async (req: Request, res: Response) => {
     }
 }
 
-export const getCustomerById = async (req: Request<getCustomerByIdInput['params']>, res: Response) => {
-    const { userId } = req.params;
+export const getCustomerDetails = async (req: Request<getCustomerDetailsInput['params']>, res: Response) => {
+    try {
+        const { userId } = req.params;
+        const { _user } = req.body;
+        let resObj: any = {};
 
-    const user = await User.findById(userId)
+        const [user,membership] = await Promise.all([
+            User.findById(userId).lean(),
+            Membership.findOne({ userId }).lean()
+        ])
 
-    if (!user) {
-        return res.status(404).json({ error: true, message: 'User not found!' })
+        if (!user) {
+            return res.status(404).json({ error: true, message: 'User not found!' })
+        }
+
+        resObj = user;
+        resObj['membershipDetails'] = membership;
+
+
+
+        return res.status(200).json({
+            error: false,
+            token: req.body.token,
+            data: resObj
+        })
+    } catch (error: any) {
+        if (error?.name === 'ZodError') {
+            return res.status(400).send(error.errors);
+        }
+        return res.status(500).json({ error: true, message: error.message })
     }
-    return res.status(200).json({
-        error: false,
-        token: req.body.token,
-        user
-    })
 }
 
 export const checkIfEmailOrPhoneExists = async (req: Request<emailOrPhoneInput['body']>, res: Response) => {

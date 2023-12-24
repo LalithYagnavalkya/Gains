@@ -1,9 +1,9 @@
 import cluster from "cluster";
 import os from "os"; // Node's built-in os module
-import app from "./app";
+import app from "./src/app";
 import { config } from "dotenv";
-import connectToDb from "./utils/connectToDb";
-import logger from "./utils/logger";
+import connectToDb from "./src/utils/connectToDb";
+import logger from "./src/utils/logger";
 config({
 	path: "./src/config/config.env",
 });

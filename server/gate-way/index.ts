@@ -1,6 +1,6 @@
 import cluster from "cluster";
 import os from "os"; // Node's built-in os module
-import app from "./app";
+import app from "./src/app";
 import { config } from "dotenv";
 import {EventEmitter} from "events";
 const eventEmitter = new EventEmitter();

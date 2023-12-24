@@ -4,11 +4,12 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 //pages
 import { Forgot, Login, Reset } from "./pages/auth";
 import { Home } from "./pages/dashboard/dashboard.page";
-import {Customer} from "./pages/customers/customers.page";
+import { Customer } from "./pages/customers/customers.page";
 
 // others
 import { PrivateRoutes } from "./utils/privateRoutes";
 import { useSelector } from "react-redux";
+import SingleCustomerPage from "./pages/customers/singleCustomerPage/singleCustomerPage";
 
 const App: React.FC = () => {
   const { isAuthenticated } = useSelector((state: any) => state.user);
@@ -23,6 +24,7 @@ const App: React.FC = () => {
           <Route path="/app" element={<PrivateRoutes />}>
             <Route path="home" element={<Home />} />
             <Route path="customers" element={<Customer />} />
+            <Route path="customers/:customerId" element={<SingleCustomerPage />} />
           </Route>
           <Route path="/" element={<Navigate to={isAuthenticated ? "login" : "/app/home"} />} />
           <Route path="*" element={<Navigate to={isAuthenticated ? "login" : "/app/home"} />} />
