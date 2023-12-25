@@ -42,7 +42,7 @@ const profileFormSchema = z.object({
 
     membershipFee: z.string(),
 
-    workoutTypes: z.array(z.string()).optional(),
+    workoutType: z.string().optional(),
 })
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
@@ -76,15 +76,18 @@ export function ProfileForm({ username, phone, email, workoutType, joinedOn, mem
 
     membershipFee = String(membershipFee)
     // Remove any non-digit characters from the input (e.g., commas)
-    const sanitizedValue = membershipFee.replace(/[^0-9]/g, '');
+    const sanitizedValue = membershipFee?.replace(/[^0-9]/g, '');
     // Format the number with commas
-    const defaultMembershipFee = sanitizedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const defaultMembershipFee = sanitizedValue?.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    let workoutTypesString = workoutType?.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' + ');
 
     const defaultValues: Partial<ProfileFormValues> = {
         username: username,
         phone: phone,
         email: email,
         membershipFee: defaultMembershipFee,
+        workoutType: workoutTypesString,
         validUpto: new Date(),
     }
     const form = useForm<ProfileFormValues>({
@@ -132,7 +135,7 @@ export function ProfileForm({ username, phone, email, workoutType, joinedOn, mem
                     </div>
                     <div className="flex flex-col justify-end items-start">
                         <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                           Joined On
+                            Joined On
                         </h4>
                         <div className="text-lg font-semibold ">
                             {joinedOn ? format(new Date(joinedOn), 'MMMM do yyy') : ''}
@@ -214,6 +217,33 @@ export function ProfileForm({ username, phone, email, workoutType, joinedOn, mem
                                 </FormItem>
                             )}
                         />
+                        <div>
+                            <FormField
+                                control={form.control}
+                                name="workoutType"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Workout Type</FormLabel>
+                                        {/* <FormControl>
+                                                    <Input autoComplete="off" placeholder="" {...field} />
+                                                </FormControl>
+                                                <FormMessage /> */}
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {wrokoutTypes.map(w => {
+                                                    return <><SelectItem value={w.value}>{w.label}</SelectItem> </>
+                                                })}
+                                            </SelectContent>
+                                        </Select>
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
                     </div>
                     {/* <div className="w-1/2">
                         <FormField
@@ -240,126 +270,7 @@ export function ProfileForm({ username, phone, email, workoutType, joinedOn, mem
                     </div> */}
 
                 </div>
-                {/* <div className="flex">
-                    <FormField
-                        control={form.control}
-                        name="joinedOn"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                                <FormLabel>Joined On</FormLabel>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <FormControl>
-                                            <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                    "w-[240px] pl-3 text-left font-normal",
-                                                    !field.value && "text-muted-foreground"
-                                                )}
-                                            >
-                                                {field.value ? (
-                                                    format(field.value, "PPP")
-                                                ) : (
-                                                    <span>Pick a date</span>
-                                                )}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar
-                                            mode="single"
-                                            selected={field.value}
-                                            onSelect={field.onChange}
-                                            disabled={(date: any) =>
-                                                date > new Date() || date < new Date("1900-01-01")
-                                            }
-                                            initialFocus
-                                        />
-                                    </PopoverContent>
-                                </Popover>
-                                <FormDescription>
-                                    Joined on Date is used for payment scheduler.
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="validUpto"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                                <FormLabel>Valid Upto</FormLabel>
-                                <div className="flex gap-x-1">
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button
-                                                    variant={"outline"}
-                                                    className={cn(
-                                                        "w-[190px] pl-3 text-left font-normal",
-                                                        !validUptoDate && "text-muted-foreground"
-                                                    )}
-                                                >
-                                                    {validUptoDate ? (
-                                                        format(validUptoDate, "PPP")
-                                                    ) : (
-                                                        <span>Pick a date</span>
-                                                    )}
-                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                            <Calendar
-                                                mode="single"
-                                                selected={validUptoDate}
-                                                onSelect={(x: Date | undefined) => {
-                                                    if (x) {
-                                                        setValidUptoDate(new Date(x))
-                                                        field.value = validUptoDate
-                                                    }
-                                                    console.log(x)
-                                                }}
-                                                // disabled={(date) =>
-                                                //     date < new Date(new Date().setMonth(new Date().getMonth() + 1))
-                                                // }
-                                                initialFocus
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="outline" size={'icon'}><PlusIcon /></Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent className="w-56">
-                                            <DropdownMenuGroup>
-                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(1)}>
-                                                    <PlusIcon />&nbsp; 1 Month
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(3)}>
-                                                    <PlusIcon />&nbsp; 3 Month
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(6)}>
-                                                    <PlusIcon />&nbsp; 6 Month
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => addMonthsInValidUptoField(12)}>
-                                                    <PlusIcon />&nbsp; 1 Year
-                                                </DropdownMenuItem>
-                                            </DropdownMenuGroup>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </div>
 
-                                <FormDescription>
-                                    When will the membership end?
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div> */}
                 <div className="flex justify-end">
                     {/* <Button variant="outline" onClick={() => closeModal()} >Cancel</Button> */}
                     <Button type="submit">Update profile</Button>
