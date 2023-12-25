@@ -8,14 +8,12 @@ const usernameRegex = /^[a-zA-Z0-9 _-]+$/;
 
 export const editCustomerSchema = object({
 
-    params: object({
-        userId: string({ required_error: 'please provide a user id' })
-            .refine(isObjectId, { message: 'Invalid userId, must be a valid ObjectId' }),
-    }),
+
     body: object({
+        customerId: z.string().optional(),
 
         operationType: z.enum(["email", "username", "phone", "workoutType", "joinedOn", "validUpto"]).
-            transform((val) => val.toLowerCase()),
+            transform((val) => val.toLowerCase()).optional(),
 
         email: string()
             .email("Not a valid email").
