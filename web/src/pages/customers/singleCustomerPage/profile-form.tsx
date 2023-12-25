@@ -217,41 +217,18 @@ export function ProfileForm({ username, phone, email, workoutType, joinedOn, mem
                                 </FormItem>
                             )}
                         />
-                        <div>
-                            <FormField
-                                control={form.control}
-                                name="workoutType"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Workout Type</FormLabel>
-                                        {/* <FormControl>
-                                                    <Input autoComplete="off" placeholder="" {...field} />
-                                                </FormControl>
-                                                <FormMessage /> */}
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {wrokoutTypes.map(w => {
-                                                    return <><SelectItem value={w.value}>{w.label}</SelectItem> </>
-                                                })}
-                                            </SelectContent>
-                                        </Select>
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
                     </div>
-                    {/* <div className="w-1/2">
+                    <div className="w-1/2">
                         <FormField
                             control={form.control}
                             name="workoutType"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Workout Type</FormLabel>
+                                    {/* <FormControl>
+                                                    <Input autoComplete="off" placeholder="" {...field} />
+                                                </FormControl>
+                                                <FormMessage /> */}
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
@@ -267,8 +244,7 @@ export function ProfileForm({ username, phone, email, workoutType, joinedOn, mem
                                 </FormItem>
                             )}
                         />
-                    </div> */}
-
+                    </div>
                 </div>
 
                 <div className="flex justify-end">
