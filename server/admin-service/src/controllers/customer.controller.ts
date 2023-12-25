@@ -72,124 +72,123 @@ export const addCustomer = async (req: Request<{}, {}, addCustomerInput['body']>
 
 }
 
-export const editCustomer = async (req: Request<editCustomerInput['params'], {}, editCustomerInput['body']>, res: Response) => {
+export const updateCustomerDetails = async (req: Request<{}, {}, editCustomerInput['body']>, res: Response) => {
 
-    const { userId } = req.params;
-    const operationType = req.body.operationType;
+    const { operationType, customerId } = req.body;
 
     try {
-        switch (operationType) {
+        // switch (operationType) {
 
-            case 'email': {
-                const parsedData = addOrEditEmailSchema.safeParse({ userId, email: req.body.email })
+        //     case 'email': {
+        //         const parsedData = addOrEditEmailSchema.safeParse({ userId: customerId, email: req.body.email })
 
-                if (parsedData.success) {
-                    const { email } = parsedData.data;
+        //         if (parsedData.success) {
+        //             const { email } = parsedData.data;
 
-                    const { error, message } = await editEmail({ email, userId });
+        //             const { error, message } = await editEmail({ email, customerId });
 
-                    if (error) {
-                        return res.status(409).json({ error, message })
-                    }
-                    return res.status(200).json({ error, message })
-                }
+        //             if (error) {
+        //                 return res.status(409).json({ error, message })
+        //             }
+        //             return res.status(200).json({ error, message })
+        //         }
 
-                return res.status(400).json({ error: true, message: 'Please provide valid email' })
-                break;
-            }
+        //         return res.status(400).json({ error: true, message: 'Please provide valid email' })
+        //         break;
+        //     }
 
-            case 'username': {
-                const parsedData = usernameSchema.safeParse({ userId, username: req.body.username })
+        //     case 'username': {
+        //         const parsedData = usernameSchema.safeParse({ userId: customerId, username: req.body.username })
 
-                if (parsedData.success) {
-                    const { username } = parsedData.data;
+        //         if (parsedData.success) {
+        //             const { username } = parsedData.data;
 
-                    const { error, message } = await editUsername({ username, userId });
+        //             const { error, message } = await editUsername({ username, userId: customerId });
 
-                    if (error) {
-                        return res.status(409).json({ error, message })
-                    }
-                    return res.status(200).json({ error, message })
-                }
+        //             if (error) {
+        //                 return res.status(409).json({ error, message })
+        //             }
+        //             return res.status(200).json({ error, message })
+        //         }
 
-                return res.status(400).json({ error: true, message: parsedData.error.message ?? 'Provide username' })
-                break;
-            }
+        //         return res.status(400).json({ error: true, message: parsedData.error.message ?? 'Provide username' })
+        //         break;
+        //     }
 
-            case 'phone': {
-                const parsedData = phoneSchema.safeParse({ userId, phone: req.body.phone })
+        //     case 'phone': {
+        //         const parsedData = phoneSchema.safeParse({ userId: customerId, phone: req.body.phone })
 
-                if (parsedData.success) {
-                    const { phone } = parsedData.data;
+        //         if (parsedData.success) {
+        //             const { phone } = parsedData.data;
 
-                    const { error, message } = await editPhone({ phone, userId });
+        //             const { error, message } = await editPhone({ phone, userId: customerId });
 
-                    if (error) {
-                        return res.status(409).json({ error, message })
-                    }
-                    return res.status(200).json({ error, message })
-                }
+        //             if (error) {
+        //                 return res.status(409).json({ error, message })
+        //             }
+        //             return res.status(200).json({ error, message })
+        //         }
 
-                return res.status(400).json({ error: true, message: parsedData.error.message ?? 'Invalid phone number' })
-                break;
-            }
+        //         return res.status(400).json({ error: true, message: parsedData.error.message ?? 'Invalid phone number' })
+        //         break;
+        //     }
 
-            case 'workoutType': {
-                const parsedData = workoutSchmea.safeParse({ userId, workoutTypes: req.body.workoutTypes })
+        //     case 'workoutType': {
+        //         const parsedData = workoutSchmea.safeParse({ userId: customerId, workoutTypes: req.body.workoutTypes })
 
-                if (parsedData.success) {
-                    const { workoutTypes } = parsedData.data;
+        //         if (parsedData.success) {
+        //             const { workoutTypes } = parsedData.data;
 
-                    const { error, message } = await editWorkoutType({ workoutTypes, userId });
+        //             const { error, message } = await editWorkoutType({ workoutTypes, userId: customerId });
 
-                    if (error) {
-                        return res.status(409).json({ error, message })
-                    }
-                    return res.status(200).json({ error, message })
-                }
+        //             if (error) {
+        //                 return res.status(409).json({ error, message })
+        //             }
+        //             return res.status(200).json({ error, message })
+        //         }
 
-                return res.status(400).json({ error: true, message: parsedData.error.message ?? 'Invalid workoutType ' })
-                break;
-            }
+        //         return res.status(400).json({ error: true, message: parsedData.error.message ?? 'Invalid workoutType ' })
+        //         break;
+        //     }
 
-            case 'joinedOn': {
-                const parsedData = joinedOnSchema.safeParse({ userId, joinedOn: req.body.joinedOn })
+        //     case 'joinedOn': {
+        //         const parsedData = joinedOnSchema.safeParse({ userId: customerId, joinedOn: req.body.joinedOn })
 
-                if (parsedData.success) {
-                    const { joinedOn } = parsedData.data;
+        //         if (parsedData.success) {
+        //             const { joinedOn } = parsedData.data;
 
-                    const { error, message } = await editJoinedOn({ joinedOn, userId });
+        //             const { error, message } = await editJoinedOn({ joinedOn, userId: customerId });
 
-                    if (error) {
-                        return res.status(409).json({ error, message })
-                    }
-                    return res.status(200).json({ error, message })
-                }
+        //             if (error) {
+        //                 return res.status(409).json({ error, message })
+        //             }
+        //             return res.status(200).json({ error, message })
+        //         }
 
-                return res.status(400).json({ error: true, message: parsedData.error.message ?? 'Invalid joinedOn Date ' })
-                break;
-            }
+        //         return res.status(400).json({ error: true, message: parsedData.error.message ?? 'Invalid joinedOn Date ' })
+        //         break;
+        //     }
 
-            case 'validUpto':
-                const parsedData = validUptoSchema.safeParse({ userId, validUpto: req.body.validUpto })
+        //     case 'validUpto':
+        //         const parsedData = validUptoSchema.safeParse({ userId: customerId, validUpto: req.body.validUpto })
 
-                if (parsedData.success) {
-                    const { validUpto } = parsedData.data;
+        //         if (parsedData.success) {
+        //             const { validUpto } = parsedData.data;
 
-                    const { error, message } = await editValidUpto({ validUpto, userId });
+        //             const { error, message } = await editValidUpto({ validUpto, userId: customerId });
 
-                    if (error) {
-                        return res.status(409).json({ error, message })
-                    }
-                    return res.status(200).json({ error, message })
-                }
+        //             if (error) {
+        //                 return res.status(409).json({ error, message })
+        //             }
+        //             return res.status(200).json({ error, message })
+        //         }
 
-                return res.status(400).json({ error: true, message: parsedData.error.message ?? 'Invalid validupto Date ' })
-                break;
+        //         return res.status(400).json({ error: true, message: parsedData.error.message ?? 'Invalid validupto Date ' })
+        //         break;
 
-            default:
-                break;
-        }
+        //     default:
+        //         break;
+        // }
     } catch (error: any) {
         return res.status(500).json({ error: true, message: error.message })
     }
@@ -232,8 +231,8 @@ export const getCustomers = async (req: Request, res: Response) => {
         if (paymentStatus) {
             query.paymentStatus = { '$in': paymentStatus }
         }
-        if(usernameOrPhone){
-            query['$or'] = [{ username: { $regex: usernameOrPhone } }, { phone: {$regex: usernameOrPhone}}]
+        if (usernameOrPhone) {
+            query['$or'] = [{ username: { $regex: usernameOrPhone } }, { phone: { $regex: usernameOrPhone } }]
         }
 
         switch (type) {
@@ -287,7 +286,7 @@ export const getCustomerDetails = async (req: Request<getCustomerDetailsInput['p
         const { _user } = req.body;
         let resObj: any = {};
 
-        const [user,membership] = await Promise.all([
+        const [user, membership] = await Promise.all([
             User.findById(userId).lean(),
             Membership.findOne({ userId }).lean()
         ])
