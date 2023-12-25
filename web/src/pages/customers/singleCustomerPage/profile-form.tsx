@@ -114,22 +114,33 @@ export function ProfileForm({ username, phone, email, workoutType, joinedOn, mem
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
-                <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Name</FormLabel>
-                            <FormControl>
-                                <Input autoComplete="off" placeholder="whats his/her name?" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                <div className="flex gap-x-4 ">
+                    <div className="w-3/4">
+                        <FormField
+                            control={form.control}
+                            name="username"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Name</FormLabel>
+                                    <FormControl>
+                                        <Input autoComplete="off" placeholder="whats his/her name?" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div className="flex flex-col justify-end items-start">
+                        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                           Joined On
+                        </h4>
+                        <div className="text-lg font-semibold ">
+                            {joinedOn ? format(new Date(joinedOn), 'MMMM do yyy') : ''}
+                        </div>
+                    </div>
+                </div>
                 <div className="flex gap-x-4">
                     <div className="w-3/4">
-
                         <FormField
                             control={form.control}
                             name="email"
@@ -140,7 +151,7 @@ export function ProfileForm({ username, phone, email, workoutType, joinedOn, mem
                                         <Input autoComplete="off" placeholder="" {...field}
                                             onBlur={async (e) => {
                                                 console.log(e.target.value)
-                                                if (email === e.target.value ){
+                                                if (email === e.target.value) {
                                                     return
                                                 }
                                                 const res = await checkIfUserNameOrPhoneExists({ email: e.target.value });
