@@ -39,7 +39,7 @@ export default function SingleCustomerPage() {
         paymentStatus: ''
     };
     let userModal = {
-        _id: "",
+        customerId: "",
         username: '',
         membershipFee: '',
         validUpto: '',
@@ -60,7 +60,7 @@ export default function SingleCustomerPage() {
             paymentStatus: data.membershipDetails?.paymentStatus,
         }
         userModal = {
-            _id: String(data._id),
+            customerId: String(data._id),
             username: data.username,
             membershipFee: data.membershipDetails?.membershipFee,
             validUpto: data.membershipDetails?.validUpto,
@@ -96,8 +96,7 @@ export default function SingleCustomerPage() {
         </div>
 
 
-        <div className="w-full space-y-4 p-8 pt-6">
-
+        <div className="hidden w-full space-y-4 p-8 pt-6 md:block">
             <div className="flex justify-between gap-x-4">
                 <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0 w-1/4">
                     <aside className="lg:w-1/2 min-w-full"> {/* Adjust the width or min-width as needed */}
