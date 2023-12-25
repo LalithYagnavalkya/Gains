@@ -30,6 +30,6 @@ app.use(
 	}),
 );
 
-app.use(router);
+app.use('/api/v1/', router);
 
 export default app;

@@ -1,15 +1,15 @@
 import { createEntityAdapter } from '@reduxjs/toolkit';
-import { apiSlice } from '../api/api.slice';
+import { adminBaseAPI } from '../api/api.slice';
 
 
 const customerAdapter = createEntityAdapter();
 const initialState = customerAdapter.getInitialState()
-const customerBackend: string = '/admin/customer'
-const paymentBackend: string = '/admin/payment'
+const customerBackend: string = '/customer'
+const paymentBackend: string = '/payment'
 
 
 
-export const customerSlice = apiSlice.injectEndpoints({
+export const customerSlice = adminBaseAPI.injectEndpoints({
     endpoints: (builder: any) => ({
         getCustomers: builder.query({
             query: (data: any) => ({

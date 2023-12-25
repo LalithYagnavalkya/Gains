@@ -1,10 +1,10 @@
 import { createEntityAdapter } from '@reduxjs/toolkit';
-import { apiSlice } from '../api/api.slice';
+import { adminBaseAPI } from '../api/api.slice';
 import { Transaction } from './types';
 
-const dashbaordRoute: string = '/admin/dashboard'
+const dashbaordRoute: string = '/dashboard'
 
-export const dashboardAPI = apiSlice.injectEndpoints({
+export const dashboardAPI = adminBaseAPI.injectEndpoints({
     endpoints: (builder: any) => ({
         getRecentTransactions: builder.query({
             query: () => ({
@@ -12,7 +12,7 @@ export const dashboardAPI = apiSlice.injectEndpoints({
                 method: 'GET',
 
             }),
-           
+          
             providesTags: ['DashboardTransactions'],
 
         }),

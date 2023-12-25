@@ -1,5 +1,5 @@
 import { createEntityAdapter } from '@reduxjs/toolkit';
-import { apiSlice } from '../api/api.slice';
+import { authBaseAPI } from '../api/api.slice';
 
 import { loginResType } from './types'
 import { setAuth } from './user.slice';
@@ -15,32 +15,34 @@ const initialState = usersAdapter.getInitialState({
 
 const authBackendRoute: string = '/auth'
 
-export const authSlice = apiSlice.injectEndpoints({
+export const authSlice = authBaseAPI.injectEndpoints({
   endpoints: (builder: any) => ({
     login: builder.mutation({
       query: (credentials: any) => ({
-        url: authBackendRoute + '/login',
+        url: '/login',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(credentials),
-        providesTags: ['Auth'],
-
-        transformResponse: (res: loginResType, state: any) => {
-          usersAdapter.setAll(initialState, { isAuthenticated: true, user: res.user, token: res.token })
-        }
       }),
-      async onCacheEntryAdded(
-        arg: any,
-        { dispatch, cacheDataLoaded }: { dispatch: any, cacheDataLoaded: any }
-      ) {
-        const authData = await cacheDataLoaded;
-        if (authData && authData.data && !authData.data.error) {
-          localStorage.setItem("currentUser", JSON.stringify({ user: authData.data.user, token: authData.data.token }));
-          dispatch(setAuth({ isAuthenticated: true, user: authData.data.user, token: authData.data.token }));
-        }
+      transformResponse: (res: loginResType, state: any) => {
+        localStorage.setItem("currentUser", JSON.stringify({ user: res.user, token: res.token }));
+        return usersAdapter.setAll(initialState, { isAuthenticated: true, user: res.user, token: res.token })
       },
+    //   async onCacheEntryAdded(
+    //     arg: any,
+    //     { dispatch, cacheDataLoaded }: { dispatch: any, cacheDataLoaded: any }
+    //   ) {
+    //     const authData = await cacheDataLoaded;
+    //     if (authData && authData.data && !authData.data.error) {
+    //       localStorage.setItem("currentUser", JSON.stringify({ user: authData.data.user, token: authData.data.token }));
+    //       dispatch(setAuth({ isAuthenticated: true, user: authData.data.user, token: authData.data.token }));
+    //     }
+    //   },
+    //   invalidatesTags: ['Auth'],
+
+
     }),
     logout: builder.mutation({
       query: () => ({
@@ -60,14 +62,14 @@ export const authSlice = apiSlice.injectEndpoints({
     }),
     forgotPassword: builder.mutation({
       query: (email: string) => ({
-        url: authBackendRoute + '/forgotpassword',
+        url: '/forgotpassword',
         method: 'POST',
         body: email
       }),
     }),
     resetPassword: builder.mutation({
       query: (email: string) => ({
-        url: authBackendRoute + '/resetPassword',
+        url: '/resetPassword',
         method: 'POST',
         body: email
       }),
