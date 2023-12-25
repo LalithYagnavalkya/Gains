@@ -79,6 +79,15 @@ export const customerSlice = adminBaseAPI.injectEndpoints({
             providesTags: ['singleCustomer']
             // invalidatesTags: ['Customer']
         }),
+        updateCustomerDetails: builder.mutation({
+            query: (data: any) => ({
+                url: customerBackend + '/updateCustomerDetails',
+                method: 'POST',
+                body: data,
+            }),
+            
+            // invalidatesTags: ['singleCustomer']
+        }),
 
     }),
 });
@@ -89,4 +98,5 @@ export const {
     useCheckIfUserNameOrPhoneExistsMutation,
     useUpdateMembershipMutation,
     useGetCustomerDetailsQuery,
+    useUpdateCustomerDetailsMutation,
 } = customerSlice;

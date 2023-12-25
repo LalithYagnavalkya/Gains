@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
-import { useCheckIfUserNameOrPhoneExistsMutation } from "@/features/customer/customer.api"
+import { useCheckIfUserNameOrPhoneExistsMutation, useUpdateCustomerDetailsMutation } from "@/features/customer/customer.api"
 import { format } from "date-fns"
 import { RupeeInput } from "@/components/ui/rupeeInput"
 
@@ -50,6 +50,7 @@ type props = {
     validUpto: string,
     paymentStatus: string,
     membershipFee: string,
+    customerId: string,
 }
 const wrokoutTypes = [
     { value: 'CARDIO', label: 'Cardio' },
@@ -77,10 +78,11 @@ const setDefaultValues = ({ membershipFee, workoutType }: { membershipFee: strin
 
 }
 
-export function ProfileForm({ username, phone, email, workoutType, joinedOn, membershipFee }: props) {
+export function ProfileForm({ username, phone, email, workoutType, joinedOn, membershipFee, customerId }: props) {
 
     const [validUptoDate, setValidUptoDate] = useState<Date>(new Date());
     const [checkIfUserNameOrPhoneExists] = useCheckIfUserNameOrPhoneExistsMutation();
+    const [updateCustomerDetails, { isLoading }] = useUpdateCustomerDetailsMutation();
 
     const { defaultMembershipFee, workoutTypesString } = setDefaultValues({ membershipFee, workoutType })
 
@@ -92,28 +94,46 @@ export function ProfileForm({ username, phone, email, workoutType, joinedOn, mem
         workoutType: workoutTypesString,
         validUpto: new Date(),
     }
-    const form = useForm<ProfileFormValues>({
+    const form = useForm<z.infer<typeof profileFormSchema>>({
         resolver: zodResolver(profileFormSchema),
         defaultValues,
         mode: "onChange",
     })
 
-    const addMonthsInValidUptoField = (value: number) => {
-        const currentDate = form.getValues('validUpto') || new Date()
-        const newDate = new Date(currentDate);
-        newDate.setMonth(currentDate.getMonth() + value);
-        setValidUptoDate(newDate)
-    }
+    async function onSubmit(values: z.infer<typeof profileFormSchema>) {
+        if (!isLoading) {
+            try {
+                let workoutTypes: string[] = values?.workoutType?.split('+').map(v => v.trim()) || []
 
-    function onSubmit(data: ProfileFormValues) {
-        toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-        })
+                // convert membership fee from string (1,200) to number 1200
+                let memberShipFeeInNumber: number = parseFloat(values?.membershipFee.replace(/,/g, ''));
+
+                const resData = await updateCustomerDetails({
+                    customerId,
+                    ...values,
+                    workoutType: workoutTypes,
+                    membershipFee: memberShipFeeInNumber,
+                })
+                console.log(resData)
+
+            } catch (error: any) {
+                if (error.status === 401) {
+                    console.log(error)
+                    toast({
+                        title: "You submitted the following values:",
+                        description: (
+                            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+                                <code className="text-white">{JSON.stringify(values, null, 2)}</code>
+                            </pre>
+                        ),
+                    })
+                    // setContent('Sorry, your credentials were incorrect. Please double-check your credentials.')
+                    // setIsPasswordWrong(true);
+                }
+            }
+        }
+
+       
     }
 
     return (
