@@ -10,7 +10,7 @@ import validateResource from "../middleware/validateResource";
 import { addCustomerSchema, editCustomerSchema, getCustomersSchema, emailOrPhoneSchema, getCustomerDetailsSchema } from "../schemas/customer.schema";
 
 // controllers
-import { uploadCustomers, addCustomer, editCustomer, getCustomers, checkIfEmailOrPhoneExists, getCustomerDetails } from "../controllers/customer.controller";
+import { uploadCustomers, addCustomer, updateCustomerDetails, getCustomers, checkIfEmailOrPhoneExists, getCustomerDetails } from "../controllers/customer.controller";
 
 dotenv.config({ path: "./src/config/config.env" });
 const router = Router();
@@ -19,7 +19,7 @@ router.post('/uploadCustomers', authenticateUser, upload.single('csvdata'), uplo
 
 router.post('/addCustomer', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), validateResource(addCustomerSchema), addCustomer)
 
-router.post('/editCustomer/:userId', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), validateResource(editCustomerSchema), editCustomer)
+router.post('/updateCustomerDetails', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), validateResource(editCustomerSchema), updateCustomerDetails)
 
 // validation input in the api for query params
 router.get('/getCustomers', authenticateUser, authorizeRole(['SUPER_ADMIN', 'ADMIN']), getCustomers)
