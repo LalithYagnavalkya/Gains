@@ -4,20 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useFieldArray, useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { cn } from "@/lib/utils"
 import { toast } from "@/components/ui/use-toast"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useState } from "react"
 import { useCheckIfUserNameOrPhoneExistsMutation } from "@/features/customer/customer.api"
 import { format } from "date-fns"
-import { CalendarIcon } from "@radix-ui/react-icons"
-import { Calendar } from "@/components/ui/calendar"
 import { RupeeInput } from "@/components/ui/rupeeInput"
 
 const profileFormSchema = z.object({
@@ -69,10 +63,7 @@ const wrokoutTypes = [
 ]
 // This can come from your database or API.
 
-export function ProfileForm({ username, phone, email, workoutType, joinedOn, membershipFee }: props) {
-
-    const [validUptoDate, setValidUptoDate] = useState<Date>(new Date());
-    const [checkIfUserNameOrPhoneExists] = useCheckIfUserNameOrPhoneExistsMutation();
+const setDefaultValues = ({ membershipFee, workoutType }: { membershipFee: string, workoutType: string[] }) => {
 
     membershipFee = String(membershipFee)
     // Remove any non-digit characters from the input (e.g., commas)
@@ -81,6 +72,17 @@ export function ProfileForm({ username, phone, email, workoutType, joinedOn, mem
     const defaultMembershipFee = sanitizedValue?.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
     let workoutTypesString = workoutType?.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' + ');
+
+    return { defaultMembershipFee, workoutTypesString }
+
+}
+
+export function ProfileForm({ username, phone, email, workoutType, joinedOn, membershipFee }: props) {
+
+    const [validUptoDate, setValidUptoDate] = useState<Date>(new Date());
+    const [checkIfUserNameOrPhoneExists] = useCheckIfUserNameOrPhoneExistsMutation();
+
+    const { defaultMembershipFee, workoutTypesString } = setDefaultValues({ membershipFee, workoutType })
 
     const defaultValues: Partial<ProfileFormValues> = {
         username: username,
