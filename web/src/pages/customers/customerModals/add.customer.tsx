@@ -112,41 +112,47 @@ const AddCustomer: React.FC = () => {
 
         if (!isLoading) {
 
+            try {
 
-            // convert membership fee from string (1,200) to number 1200
-            let memberShipFeeInNumber: number = parseFloat(values.membershipFee.replace(/,/g, ''));
+                // convert membership fee from string (1,200) to number 1200
+                let memberShipFeeInNumber: number = parseFloat(values.membershipFee.replace(/,/g, ''));
 
-            // converting workouttypes to array
-            let workoutTypes: string[] = values.workoutType?.split('+').map(v => v.trim()) || []
+                // converting workouttypes to array
+                let workoutTypes: string[] = values.workoutType?.split('+').map(v => v.trim()) || []
 
 
-            const result = await addNewCustomer({
-                ...values, membershipFee: memberShipFeeInNumber,
-                workoutType: workoutTypes,
-                validUpto: validUptoDate
-            })
-
-            setValidUptoDate(new Date())
-
-            if (result.status === 401) {
-                dispatch(logout())
-            }
-
-            if (result.data.error === false) {
-                toast({
-                    description: "🎉 Hurray!, new Customer!!",
+                const result = await addNewCustomer({
+                    ...values, membershipFee: memberShipFeeInNumber,
+                    workoutType: workoutTypes,
+                    validUpto: validUptoDate
                 })
-            }
 
-            if (result.error?.data?.error) {
-                console.log(result.error.data.message)
+                setValidUptoDate(new Date())
+
+                if (result.status === 401) {
+                    dispatch(logout())
+                }
+
+                if (result.data.error === false) {
+                    toast({
+                        description: "🎉 Hurray!, new Customer!!",
+                    })
+                }
+
+                if (result.error?.data?.error) {
+                    console.log(result.error.data.message)
+                    toast({
+                        title: "Please Provide new Phone number",
+                        description: result.error.data.message,
+                    })
+                    return;
+                } else {
+                    closeModal()
+                }
+            } catch (error) {
                 toast({
-                    title: "Please Provide new Phone number",
-                    description: result.error.data.message,
+                    title: "Oops! Something went wrong! 👀",
                 })
-                return;
-            } else {
-                closeModal()
             }
         }
     }
