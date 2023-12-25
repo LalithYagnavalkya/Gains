@@ -69,12 +69,22 @@ const wrokoutTypes = [
 ]
 // This can come from your database or API.
 
-export function ProfileForm({ username, phone, email, workoutType, joinedOn: string }: props) {
+export function ProfileForm({ username, phone, email, workoutType, joinedOn, membershipFee }: props) {
+
+    const [validUptoDate, setValidUptoDate] = useState<Date>(new Date());
+    const [checkIfUserNameOrPhoneExists] = useCheckIfUserNameOrPhoneExistsMutation();
+
+    membershipFee = String(membershipFee)
+    // Remove any non-digit characters from the input (e.g., commas)
+    const sanitizedValue = membershipFee.replace(/[^0-9]/g, '');
+    // Format the number with commas
+    const defaultMembershipFee = sanitizedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
     const defaultValues: Partial<ProfileFormValues> = {
         username: username,
         phone: phone,
         email: email,
-
+        membershipFee: defaultMembershipFee,
         validUpto: new Date(),
     }
     const form = useForm<ProfileFormValues>({
@@ -82,8 +92,6 @@ export function ProfileForm({ username, phone, email, workoutType, joinedOn: str
         defaultValues,
         mode: "onChange",
     })
-    const [checkIfUserNameOrPhoneExists] = useCheckIfUserNameOrPhoneExistsMutation();
-    const [validUptoDate, setValidUptoDate] = useState<Date>(new Date());
 
     const addMonthsInValidUptoField = (value: number) => {
         const currentDate = form.getValues('validUpto') || new Date()
@@ -132,6 +140,9 @@ export function ProfileForm({ username, phone, email, workoutType, joinedOn: str
                                         <Input autoComplete="off" placeholder="" {...field}
                                             onBlur={async (e) => {
                                                 console.log(e.target.value)
+                                                if (email === e.target.value ){
+                                                    return
+                                                }
                                                 const res = await checkIfUserNameOrPhoneExists({ email: e.target.value });
                                                 if (res?.error?.status === 409) {
                                                     form.setError('email', { type: 'custom', message: 'This email already exists' })
@@ -158,6 +169,9 @@ export function ProfileForm({ username, phone, email, workoutType, joinedOn: str
                                     <Input autoComplete="off" placeholder="" {...field} value={field.value ?? ""} onChange={field.onChange}
                                         onBlur={async (e) => {
                                             console.log(e.target.value)
+                                            if (phone === e.target.value) {
+                                                return
+                                            }
                                             const res = await checkIfUserNameOrPhoneExists({ phone: e.target.value });
                                             if (res?.error?.status === 409) {
                                                 form.setError('phone', { type: 'custom', message: 'This phone number already exists' })
