@@ -2,6 +2,7 @@ import { Router } from "express";
 import customerRoutes from './customer.route'
 import paymentRoutes from './paymemt.route'
 import dashboardRoutes from './dashboard.route'
+import schedulerRoutes from './shedulers.route'
 const router = Router();
 
 
@@ -10,6 +11,8 @@ router.use('/customer', customerRoutes )
 router.use('/payment', paymentRoutes )
 
 router.use('/dashboard', dashboardRoutes )
+
+router.use('/scheduler ', schedulerRoutes )
 
 
 
