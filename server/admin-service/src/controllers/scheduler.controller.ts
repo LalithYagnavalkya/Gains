@@ -17,14 +17,15 @@ const memberShipJob = schedule.scheduleJob('0 0 * * *', async function () {
     let scheduler_id :string;
     try {
         let today = new Date();
-        let todayStart = today.setHours(0, 0, 0, 0);
-        let todayEnd = today.setHours(23, 59, 0, 0);
 
-        let _scheduler = await schedulerLog.create({ type: 'MEMBERSHIP', status: 'In Progress', startDate: new Date() });
+        let _scheduler = await schedulerLog.create({ type: 'MEMBERSHIP', status: 'In Progress', startDate: today });
         scheduler_id = String(_scheduler._id)
         setTimeout(async () => {
             await membershipJobLogic(scheduler_id);
         }, 10000)
+
+        today.getTime()
+        await schedulerLog.findByIdAndUpdate({ _id: scheduler_id }, { status: 'Completed' });
 
     } catch (error: any) {
 
