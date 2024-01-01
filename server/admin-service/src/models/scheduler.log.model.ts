@@ -28,7 +28,7 @@ const schedulerLogSchema = new mongoose.Schema(
     { timestamps: true },
 );
 
-const schedulerLog: Model<ISchedulerLog> = mongoose.model<ISchedulerLog>("Membership", schedulerLogSchema);
+const schedulerLog: Model<ISchedulerLog> = mongoose.model<ISchedulerLog>("SchedulerLog", schedulerLogSchema);
 
 export default schedulerLog;
 
