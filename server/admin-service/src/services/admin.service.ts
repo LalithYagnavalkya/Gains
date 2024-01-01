@@ -232,7 +232,7 @@ export const createCustomer = async (data: addCustomerInput['body']): Promise<{ 
             return Promise.resolve({ error: true, message: 'User was not created' })
         }
         const joinedOnDate = new Date(joinedOn);
-        const validUptoDate = new Date(validUpto);
+        const validUptoDate = new  Date(new Date(validUpto).setHours(23, 59, 0, 0));
         const diffMonths = (validUptoDate.getFullYear() - joinedOnDate.getFullYear()) * 12 + (validUptoDate.getMonth() - joinedOnDate.getMonth());
 
         const membershipObj = await Membership.create({
