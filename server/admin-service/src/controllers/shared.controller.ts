@@ -1,4 +1,5 @@
 import { Model, Document } from "mongoose";
+import { differenceInSeconds, differenceInMinutes, differenceInHours, format } from 'date-fns';
 
 // models
 import Classification from "../models/classification.model";
@@ -51,7 +52,7 @@ export const paginateResults = async <T extends Document>(
     sortField?: string,
     sortDirection?: -1 | 1,
     select?: string,
-    populateFields?: string[], 
+    populateFields?: string[],
     populateSelect?: string[]
 ): Promise<PaginatedResults<T>> => {
 
@@ -90,3 +91,24 @@ export const paginateResults = async <T extends Document>(
     };
 };
 
+export const formatTimeTaken = (startTime: Date, endTime: Date) : string => {
+    const timeTakenInSeconds = differenceInSeconds(endTime, startTime);
+    const timeTakenInMinutes = differenceInMinutes(endTime, startTime);
+    const timeTakenInHours = differenceInHours(endTime, startTime);
+
+    const formattedTime = [];
+
+    if (timeTakenInHours > 0) {
+        formattedTime.push(`${timeTakenInHours}h`);
+    }
+
+    if (timeTakenInMinutes > 0) {
+        formattedTime.push(`${timeTakenInMinutes % 60}m`);
+    }
+
+    if (timeTakenInSeconds > 0) {
+        formattedTime.push(`${timeTakenInSeconds % 60}s`);
+    }
+
+    return formattedTime.join(' ');
+};
