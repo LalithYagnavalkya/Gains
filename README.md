@@ -9,6 +9,7 @@ Admin panel which can track customers and their payments.
 - should work on schedulers for updating payment status - DONE
 - add navbar logout button inside profile avatar options (update navbar)
 - add loaders every where
+- add dummy data in db.
 - logout user if the token is expired.
 
 ## Long scope
