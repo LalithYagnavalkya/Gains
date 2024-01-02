@@ -5,7 +5,8 @@ export interface ISchedulerLog extends Document {
     startDate: Date,
     endDate?: Date,
     status: string,
-    error?: Schema.Types.Mixed,
+    errorMessage: string,
+    errorStack?: Schema.Types.Mixed,
     createdAt: Date,
     updatedAt: Date
 }
@@ -18,9 +19,10 @@ const schedulerLogSchema = new mongoose.Schema(
         startDate: { type: Date, required: true },
         status: { type: String },
         endDate: { type: Date },
-        error: {
+        errorStack: {
             type: Schema.Types.Mixed
         },
+        errorMessage: {type: String},
         startTime: { type: String, required: true },
         endTime: { type: String },
         timeTaken: { type: String }
