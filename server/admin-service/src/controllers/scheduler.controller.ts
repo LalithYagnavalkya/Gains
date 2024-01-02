@@ -22,10 +22,10 @@ const memberShipJob = schedule.scheduleJob('0 0 * * *', async function () {
         await membershipJobLogic(scheduler_id);
         const endTime = new Date();
         const timeTakenString = formatTimeTaken(startTime, endTime);
-        await schedulerLog.findByIdAndUpdate({ _id: scheduler_id }, { status: 'Completed', timeTaken: timeTakenString });
+        await schedulerLog.findByIdAndUpdate({ _id: scheduler_id }, { status: 'Completed', endTime: format(endTime, 'yyyy MMM dd hh:mm:ss a'), endDate: endTime, timeTaken: timeTakenString });
 
     } catch (error: any) {
-        await schedulerLog.findByIdAndUpdate({ _id: scheduler_id }, { status: 'Failed', errorMessage: error.message, errorStack: error.stack });
+        await schedulerLog.findByIdAndUpdate({ _id: scheduler_id }, { status: 'Failed', endTime: format(new Date(), 'yyyy MMM dd hh:mm:ss a'), endDate: new Date(), errorMessage: error.message, errorStack: error.stack });
     }
 
 });
@@ -51,6 +51,6 @@ const membershipJobLogic = async (scheduler_id: string) => {
         })
 
     } catch (error: any) {
-        await schedulerLog.findByIdAndUpdate({ _id: scheduler_id }, { status: 'Failed', errorMessage: error.message, errorStack: error.stack });
+        await schedulerLog.findByIdAndUpdate({ _id: scheduler_id }, { status: 'Failed', endTime: format(new Date(), 'yyyy MMM dd hh:mm:ss a'), endDate: new Date(), errorMessage: error.message, errorStack: error.stack });
     }
 }
