@@ -3,34 +3,29 @@ const schedule = require('node-schedule');
 import schedulerLog from "../models/scheduler.log.model";
 import Membership, { IMembership } from "../models/membership.model";
 import { format } from 'date-fns';
+import { formatTimeTaken } from "./shared.controller";
 
 export const runMembershipScheduler = async (req: Request, res: Response) => {
     memberShipJob.invoke();
-    res.send('Scheduler manually triggered');
+    res.status(200).json({ error: false, message: 'Scheduler manually triggered' });
 }
 
-// const membershipScheduler = (): any => {
-//     return []
-// }
-
-
 const memberShipJob = schedule.scheduleJob('0 0 * * *', async function () {
-    let scheduler_id: string;
+    let scheduler_id: string = '';
     try {
-        let today = new Date();
+        let startTime = new Date();
 
-        let _scheduler = await schedulerLog.create({ type: 'MEMBERSHIP', status: 'In Progress', startDate: today, startTime: format(today, 'yyyy-MM-dd hh:mm:ss a') });
+        let _scheduler = await schedulerLog.create({ type: 'MEMBERSHIP', status: 'In Progress', startDate: startTime, startTime: format(startTime, 'yyyy-MM-dd hh:mm:ss a') });
 
-        scheduler_id = String(_scheduler._id)
-        setTimeout(async () => {
-            await membershipJobLogic(scheduler_id);
-        }, 10000)
+        scheduler_id = String(_scheduler?._id)
 
-        today.getTime()
-        await schedulerLog.findByIdAndUpdate({ _id: scheduler_id }, { status: 'Completed' });
+        await membershipJobLogic(scheduler_id);
+        const endTime = new Date();
+        const timeTakenString = formatTimeTaken(startTime, endTime);
+        await schedulerLog.findByIdAndUpdate({ _id: scheduler_id }, { status: 'Completed', timeTaken: timeTakenString });
 
     } catch (error: any) {
-
+        await schedulerLog.findByIdAndUpdate({ _id: scheduler_id }, { status: 'Failed', errorMessage: error.message, errorStack: error.stack });
     }
 
 });
@@ -55,7 +50,7 @@ const membershipJobLogic = async (scheduler_id: string) => {
             }
         })
 
-    } catch (error) {
-        await schedulerLog.findByIdAndUpdate({ _id: scheduler_id }, { status: 'Failed', error });
+    } catch (error: any) {
+        await schedulerLog.findByIdAndUpdate({ _id: scheduler_id }, { status: 'Failed', errorMessage: error.message, errorStack: error.stack });
     }
 }
