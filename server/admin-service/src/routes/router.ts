@@ -12,7 +12,7 @@ router.use('/payment', paymentRoutes )
 
 router.use('/dashboard', dashboardRoutes )
 
-router.use('/scheduler ', schedulerRoutes )
+router.use('/scheduler', schedulerRoutes )
 
 
 

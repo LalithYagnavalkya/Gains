@@ -2,10 +2,11 @@ import { Request, Response } from "express";
 const schedule = require('node-schedule');
 import schedulerLog from "../models/scheduler.log.model";
 import Membership, { IMembership } from "../models/membership.model";
+import { format } from 'date-fns';
 
 export const runMembershipScheduler = async (req: Request, res: Response) => {
-
-
+    memberShipJob.invoke();
+    res.send('Scheduler manually triggered');
 }
 
 // const membershipScheduler = (): any => {
@@ -14,11 +15,12 @@ export const runMembershipScheduler = async (req: Request, res: Response) => {
 
 
 const memberShipJob = schedule.scheduleJob('0 0 * * *', async function () {
-    let scheduler_id :string;
+    let scheduler_id: string;
     try {
         let today = new Date();
 
-        let _scheduler = await schedulerLog.create({ type: 'MEMBERSHIP', status: 'In Progress', startDate: today });
+        let _scheduler = await schedulerLog.create({ type: 'MEMBERSHIP', status: 'In Progress', startDate: today, startTime: format(today, 'yyyy-MM-dd hh:mm:ss a') });
+
         scheduler_id = String(_scheduler._id)
         setTimeout(async () => {
             await membershipJobLogic(scheduler_id);
@@ -57,5 +59,3 @@ const membershipJobLogic = async (scheduler_id: string) => {
         await schedulerLog.findByIdAndUpdate({ _id: scheduler_id }, { status: 'Failed', error });
     }
 }
-
-// membershipJobLogic();
