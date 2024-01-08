@@ -48,8 +48,8 @@ export const uploadCustomers = async (req: Request, res: Response) => {
 }
 
 export const addCustomer = async (req: Request<{}, {}, addCustomerInput['body']>, res: Response) => {
-    const { email, phone, } = req.body;
     try {
+        const { email, phone, } = req.body;
         const userExists = await User.findOne({
             $or: [{ email }, { phone }]
         });
