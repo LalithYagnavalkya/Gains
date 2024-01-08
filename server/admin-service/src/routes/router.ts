@@ -3,10 +3,13 @@ import customerRoutes from './customer.route'
 import paymentRoutes from './paymemt.route'
 import dashboardRoutes from './dashboard.route'
 import schedulerRoutes from './shedulers.route'
+import bodyMetricRoutes from './bodyMetrics.route'
 const router = Router();
 
 
 router.use('/customer', customerRoutes )
+
+router.use('/bodyMetrics', bodyMetricRoutes )
 
 router.use('/payment', paymentRoutes )
 

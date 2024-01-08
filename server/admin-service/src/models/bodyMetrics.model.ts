@@ -25,11 +25,10 @@ const bodyMetricSchema = new mongoose.Schema(
         thighs: {type: Number},
         calfs: {type: Number},
         glutes : {type: Number},
-
     },
     { timestamps: true },
 );
 
-const BodyMetrics: Model<IBodyMetrics> = mongoose.model<IBodyMetrics>("user", bodyMetricSchema);
+const BodyMetrics: Model<IBodyMetrics> = mongoose.model<IBodyMetrics>("bodyMetric", bodyMetricSchema);
 
 export default BodyMetrics;
