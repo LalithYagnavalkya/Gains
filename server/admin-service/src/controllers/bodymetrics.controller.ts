@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import User from "../models/user.model";
 import BodyMetrics from "../models/bodyMetrics.model";
 
-import { addBodyMetricsInput } from "../schemas/bodymetrics.schema";
+import { addBodyMetricsInput, getBodyMetricsByIdInput } from "../schemas/bodymetrics.schema";
 import { format } from "date-fns";
 
 export const addBodyMetrics = async (req: Request<{}, {}, addBodyMetricsInput['body'], {}>, res: Response) => {
@@ -29,7 +29,7 @@ export const addBodyMetrics = async (req: Request<{}, {}, addBodyMetricsInput['b
         }
 
         const bodyMetricsCreated = await BodyMetrics.create({
-            date: format(new Date(date), 'MMM YYYY'),
+            date: new Date(date),
             height: bodyMetrics.height ?? null,
             weight: bodyMetrics.weight ?? null,
             chest: bodyMetrics.chest ?? null,
@@ -46,4 +46,29 @@ export const addBodyMetrics = async (req: Request<{}, {}, addBodyMetricsInput['b
         return res.status(500).json({ error: true, message: 'Internal server error' })
     }
 
+}
+
+export const getBodyMetrics = async (req: Request<getBodyMetricsByIdInput['params'], {}, getBodyMetricsByIdInput['body'], {}>, res: Response) => {
+    try {
+        const { userId } = req.params;
+
+        const currentDate = new Date();
+        const lastTwelveMonthsStartDate = new Date(currentDate);
+        lastTwelveMonthsStartDate.setMonth(currentDate.getMonth() - 11);
+
+        const bodyMetricFilter = {
+            userId,
+            startDate: {
+                $gte: lastTwelveMonthsStartDate,
+                $lte: currentDate,
+            }
+        };
+
+        const userBodyMetrics = await BodyMetrics.find(bodyMetricFilter);
+
+        return res.status(200).json(userBodyMetrics)
+
+    } catch (error) {
+
+    }
 }

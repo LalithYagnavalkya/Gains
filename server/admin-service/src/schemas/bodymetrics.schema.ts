@@ -28,5 +28,20 @@ export const addBodyMetricsSchema = object({
 
     })
 })
+export const getBodyMetricsByIdSchema = object({
+    params: object({
+        userId: string({ required_error: 'please provide a user id' })
+            .refine(isObjectId, { message: 'Invalid userId, must be a valid ObjectId' }),
+    }),
+    body: object({
+        _user: object({
+            _id: z.string(),
+            role: string(),
+            partnerId: z.number(),
+        })
+    })
+
+})
 
 export type addBodyMetricsInput = TypeOf<typeof addBodyMetricsSchema>;
+export type getBodyMetricsByIdInput = TypeOf<typeof getBodyMetricsByIdSchema>;
