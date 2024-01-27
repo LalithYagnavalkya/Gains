@@ -4,6 +4,7 @@ import paymentRoutes from './paymemt.route'
 import dashboardRoutes from './dashboard.route'
 import schedulerRoutes from './shedulers.route'
 import bodyMetricRoutes from './bodyMetrics.route'
+import authRoutes from './authRoutes.route'
 const router = Router();
 
 
@@ -16,6 +17,8 @@ router.use('/payment', paymentRoutes )
 router.use('/dashboard', dashboardRoutes )
 
 router.use('/scheduler', schedulerRoutes )
+
+router.use('/auth', authRoutes)
 
 
 
