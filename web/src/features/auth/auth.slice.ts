@@ -1,5 +1,5 @@
 import { createEntityAdapter } from '@reduxjs/toolkit';
-import { authBaseAPI } from '../api/api.slice';
+import { adminBaseAPI } from '../api/api.slice';
 
 import { loginResType } from './types'
 import { setAuth } from './user.slice';
@@ -15,11 +15,11 @@ const initialState = usersAdapter.getInitialState({
 
 const authBackendRoute: string = '/auth'
 
-export const authSlice = authBaseAPI.injectEndpoints({
+export const authSlice = adminBaseAPI.injectEndpoints({
   endpoints: (builder: any) => ({
     login: builder.mutation({
       query: (credentials: any) => ({
-        url: '/login',
+        url: authBackendRoute + '/login',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ export const authSlice = authBaseAPI.injectEndpoints({
     }),
     logout: builder.mutation({
       query: () => ({
-        url: '/logout',
+        url: authBackendRoute + '/logout',
         method: 'POST',
       }),
       async onCacheEntryAdded(
@@ -62,14 +62,14 @@ export const authSlice = authBaseAPI.injectEndpoints({
     }),
     forgotPassword: builder.mutation({
       query: (email: string) => ({
-        url: '/forgotpassword',
+        url: authBackendRoute + '/forgotpassword',
         method: 'POST',
         body: email
       }),
     }),
     resetPassword: builder.mutation({
       query: (email: string) => ({
-        url: '/resetPassword',
+        url: authBackendRoute + '/resetPassword',
         method: 'POST',
         body: email
       }),
