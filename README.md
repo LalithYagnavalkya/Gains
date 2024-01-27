@@ -24,7 +24,9 @@ Admin panel which can track customers and their payments.
 - Customers page paginationation, inital previous button should be disabled - DONE
 - Frontend: add apiSlic end points in .env file 
 - Onces token expires and logouts. next login getCustomers api is always failing and signing out.
+- after password reset, show a success toater and then redirect
 
 
 ## Issues 
  Because of RAM memory constraints, I must maintain fewer services. In my ec2 instance, I only have 1GB of RAM.
+ - shifted every API into admin-service, now the project is monolithic
