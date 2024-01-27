@@ -8,9 +8,9 @@ config({
 });
 
 
-export const generateToken = (userId: string) => {
+export const generateToken = (userId: string, expireTime: string | null) => {
     const secretKey: string = <string>process.env.SECRET_KEY
-    const token = jwt.sign({ userId }, secretKey, { expiresIn: '1h' });
+    const token = jwt.sign({ userId }, secretKey, { expiresIn: expireTime ? expireTime : '1h' });
     return token;
 };
 interface tokenObj {
