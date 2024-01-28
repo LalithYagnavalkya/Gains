@@ -96,7 +96,7 @@ export default function SingleCustomerPage() {
         </div>
 
 
-        <div className="hidden w-full space-y-4 p-8 pt-6 md:block">
+        <div className="hidden w-full p-8 md:block container mx-auto pt-4 space-y-4">
             <div className="flex justify-between gap-x-4">
                 <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0 w-1/4">
                     <aside className="lg:w-1/2 min-w-full"> {/* Adjust the width or min-width as needed */}
