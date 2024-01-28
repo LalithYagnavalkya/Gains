@@ -3,38 +3,37 @@
 
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { Link } from "react-router-dom"
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
     items: {
         title: string
     }[],
     setCurrentPage?: (arg: string) => void
+    currentPage: string
 }
 
-export function SidebarNav({ className, items, setCurrentPage, ...props }: SidebarNavProps) {
-    const pathname = ''
-
+export function SidebarNav({ className, items, setCurrentPage, currentPage, }: SidebarNavProps) {
     return (
         <nav
             className={cn(
-                "flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1",
+                "flex space-x-2 md:flex-col lg:space-x-0 lg:space-y-1",
                 className
             )}
-            {...props}
         >
             {items.map((item) => (
                 <div
                     key={item.title}
                     className={cn(
                         buttonVariants({ variant: "ghost" }),
-                        // pathname === item.href
-                        //     ? "bg-muted hover:bg-muted"
-                        //     : "hover:bg-transparent hover:underline",
+                        currentPage === item.title
+                            ? "bg-muted hover:bg-muted"
+                            : "",
                         "justify-start",
                         "cursor-pointer"
                     )}
-                    // onClick={() => setCurrentPage(item.title)}
+                    onClick={() => {
+                        (setCurrentPage || (() => { }))(item.title)
+                    }}
                 >
                     {item.title}
                 </div>

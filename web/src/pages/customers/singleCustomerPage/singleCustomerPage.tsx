@@ -100,7 +100,7 @@ export default function SingleCustomerPage() {
             <div className="flex justify-between gap-x-4">
                 <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0 w-1/4">
                     <aside className="lg:w-1/2 min-w-full"> {/* Adjust the width or min-width as needed */}
-                        <SidebarNav items={sidebarNavItems} />
+                        <SidebarNav items={sidebarNavItems} setCurrentPage={setCurrentPage} currentPage={currentPage} />
                     </aside>
                     {/* The rest of your content... */}
                 </div>
