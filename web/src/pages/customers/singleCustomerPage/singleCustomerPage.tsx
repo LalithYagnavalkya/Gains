@@ -105,34 +105,89 @@ export default function SingleCustomerPage() {
                     {/* The rest of your content... */}
                 </div>
                 {/* Userpage */}
-                {!isLoading && !isFetching && <>
-                    <Card className="w-full">
-                        <CardHeader>
-                            <CardTitle className="">
-                                <div className="flex justify-between">
-                                    <div className="flex-col items-center justify-between space-y-2">
-                                        <div className="flex justify-between items-center">
-                                            <h2 className="text-3xl font-bold tracking-tight capitalize">
-                                                {data?.username ? data.username : <Skeleton className="h-12 w-[150px]" />}
-                                            </h2>
-                                            {/* <h2 className="text-2xl font-light tracking-tight capitalize">Details</h2> */}
-                                        </div>
+                {currentPage === sidebarNavItems[0].title && <>
+                    {!isLoading && !isFetching && <>
+                        <Card className="w-full">
+                            <CardHeader>
+                                <CardTitle className="">
+                                    <div className="flex justify-between">
+                                        <div className="flex-col items-center justify-between space-y-2">
+                                            <div className="flex justify-between items-center">
+                                                <h2 className="text-3xl font-bold tracking-tight capitalize">
+                                                    {data?.username ? data.username : <Skeleton className="h-12 w-[150px]" />}
+                                                </h2>
+                                                {/* <h2 className="text-2xl font-light tracking-tight capitalize">Details</h2> */}
+                                            </div>
 
+                                        </div>
+                                        <div className="flex justify-center items-center">
+                                            {isLoading || isFetching ? <Skeleton className="h-12 w-[150px]" /> :
+                                                <StatusPill status={data?.membershipDetails.paymentStatus} />
+                                            }
+                                        </div>
                                     </div>
-                                    <div className="flex justify-center items-center">
-                                        {isLoading || isFetching ? <Skeleton className="h-12 w-[150px]" /> :
-                                            <StatusPill status={data?.membershipDetails.paymentStatus} />
-                                        }
+                                </CardTitle>
+                                <CardDescription>Edit and update your cutomer details</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <ProfileForm {...userModal} />
+                            </CardContent>
+                        </Card>
+                    </>}
+                </>
+                }
+                {currentPage === sidebarNavItems[1].title && <Card className="w-full">
+                    <CardHeader>
+                        <CardTitle className="">
+                            <div className="flex justify-between">
+                                <div className="flex-col items-center justify-between space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <h2 className="text-3xl font-bold tracking-tight capitalize">
+                                            Comming Soon
+                                        </h2>
+                                        {/* <h2 className="text-2xl font-light tracking-tight capitalize">Details</h2> */}
                                     </div>
+
                                 </div>
-                            </CardTitle>
-                            <CardDescription>Edit and update your cutomer details</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <ProfileForm {...userModal} />
-                        </CardContent>
-                    </Card>
-                </>}
+                                <div className="flex justify-center items-center">
+                                    {/* {isLoading || isFetching ? <Skeleton className="h-12 w-[150px]" /> :
+                                        <StatusPill status={data?.membershipDetails.paymentStatus} />
+                                    } */}
+                                </div>
+                            </div>
+                        </CardTitle>
+                        <CardDescription>Will be able to track cutomers mesurments every month</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        {/* <ProfileForm {...userModal} /> */}
+                    </CardContent>
+                </Card>}
+                {currentPage === sidebarNavItems[2].title && <Card className="w-full">
+                    <CardHeader>
+                        <CardTitle className="">
+                            <div className="flex justify-between">
+                                <div className="flex-col items-center justify-between space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <h2 className="text-3xl font-bold tracking-tight capitalize">
+                                            Comming Soon
+                                        </h2>
+                                        {/* <h2 className="text-2xl font-light tracking-tight capitalize">Details</h2> */}
+                                    </div>
+
+                                </div>
+                                <div className="flex justify-center items-center">
+                                    {/* {isLoading || isFetching ? <Skeleton className="h-12 w-[150px]" /> :
+                                        <StatusPill status={data?.membershipDetails.paymentStatus} />
+                                    } */}
+                                </div>
+                            </div>
+                        </CardTitle>
+                        <CardDescription>Can track customers payment history</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        {/* <ProfileForm {...userModal} /> */}
+                    </CardContent>
+                </Card>}
             </div>
 
         </div>
