@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
+const enviromment = import.meta.env.VITE_ENVIRONMENT;
 const getAuthToken = () => {
     const storedData = localStorage.getItem('currentUser');
     if (storedData) {
@@ -23,14 +23,14 @@ export const authBaseAPI: any = createApi({
             return headers;
         },
     }),
-    tagTypes: ['Post', 'User', 'Auth', 'Customer','DashboardTransactions','DashboardCustomerStats'],
+    tagTypes: ['Post', 'User', 'Auth', 'Customer', 'DashboardTransactions', 'DashboardCustomerStats'],
     endpoints: builder => ({})
 })
 
 export const adminBaseAPI: any = createApi({
     reducerPath: 'admin',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:4002/api/v1',
+        baseUrl: enviromment === 'DEV' ? 'http://localhost:4002/api/v1' : 'https://gains-backend.onrender.com/api/v1',
         prepareHeaders: (headers) => {
             const token = getAuthToken();
             if (token) {
@@ -40,6 +40,6 @@ export const adminBaseAPI: any = createApi({
             return headers;
         },
     }),
-    tagTypes: ['Post', 'User', 'Auth', 'Customer','DashboardTransactions','DashboardCustomerStats'],
+    tagTypes: ['Post', 'User', 'Auth', 'Customer', 'DashboardTransactions', 'DashboardCustomerStats'],
     endpoints: builder => ({})
 })
