@@ -6,12 +6,23 @@ import { setAuth } from './user.slice';
 
 
 const usersAdapter = createEntityAdapter();
+const storedData = localStorage.getItem('currentUser');
+let initialState: any;
 
-const initialState = usersAdapter.getInitialState({
-  isAuthenticated: false,
-  user: null,
-  token: null,
-});
+if (storedData !== null) {
+  initialState = usersAdapter.getInitialState({
+    isAuthenticated: false,
+    user: JSON.parse(storedData)?.user,
+    token: null,
+  });
+} else {
+  initialState = usersAdapter.getInitialState({
+    isAuthenticated: false,
+    user: null,
+    token: null,
+  });
+}
+
 
 const authBackendRoute: string = '/auth'
 
@@ -26,21 +37,17 @@ export const authSlice = adminBaseAPI.injectEndpoints({
         },
         body: JSON.stringify(credentials),
       }),
-      transformResponse: (res: loginResType, state: any) => {
-        localStorage.setItem("currentUser", JSON.stringify({ user: res.user, token: res.token }));
-        return usersAdapter.setAll(initialState, { isAuthenticated: true, user: res.user, token: res.token })
+      async onCacheEntryAdded(
+        arg: any,
+        { dispatch, cacheDataLoaded }: { dispatch: any, cacheDataLoaded: any }
+      ) {
+        const authData = await cacheDataLoaded;
+        if (authData && authData.data && !authData.data.error) {
+          localStorage.setItem("currentUser", JSON.stringify({ user: authData.data.user, token: authData.data.token }));
+          dispatch(setAuth({ isAuthenticated: true, user: authData.data.user, token: authData.data.token }));
+        }
       },
-    //   async onCacheEntryAdded(
-    //     arg: any,
-    //     { dispatch, cacheDataLoaded }: { dispatch: any, cacheDataLoaded: any }
-    //   ) {
-    //     const authData = await cacheDataLoaded;
-    //     if (authData && authData.data && !authData.data.error) {
-    //       localStorage.setItem("currentUser", JSON.stringify({ user: authData.data.user, token: authData.data.token }));
-    //       dispatch(setAuth({ isAuthenticated: true, user: authData.data.user, token: authData.data.token }));
-    //     }
-    //   },
-    //   invalidatesTags: ['Auth'],
+      invalidatesTags: ['Auth'],
 
 
     }),

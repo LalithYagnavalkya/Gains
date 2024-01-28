@@ -33,7 +33,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            const resData = await login(values).unwrap()
+            const resData = await login(values)
             if (!resData.error && !isError) {
                 navigate('/app/home');
             } else {

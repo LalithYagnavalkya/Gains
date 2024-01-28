@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/navigation-menu"
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { logout } from '../features/auth/user.slice';
+import { useLoginMutation } from '@/features/auth/auth.slice';
 
 interface navItemType {
     name: string,
@@ -34,6 +34,7 @@ const NavComponent: React.FC<{ item: navItemType }> = ({ item }) => {
 
 const Navbar: React.FC = () => {
     const dispatch = useDispatch();
+    const [logout] = useLoginMutation();
     return (
         <nav className="border-b">
             <div className="container mx-auto">
@@ -44,7 +45,9 @@ const Navbar: React.FC = () => {
                             {navLinks.map((x: navItemType
                             ) => <NavComponent key={x.name} item={x} />)}
                             <Link to='/'>
-                                <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={() => { dispatch(logout()) }}>
+                                <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={async () => {
+                                    await logout()
+                                }}>
                                     Logout
                                 </NavigationMenuLink>
                             </Link>
