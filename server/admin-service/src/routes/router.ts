@@ -8,18 +8,21 @@ import authRoutes from './authRoutes.route'
 const router = Router();
 
 
-router.use('/customer', customerRoutes )
+router.use('/customer', customerRoutes)
 
-router.use('/bodyMetrics', bodyMetricRoutes )
+router.use('/bodyMetrics', bodyMetricRoutes)
 
-router.use('/payment', paymentRoutes )
+router.use('/payment', paymentRoutes)
 
-router.use('/dashboard', dashboardRoutes )
+router.use('/dashboard', dashboardRoutes)
 
-router.use('/scheduler', schedulerRoutes )
+router.use('/scheduler', schedulerRoutes)
 
 router.use('/auth', authRoutes)
 
+router.get('/live', (req, res) => {
+    return res.status(200).json({ error: false, message: 'Server is live' })
+})
 
 
 // API bulk upload api 
