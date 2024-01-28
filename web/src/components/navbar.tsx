@@ -9,7 +9,6 @@ import {
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { useLoginMutation } from '@/features/auth/auth.slice';
 
 interface navItemType {
@@ -33,7 +32,6 @@ const NavComponent: React.FC<{ item: navItemType }> = ({ item }) => {
 }
 
 const Navbar: React.FC = () => {
-    const dispatch = useDispatch();
     const [logout] = useLoginMutation();
     return (
         <nav className="border-b">

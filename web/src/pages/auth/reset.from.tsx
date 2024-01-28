@@ -99,22 +99,25 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                             <div className="flex items-center justify-end">
                                                 <div className="w-full">
                                                     <Input
-                                                        type={password1View === false ? 'password' : 'text'}
+                                                        type={password1View ? 'text' : 'password'}
                                                         autoCapitalize="none"
                                                         autoCorrect="off"
-                                                        {...field} />
+                                                        {...field}
+                                                    />
                                                 </div>
                                                 <div className="absolute pr-2 cursor-pointer">
-                                                    {password1View ? <EyeClosedIcon onClick={() => setPassword1View(!password1View)} />
-                                                        : <EyeIcon className="text-muted" onClick={() => setPassword1View(!password1View)} />
-                                                    }
+                                                    {password1View ? (
+                                                        <EyeClosedIcon onClick={() => setPassword1View(!password1View)} />
+                                                    ) : (
+                                                        <EyeIcon className="text-muted" onClick={() => setPassword1View(!password1View)} />
+                                                    )}
                                                 </div>
                                             </div>
                                         </FormControl>
                                     </FormItem>
-                                )}>
+                                )}
+                            />
 
-                            </FormField>
 
                             <FormField
                                 control={form.control}
@@ -126,22 +129,25 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                             <div className="flex items-center justify-end">
                                                 <div className="w-full">
                                                     <Input
-                                                        type={password2View === false ? 'password' : 'text'}
+                                                        type={password2View ? 'text' : 'password'}
                                                         autoCapitalize="none"
                                                         autoCorrect="off"
-                                                        {...field} />
+                                                        {...field}
+                                                    />
                                                 </div>
                                                 <div className="absolute pr-2 cursor-pointer">
-                                                    {password2View ? <EyeClosedIcon onClick={() => setPassword2View(!password2View)} />
-                                                        : <EyeIcon onClick={() => setPassword2View(!password2View)} className="text-muted" />
-                                                    }
+                                                    {password2View ? (
+                                                        <EyeClosedIcon onClick={() => setPassword2View(!password2View)} />
+                                                    ) : (
+                                                        <EyeIcon onClick={() => setPassword2View(!password2View)} className="text-muted" />
+                                                    )}
                                                 </div>
                                             </div>
                                         </FormControl>
                                     </FormItem>
-                                )}>
+                                )}
+                            />
 
-                            </FormField>
 
 
 
