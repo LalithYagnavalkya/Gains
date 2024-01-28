@@ -135,3 +135,12 @@ export const resetPassword = async (req: Request<{}, {}, resetPassowrdInput['bod
     }
 
 }
+
+export const logout = (req: Request<{}, {}, {}>, res: Response) => {
+    try {
+        // remove cookies and logout
+        return res.status(200).json({error: false, message: 'logout successfully'})
+    } catch (error) {
+        return res.status(500).send(error);
+    }
+}
