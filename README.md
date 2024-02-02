@@ -4,13 +4,12 @@ Admin panel which can track customers and their payments.
 
 # Todo
 - proper authentication and authorization.
-- implement search feature in customers page. - DONE
 - filters - filter by paymentStatus, joining date, added recently (createdAt: -1)
-- should work on schedulers for updating payment status - DONE
 - add navbar logout button inside profile avatar options (update navbar)
 - add loaders every where
 - add dummy data in db.
 - logout user if the token is expired.
+- create a landing page for gains. and add it in the sheet
 
 ## Long scope
 - every 'any' should be replaced with proper interface
