@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node index.js",
+    "start": "ts-node ./dist/index.js",
     "dev": "nodemon index.ts",
-    "build": "npm install && tsc",
-     "clean-js": "find ./src/controllers -type f -name '*.js' -delete"
+    "build": "npm install && tsc"
   },
   "author": "",
   "license": "ISC",
