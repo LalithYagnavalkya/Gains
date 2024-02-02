@@ -5,10 +5,10 @@ import dotenv from "dotenv";
 import validateResource from "../middleware/validateResource";
 
 //schemas
-import { loginSchema, forgotPasswordSchema,resetPassowrdSchema } from "../schemas/auth.schema";
+import { loginSchema, forgotPasswordSchema, resetPassowrdSchema } from "../schemas/auth.schema";
 
 // controllers
-import { login, forgotPassword, resetPassword } from "../controllers/auth.controller";
+import { login, forgotPassword, resetPassword, logout } from "../controllers/auth.controller";
 
 dotenv.config({ path: "./src/config/config.env" });
 
@@ -20,4 +20,6 @@ router.post("/forgotpassword", validateResource(forgotPasswordSchema), forgotPas
 
 router.post('/resetpassword', validateResource(resetPassowrdSchema), resetPassword)
 
-export default  router;
+router.post('/logout', logout)
+
+export default router;

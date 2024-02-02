@@ -8,8 +8,8 @@ import {
     NavigationMenuLink,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import { Link } from 'react-router-dom';
-import { useLoginMutation } from '@/features/auth/auth.slice';
+import { Link, useNavigate } from 'react-router-dom';
+import { useLogoutMutation } from '@/features/auth/auth.slice';
 
 interface navItemType {
     name: string,
@@ -32,7 +32,9 @@ const NavComponent: React.FC<{ item: navItemType }> = ({ item }) => {
 }
 
 const Navbar: React.FC = () => {
-    const [logout] = useLoginMutation();
+    const [logout] = useLogoutMutation();
+    const navigate = useNavigate();
+
     return (
         <nav className="border-b">
             <div className="container mx-auto">
@@ -45,6 +47,7 @@ const Navbar: React.FC = () => {
                             <Link to='/'>
                                 <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={async () => {
                                     await logout()
+                                    navigate('/login')
                                 }}>
                                     Logout
                                 </NavigationMenuLink>
