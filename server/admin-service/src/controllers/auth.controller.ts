@@ -10,6 +10,7 @@ dotenv.config({ path: "./src/config/config.env" });
 //schemas
 import { forgotPasswordInput, loginInput, resetPassowrdInput } from "../schemas/auth.schema";
 import sendEmail from "../utils/mailer";
+import logErrorInDB from "../utils/errorLog";
 
 
 export const login = async (req: Request<{}, {}, loginInput['body']>, res: Response) => {
@@ -54,15 +55,14 @@ export const login = async (req: Request<{}, {}, loginInput['body']>, res: Respo
 
 export const forgotPassword = async (req: Request<{}, {}, forgotPasswordInput['body']>, res: Response) => {
 
-    const message =
-        "👀 If the provided email is registered with Gains, you will receive a password reset email";
-
-    const {
-        email,
-    } = req.body;
-
     try {
 
+        const message =
+            "👀 If the provided email is registered with Gains, you will receive a password reset email";
+
+        const {
+            email,
+        } = req.body;
 
         let user = await User.findOne({ email }).select('email');
 
@@ -91,7 +91,8 @@ export const forgotPassword = async (req: Request<{}, {}, forgotPasswordInput['b
         });
 
         return res.status(200).json({ error: false, message });
-    } catch (error) {
+    } catch (error: any) {
+        await logErrorInDB(error.message, error)
         return res.status(500).json({ error: true, message: 'Something went wrong!' });
     }
 }
@@ -139,7 +140,7 @@ export const resetPassword = async (req: Request<{}, {}, resetPassowrdInput['bod
 export const logout = (req: Request<{}, {}, {}>, res: Response) => {
     try {
         // remove cookies and logout
-        return res.status(200).json({error: false, message: 'logout successfully'})
+        return res.status(200).json({ error: false, message: 'logout successfully' })
     } catch (error) {
         return res.status(500).send(error);
     }
