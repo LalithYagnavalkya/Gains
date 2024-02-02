@@ -77,7 +77,9 @@ const AddCustomer: React.FC = () => {
     const dispatch = useDispatch();
 
     const [isModalOpen, setModalOpen] = useState<Boolean>(false);
-    const [validUptoDate, setValidUptoDate] = useState<Date>(new Date());
+    
+    // initial validupToDate will be one month from today.
+    const [validUptoDate, setValidUptoDate] = useState<Date>(new Date(new Date().setMonth(new Date().getMonth() + 1)));
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -86,7 +88,7 @@ const AddCustomer: React.FC = () => {
             username: "",
             phone: '',
             joinedOn: new Date(),
-            validUpto: new Date(),
+            validUpto: new Date(new Date().setDate(new Date().getDate() + 1)),
             workoutType: 'Cardio'
 
         },
@@ -365,7 +367,6 @@ const AddCustomer: React.FC = () => {
                                                                         setValidUptoDate(new Date(x))
                                                                         field.value = validUptoDate
                                                                     }
-                                                                    console.log(x)
                                                                 }}
                                                                 // disabled={(date) =>
                                                                 //     date < new Date(new Date().setMonth(new Date().getMonth() + 1))
