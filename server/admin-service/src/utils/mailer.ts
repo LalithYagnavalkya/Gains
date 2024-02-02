@@ -1,6 +1,6 @@
 import nodemailer, { SendMailOptions } from "nodemailer";
 import { config } from "dotenv";
-
+import errorLog from './errorLog'
 config({
     path: "../config/config.env",
 });
@@ -21,7 +21,7 @@ const transporter = nodemailer.createTransport(smtpConfig);
 async function sendEmail(payload: SendMailOptions) {
     transporter.sendMail(payload, (err: any, info: any) => {
         if (err) {
-            //log error in future
+            errorLog(err?.message, err)
             return false;
         }
         return true;
