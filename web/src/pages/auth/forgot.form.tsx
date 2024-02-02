@@ -77,10 +77,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="flex justify-between">
-                                            Password
+                                            Email
                                         </FormLabel>
                                         <FormControl>
-                                            <Input type="email" placeholder="Enter you password"
+                                            <Input type="email" placeholder="Enter you Email"
                                                 autoCapitalize="none"
                                                 autoComplete="email"
                                                 autoCorrect="off"
