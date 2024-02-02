@@ -6,7 +6,8 @@
   "scripts": {
     "start": "ts-node index.js",
     "dev": "nodemon index.ts",
-    "build": "npm install && tsc"
+    "build": "npm install && tsc",
+     "clean-js": "find ./src/controllers -type f -name '*.js' -delete"
   },
   "author": "",
   "license": "ISC",
