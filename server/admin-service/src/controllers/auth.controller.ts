@@ -76,19 +76,13 @@ export const forgotPassword = async (req: Request<{}, {}, forgotPasswordInput['b
 
         user.save();
 
-
-        await sendEmail({
-            to: user.email,
-            from: "Gains",
-            subject: "Reset your password",
-            html: `
-        <div style="background-color: #000000; color: #FAFAFA; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); font-family: Arial, sans-serif;">
+        const emailBody = `<div style="background-color: #000000; color: #FAFAFA; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); font-family: Arial, sans-serif;">
             <h2 style="color: #FAFAFA; font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">Reset Your Password</h2>
             <p style="color: #A3A3A4; margin-bottom: 20px;">To reset your password, click on the following link:</p>
             <a href="${process.env.WEBAPP_ADDRESS}/resetpassword?token=${token}" style="display: inline-block; padding: 10px 20px; background-color: #000000; color: #FFFFFF; text-decoration: none; border: 1px solid #1B1B1D; border-radius: 5px; transition: background-color 0.3s, color 0.3s;">Reset Password</a>
             </div>
-            `,
-        });
+            `
+        sendEmail('Reset your password', emailBody, user?.email || '');
 
         return res.status(200).json({ error: false, message });
     } catch (error: any) {
