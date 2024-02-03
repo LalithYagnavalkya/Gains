@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import ContactForm from "./contact.form";
 
 const aboutPoints = [
     { heading: 'Seamless Member Management', description: 'Add, edit, and track members effortlessly' },
@@ -59,7 +60,7 @@ const Landing: React.FC = () => {
             .then(response => { return response.json() })
             .then(data => {
                 toast({
-                    description: "🎉 Hurray!, new Customer!!",
+                    description: "Message sent ✅",
                 })
                 form.reset();
             })
@@ -70,27 +71,11 @@ const Landing: React.FC = () => {
             });
     }
     return <>
-        <div className="md:hidden">
-            <img
-                src="/examples/dashboard-light.png"
-                width={1280}
-                height={866}
-                alt="Dashboard"
-                className="block dark:hidden"
-            />
-            <img
-                src="/examples/dashboard-dark.png"
-                width={1280}
-                height={866}
-                alt="Dashboard"
-                className="hidden dark:block"
-            />
-        </div>
-        <div className="hidden flex-col md:flex w-[100%]">
+        <div className="flex-col md:flex w-[100%]">
             <Navbar />
             <div className="flex-1 mx-auto pt-4">
-                <div className="container h-[85vh] flex justify-between items-center">
-                    <div className="w-[40%] flex flex-col space-y-4">
+                <div className="container flex-col justify-center items-center md:pt-10 md:flex lg:flex-row lg:h-[85vh] lg:justify-between lg:pt-0">
+                    <div className="pt-10 flex flex-col space-y-4 md:w-[80%] lg:w-[40%] lg:pt-0">
                         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-[#D8E9A8] leading-tight">Organize your customers in a simple way</h1>
                         <p className="text-base text-[#D8E9A8] text-opacity-95"> Our solution automates routine tasks, allowing you to focus on growing your business rather than getting bogged down by administrative work.</p>
                         <div className="pt-4">
@@ -99,25 +84,25 @@ const Landing: React.FC = () => {
                             </Link>
                         </div>
                     </div>
-                    <><img src="/dashboard-img.svg" alt="" /></>
+                    <div className="pt-10 lg:pt-0"><img src="/dashboard-img.svg" alt="" /></div>
                 </div>
                 {/* About */}
-                <div className="container flex flex-col justify-between items-start">
-                    <h2 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Why Gains?</h2>
+                <div className="container pt-10 flex flex-col justify-between items-start md:w-[90%] md:pt-10 lg:pt-0">
+                    <h2 id='why-gains' className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Why Gains?</h2>
                     <p className="text-xl text-muted-foreground mt-6">
                         Gains is a cutting-edge gym management solution designed to streamline and enhance the way you handle your fitness center. Whether you run a small boutique gym or a large fitness facility,
                         our platform is tailored to meet your needs.
                     </p>
-                    <div className="flex pt-6 justify-between">
-                        <div className="flex flex-col w-[40%] gap-y-2">
+                    <div className="flex-col pt-6 justify-between lg:flex lg:flex-row">
+                        <div className="flex flex-col w-[100%] gap-y-2 lg:w-[40%]">
                             <span className="scroll-m-20 text-xl font-semibold tracking-tight">
                                 Saves Time and Resources
                             </span>
                             <span className="text-xl text-muted-foreground">
                                 Our solution automates routine tasks, allowing you to focus on growing your business rather than getting bogged down by administrative work.
                             </span>
-                        </div>
-                        <div className="flex flex-col w-[40%] gap-y-2">
+                         </div>
+                        <div className="flex flex-col w-[100%] gap-y-2  pt-6 lg:w-[40%] lg:pt-0">
                             <span className="scroll-m-20 text-xl font-semibold tracking-tight">
                                 Flexible and Scalable
                             </span>
@@ -126,7 +111,7 @@ const Landing: React.FC = () => {
                             </span>
                         </div>
                     </div>
-                    <div className="flex flex-col w-[40%] gap-y-2 self-center pt-6">
+                    <div className="flex flex-col w-[100%] gap-y-2 self-center pt-6 lg:w-[40%] lg:pt-0">
                         <span className="scroll-m-20 text-xl font-semibold tracking-tight">
                             Enhanced Customer Experience:
                         </span>
@@ -135,17 +120,8 @@ const Landing: React.FC = () => {
                         </span>
                     </div>
                 </div>
-                <div className=" pt-8 container flex flex-col justify-center items-center text-center text-[#09090B]">
+                <div className="hidden pt-8 container md:flex flex-col justify-center items-center text-center text-[#09090B]">
                     <>
-                        {/* <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0 text-[#D8E9A8]">
-                            Customer Managment Web Application
-                        </h2> */}
-                        <div className="w-[50%]">
-                            <p className="leading-7 font-normal [&:not(:first-child)]:mt-6">
-                                Gains is a cutting-edge gym management solution designed to streamline and enhance the way you handle your fitness center. Whether you run a small boutique gym or a large fitness facility,
-                                our platform is tailored to meet your needs.
-                            </p>
-                        </div>
                         <div className="flex justify-center items-center pt-4 w-[50%]">
                             <Carousel>
                                 <CarouselContent>
@@ -195,81 +171,9 @@ const Landing: React.FC = () => {
                     </>
                 </div>
 
-                <div id="contact-form" className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0 mt-8">Get in touch</div>
+                <div id="contact-form" className="container scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0 mt-8">Get in touch</div>
 
-                <div className="mt-8 pb-28">
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                            <div className="flex justify-between items-center gap-x-4">
-                                <div className="flex-1">
-                                    <FormField
-                                        control={form.control}
-                                        name="username"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Name</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="" {...field} />
-                                                </FormControl>
-
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
-                                <div className="flex-1">
-
-                                    <FormField
-                                        control={form.control}
-                                        name="phone"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Phone</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="" {...field} value={field.value ?? ""} />
-                                                </FormControl>
-
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-
-                                </div>
-                            </div>
-
-                            <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Email</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="@gmail.com" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="message"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Message</FormLabel>
-                                        <FormControl>
-                                            <Textarea placeholder="Please ask any questions you may have about Gains"  {...field} />
-                                        </FormControl>
-
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <Button type="submit">Send Message</Button>
-                        </form>
-                    </Form>
-                </div>
-
+                <ContactForm />
             </div>
         </div>
     </>
