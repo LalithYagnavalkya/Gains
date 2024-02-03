@@ -48,9 +48,6 @@ const Landing: React.FC = () => {
         },
     })
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
         fetch("https://formspree.io/f/xayreojw", {
             method: "POST",
             body: JSON.stringify(values),
