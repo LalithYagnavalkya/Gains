@@ -4,12 +4,14 @@ Admin panel which can track customers and their payments.
 
 # Todo
 - proper authentication and authorization.
-- filters - filter by paymentStatus, joining date, added recently (createdAt: -1)
+- filters - filter by paymentStatus, joining date, added recently (createdAt: -1) - UI in progress
 - add navbar logout button inside profile avatar options (update navbar)
 - add loaders every where
 - add dummy data in db.
 - logout user if the token is expired.
-- create a landing page for gains. and add it in the sheet
+- create a landing page for gains. and add it in the sheet - current
+- add pending customers in dashboard in place of recent sales - can switch between them
+
 
 ## Long scope
 - every 'any' should be replaced with proper interface

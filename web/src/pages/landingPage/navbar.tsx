@@ -44,7 +44,7 @@ const Navbar: React.FC = () => {
                             {navLinks.map((x: navItemType
                             ) => <NavComponent key={x.name} item={x} />)}
 
-                            <Button className='bg-green-paid hover:bg-transparent hover:text-white hover:bg-green-paid'>Login</Button>
+                            <Button className='bg-green-paid hover:bg-transparent hover:text-white hover:bg-green-paid' onClick={() => navigate('/login')}>Login</Button>
                         </NavigationMenuList>
                     </NavigationMenu>
                 </div>

@@ -36,7 +36,7 @@ const Navbar: React.FC = () => {
     const navigate = useNavigate();
 
     return (
-        <nav className="border-b">
+        <nav className="pt-4">
             <div className="container mx-auto">
                 <div className="py-3 flex justify-between items-center">
                     <Logo />
@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
                             <Link to='/'>
                                 <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={async () => {
                                     await logout()
-                                    navigate('/login')
+                                    navigate('/')
                                 }}>
                                     Logout
                                 </NavigationMenuLink>
