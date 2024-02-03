@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { Link, animateScroll as scroll } from 'react-scroll';
 
 import { Button } from "@/components/ui/button";
 import Navbar from "./navbar";
@@ -55,7 +56,7 @@ const Landing: React.FC = () => {
                 "Content-Type": "application/json",
             }
         })
-            .then(response =>{  console.log(response); return response.json()})
+            .then(response => { return response.json() })
             .then(data => {
                 toast({
                     description: "🎉 Hurray!, new Customer!!",
@@ -93,7 +94,9 @@ const Landing: React.FC = () => {
                         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-[#D8E9A8] leading-tight">Organize your customers in a simple way</h1>
                         <p className="text-base text-[#D8E9A8] text-opacity-95"> Our solution automates routine tasks, allowing you to focus on growing your business rather than getting bogged down by administrative work.</p>
                         <div className="pt-4">
-                            <Button className="bg-[#4E9F3D]">Join Now</Button>
+                            <Link to="contact-form" smooth={true} duration={500}>
+                                <Button className="bg-[#4E9F3D]">Join Now</Button>
+                            </Link>
                         </div>
                     </div>
                     <><img src="/dashboard-img.svg" alt="" /></>
@@ -192,7 +195,7 @@ const Landing: React.FC = () => {
                     </>
                 </div>
 
-                <div className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0 mt-8">Get in touch</div>
+                <div id="contact-form" className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0 mt-8">Get in touch</div>
 
                 <div className="mt-8 pb-28">
                     <Form {...form}>
@@ -230,7 +233,7 @@ const Landing: React.FC = () => {
                                             </FormItem>
                                         )}
                                     />
-                                  
+
                                 </div>
                             </div>
 
