@@ -1,5 +1,6 @@
 import React from 'react'
 import Logo from '../../components/logo';
+import { Link, animateScroll as scroll } from 'react-scroll';
 
 import {
     NavigationMenu,
@@ -8,7 +9,7 @@ import {
     NavigationMenuLink,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 interface navItemType {
@@ -17,13 +18,14 @@ interface navItemType {
 }
 
 const navLinks: navItemType[] = [
-    { name: 'Home', route: '/app/home' },
-    { name: 'About', route: '/app/customers' },
+    // { name: 'Home', route: '/' },
+    { name: 'About', route: 'why-gains' },
     // { name: 'Dashboard', route: '/app/home' }
 ]
+
 const NavComponent: React.FC<{ item: navItemType }> = ({ item }) => {
     return <NavigationMenuItem>
-        <Link to={item.route}>
+        <Link to={item.route} smooth={true}>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 {item.name}
             </NavigationMenuLink>
