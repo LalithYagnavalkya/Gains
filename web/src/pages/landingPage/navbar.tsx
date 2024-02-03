@@ -1,5 +1,5 @@
 import React from 'react'
-import Logo from './logo';
+import Logo from '../../components/logo';
 
 import {
     NavigationMenu,
@@ -9,7 +9,7 @@ import {
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Link, useNavigate } from 'react-router-dom';
-import { useLogoutMutation } from '@/features/auth/auth.slice';
+import { Button } from '@/components/ui/button';
 
 interface navItemType {
     name: string,
@@ -17,8 +17,8 @@ interface navItemType {
 }
 
 const navLinks: navItemType[] = [
-    { name: 'Dashboard', route: '/app/home' },
-    { name: 'Customers', route: '/app/customers' },
+    { name: 'Home', route: '/app/home' },
+    { name: 'About', route: '/app/customers' },
     // { name: 'Dashboard', route: '/app/home' }
 ]
 const NavComponent: React.FC<{ item: navItemType }> = ({ item }) => {
@@ -32,11 +32,10 @@ const NavComponent: React.FC<{ item: navItemType }> = ({ item }) => {
 }
 
 const Navbar: React.FC = () => {
-    const [logout] = useLogoutMutation();
     const navigate = useNavigate();
 
     return (
-        <nav className="border-b">
+        <nav className="pt-4">
             <div className="container mx-auto">
                 <div className="py-3 flex justify-between items-center">
                     <Logo />
@@ -44,14 +43,8 @@ const Navbar: React.FC = () => {
                         <NavigationMenuList>
                             {navLinks.map((x: navItemType
                             ) => <NavComponent key={x.name} item={x} />)}
-                            <Link to='/'>
-                                <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={async () => {
-                                    await logout()
-                                    navigate('/login')
-                                }}>
-                                    Logout
-                                </NavigationMenuLink>
-                            </Link>
+
+                            <Button className='bg-green-paid hover:bg-transparent hover:text-white hover:bg-green-paid'>Login</Button>
                         </NavigationMenuList>
                     </NavigationMenu>
                 </div>

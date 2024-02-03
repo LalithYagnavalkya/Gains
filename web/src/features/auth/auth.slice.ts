@@ -60,10 +60,8 @@ export const authSlice = adminBaseAPI.injectEndpoints({
         arg: any,
         { dispatch, cacheDataLoaded }: { dispatch: any, cacheDataLoaded: any }
       ) {
-        const authData = await cacheDataLoaded;
-        if (authData && authData.data && !authData.data.error) {
-          dispatch(setAuth({ isAuthenticated: false, user: null, token: null }));
-        }
+        dispatch(setAuth({ isAuthenticated: false, user: null, token: null }));
+        localStorage.removeItem('currentUser')
       },
       invalidatesTags: ['Auth'],
     }),
