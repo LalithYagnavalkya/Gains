@@ -1,6 +1,3 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Link, animateScroll as scroll } from 'react-scroll';
 
 import { Button } from "@/components/ui/button";
@@ -15,7 +12,6 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import Autoplay from "embla-carousel-autoplay"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useToast } from "@/components/ui/use-toast";
 import ContactForm from "./contact.form";
 import InsideLook from "./inside.look";
 
@@ -25,50 +21,8 @@ const aboutPoints = [
     { heading: 'Customizable Dashboards', description: 'Stay on top of key metrics with personalized dashboards' }
 ]
 
-const formSchema = z.object({
-    username: z.string().min(2, {
-        message: "Username must be at least 2 characters.",
-    }),
-    phone: z.string().nullable().refine(data => data === null || data.length === 10, {
-        message: "Phone number must be at least 10 characters long when provided",
-    }),
-    email: z.string()
-        .email("Not a valid email"),
-    message: z.string().optional()
-})
-
 const Landing: React.FC = () => {
-    const { toast } = useToast()
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            username: "",
-            phone: "",
-            email: "",
-            message: "",
-        },
-    })
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        fetch("https://formspree.io/f/xayreojw", {
-            method: "POST",
-            body: JSON.stringify(values),
-            headers: {
-                "Content-Type": "application/json",
-            }
-        })
-            .then(response => { return response.json() })
-            .then(data => {
-                toast({
-                    description: "Message sent ✅",
-                })
-                form.reset();
-            })
-            .catch(error => {
-                toast({
-                    title: "Oops! Something went wrong! 👀",
-                })
-            });
-    }
+    
     return <>
         <div className="flex-col md:flex w-[100%]">
             <Navbar />
