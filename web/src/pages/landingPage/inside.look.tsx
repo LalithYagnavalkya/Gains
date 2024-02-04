@@ -13,7 +13,7 @@ const InsideLook: React.FC = () => {
   
     return (
         <div className='container w-[80%]'>
-            <h2 id='why-gains' className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0 pt-10 lg:pt-0">Take an inside Look!!</h2>
+            <h2 id='why-gains' className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0 pt-10">Take an inside Look!!</h2>
             <div className="flex justify-center items-center pt-4">
                 <Carousel
                     plugins={[
