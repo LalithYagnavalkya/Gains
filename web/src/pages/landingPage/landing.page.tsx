@@ -1,6 +1,3 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Link, animateScroll as scroll } from 'react-scroll';
 
 import { Button } from "@/components/ui/button";
@@ -12,13 +9,11 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import Autoplay from "embla-carousel-autoplay"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
 import ContactForm from "./contact.form";
+import InsideLook from "./inside.look";
 
 const aboutPoints = [
     { heading: 'Seamless Member Management', description: 'Add, edit, and track members effortlessly' },
@@ -26,50 +21,8 @@ const aboutPoints = [
     { heading: 'Customizable Dashboards', description: 'Stay on top of key metrics with personalized dashboards' }
 ]
 
-const formSchema = z.object({
-    username: z.string().min(2, {
-        message: "Username must be at least 2 characters.",
-    }),
-    phone: z.string().nullable().refine(data => data === null || data.length === 10, {
-        message: "Phone number must be at least 10 characters long when provided",
-    }),
-    email: z.string()
-        .email("Not a valid email"),
-    message: z.string().optional()
-})
-
 const Landing: React.FC = () => {
-    const { toast } = useToast()
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            username: "",
-            phone: "",
-            email: "",
-            message: "",
-        },
-    })
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        fetch("https://formspree.io/f/xayreojw", {
-            method: "POST",
-            body: JSON.stringify(values),
-            headers: {
-                "Content-Type": "application/json",
-            }
-        })
-            .then(response => { return response.json() })
-            .then(data => {
-                toast({
-                    description: "Message sent ✅",
-                })
-                form.reset();
-            })
-            .catch(error => {
-                toast({
-                    title: "Oops! Something went wrong! 👀",
-                })
-            });
-    }
+    
     return <>
         <div className="flex-col md:flex w-[100%]">
             <Navbar />
@@ -101,7 +54,7 @@ const Landing: React.FC = () => {
                             <span className="text-xl text-muted-foreground">
                                 Our solution automates routine tasks, allowing you to focus on growing your business rather than getting bogged down by administrative work.
                             </span>
-                         </div>
+                        </div>
                         <div className="flex flex-col w-[100%] gap-y-2  pt-6 lg:w-[40%] lg:pt-0">
                             <span className="scroll-m-20 text-xl font-semibold tracking-tight">
                                 Flexible and Scalable
@@ -123,7 +76,12 @@ const Landing: React.FC = () => {
                 <div className="hidden pt-8 container md:flex flex-col justify-center items-center text-center text-[#09090B]">
                     <>
                         <div className="flex justify-center items-center pt-4 w-[50%]">
-                            <Carousel>
+                            <Carousel
+                                plugins={[
+                                    Autoplay({
+                                        delay: 2000,
+                                    }),
+                                ]}>
                                 <CarouselContent>
                                     {aboutPoints.map(item => {
                                         return <CarouselItem className="md:basis-1/2">
@@ -146,8 +104,7 @@ const Landing: React.FC = () => {
                     </>
 
                 </div>
-                <div>
-                </div>
+                <InsideLook />
                 {/* Contact */}
                 <div className="flex flex-col justify-center items-center mt-32 gap-y-6">
                     <h1 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0" >Meet the Team</h1>
