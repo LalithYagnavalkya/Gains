@@ -42,8 +42,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                     title: "🐛 Please wait...",
                     description: "Server may take 30 seconds to respond",
                 })
-            }, 2000);
+            }, 2500);
             const resData = await login(values)
+            if (resData) {
+                clearTimeout(timer);
+            }
             if (!resData.error && !isError) {
                 navigate('/app/home');
             } else {
