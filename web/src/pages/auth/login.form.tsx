@@ -16,6 +16,7 @@ import { Icons } from "@/components/ui/icon"
 import { useLoginMutation } from "../../features/auth/auth.slice";
 import { EyeClosedIcon } from "@radix-ui/react-icons"
 import { EyeIcon } from "lucide-react"
+import { useToast } from "@/components/ui/use-toast";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
@@ -26,6 +27,8 @@ const formSchema = z.object({
 })
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     const navigate = useNavigate();
+    const { toast } = useToast()
+
     const [login, { data, isLoading, isError }] = useLoginMutation();
     const [isPasswordWrong, setIsPasswordWrong] = React.useState(false)
     const [content, setContent] = React.useState("")
@@ -33,6 +36,13 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
+            const timer = setTimeout(() => {
+                toast({
+                    variant: 'destructive',
+                    title: "🐛 Please wait...",
+                    description: "Server may take 30 seconds to respond",
+                })
+            }, 2000);
             const resData = await login(values)
             if (!resData.error && !isError) {
                 navigate('/app/home');
