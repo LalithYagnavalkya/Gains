@@ -14,7 +14,7 @@ Gains is a customer management platform designed to help you efficiently track r
 
 To start using Gains for your customer management needs, follow these steps:
 
-1. **Contact for Onboarding**: If you're interested in using Gains, please get in touch by filling up the contact me at form at [gains.com](https://gains-pink.vercel.app/).
+1. **Contact for Onboarding**: If you're interested in using Gains, please get in touch by filling up the contact me form at [gains.com](https://gains-pink.vercel.app/).
 
 2. **Provide Information**: During the onboarding process, you'll be guided through the setup. Please be prepared to provide the following information:
    - Business Name
@@ -32,40 +32,27 @@ I look forward to helping you get started with Gains!
 
 ## Bulk Data Upload
 
-Gains supports bulk data upload for efficient onboarding of your customer information. Follow these steps to prepare your data:
+Gains supports bulk data upload for efficient onboarding of your customer information. Follow these steps to submit your data for backend upload:
 
-1. **Download the Sample Excel Sheet**: [Sample Excel Sheet](link-to-your-sample-sheet.xlsx)
-   - Use this sample sheet as a reference for formatting your data.
+1. **Prepare Your Data**:
+   - Organize your customer data in a spreadsheet (e.g., Excel) or a CSV file.
+   - Include the required fields for each customer, such as `Username`, `Contact Number`, `Last pay off date`, `Valid upto date`, `Joined on date` and `custom serial number for your customer`
 
-2. **Required Fields**:
-   - The Excel sheet should include the following required fields:
-     - `Business Name`
-     - `Contact Person's Name`
-     - `Business Type`
-     - `Contact Number`
-     - `Email Address`
+2. **Optional Fields**:
+   - You can include optional fields based on your specific needs, such as `Membership ID`, `Email Address`, `Payment Amount`, `Payment Type`, `Partner ID`, and `Transaction Type`.
 
-3. **Optional Fields**:
-   - You can include optional fields based on your specific needs, such as:
-     - `Membership ID`
-     - `Payment Amount`
-     - `Payment Type`
-     - `Partner ID`
-     - `Transaction Type`
+3. **Save Your File**:
+   - Save your data file in CSV format or Excel format.
 
-4. **Fill in Your Data**:
-   - Populate the Excel sheet with your customer data following the sample structure.
+4. **Send Your Data**:
+   - Once your data file is ready, email it to y.lalith01@gmail.com.
+   - Include any additional instructions or requirements in the email.
 
-5. **Upload Your Data**:
-   - Once your Excel sheet is ready, navigate to the Gains dashboard.
-   - Look for the "Bulk Upload" or "Import Data" feature.
-   - Follow the prompts to select and upload your prepared Excel sheet.
+5. **Confirmation and Processing**:
+   - I will receive your data file and process it for bulk upload on the backend.
+   - You will be notified once the data has been successfully imported into Gains.
 
-6. **Review and Confirm**:
-   - Gains will process your data, and you'll have the opportunity to review the imported information before confirming the upload.
-
-**Note**: Ensure that your Excel sheet is saved in a compatible format (e.g., .xlsx) before uploading.
-
-For any assistance or questions regarding bulk data upload, feel free to contact me at y.laliith01@gmail.com
+For any assistance or questions regarding bulk data upload, feel free to contact me at y.lalith01@gmail.com.
 
 I look forward to making the onboarding process smooth for you!
+
