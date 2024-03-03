@@ -20,6 +20,7 @@ interface navItemType {
 const navLinks: navItemType[] = [
     // { name: 'Home', route: '/' },
     { name: 'About', route: 'why-gains' },
+    { name: 'Contact', route: 'contact-form' },
     // { name: 'Dashboard', route: '/app/home' }
 ]
 
