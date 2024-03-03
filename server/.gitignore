@@ -1,2 +1,5 @@
 /*/node_modules
 node_modules
+/admin-service/src/config/config.env
+/authentication-service/src/config/config.env
+/gate-way-service/src/config/config.env

@@ -1,3 +1,4 @@
+const { VITE_BACKEND_URL, VITE_DEPLOYED_BACKEND_URL, VITE_ENVIRONMENT } = import.meta.env;
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 const enviromment = import.meta.env.VITE_ENVIRONMENT;
 const getAuthToken = () => {
@@ -30,7 +31,7 @@ export const authBaseAPI: any = createApi({
 export const adminBaseAPI: any = createApi({
     reducerPath: 'admin',
     baseQuery: fetchBaseQuery({
-        baseUrl: enviromment === 'DEV' ? 'http://localhost:4002/api/v1' : 'https://gains-backend.onrender.com/api/v1',
+        baseUrl: VITE_ENVIRONMENT === 'DEV' ? VITE_BACKEND_URL : VITE_DEPLOYED_BACKEND_URL,
         prepareHeaders: (headers) => {
             const token = getAuthToken();
             if (token) {
