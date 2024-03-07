@@ -1,5 +1,6 @@
 # Gains - Customer Management Platform
 
+Live demo - https://gains-pink.vercel.app/
 Gains is a customer management platform designed to help you efficiently track recurring payments from your customers. Whether you're running a subscription-based service, managing memberships, or handling regular transactions, Gains provides a user-friendly interface to streamline your customer management processes.
 
 ## Features
